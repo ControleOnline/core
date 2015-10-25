@@ -174,7 +174,10 @@ class DefaultModel {
     }
 
     private function generateAlias($lenght = 10) {
-        return substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $lenght);
+        do {
+            $alias = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $lenght);
+        } while (in_array($alias, $this->alias));
+        return $alias;
     }
 
     public function getWithParent($id, $entity_parent, $page = 1, $limit = 100) {
