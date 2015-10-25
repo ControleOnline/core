@@ -1,0 +1,26 @@
+{
+    "name": "controleonline/core",
+    "description": "Core of Controle Online Systems",
+    "license": "BSD-3-Clause",
+    "homepage": "http://controleonline.com/",
+    "type": "library",
+    "keywords": [
+        "ControleOnline"
+    ],
+    "autoload": {
+        "psr-4": {
+            "core\\": "src/core"
+        },
+        "classmap": [
+            "Module.php"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "component-dir": "public/components"
+    },
+    "require": {
+        "php": ">=5.5",
+        "zendframework/zendframework": "~2.0"        
+    }
+}
