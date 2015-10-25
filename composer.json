@@ -24,7 +24,7 @@
         "zendframework/zendframework": "~2.0"
     },
     "suggest":{
-        "ControleOnline/rest-essentials": "*",
-        "ControleOnline/speed-up-essentials": "*"        
+        "ControleOnline/rest-essentials": "Automatic create your REST API",
+        "ControleOnline/speed-up-essentials": "This software aims to be engaged in any system and without any additional line programming is required, the final code is automatically optimized."        
     }
 }
