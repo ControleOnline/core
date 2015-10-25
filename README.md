@@ -6,8 +6,10 @@
 # Core of Controle Online modules #
 
 Used by another projects:
+```
 https://github.com/ControleOnline/rest-essentials
 https://github.com/ControleOnline/speed-up-essentials
 https://github.com/ControleOnline/doubleclick
 https://github.com/ControleOnline/table-essentials
 https://github.com/ControleOnline/zf2-essentials
+```

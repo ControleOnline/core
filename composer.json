@@ -21,6 +21,10 @@
     },
     "require": {
         "php": ">=5.5",
-        "zendframework/zendframework": "~2.0"        
+        "zendframework/zendframework": "~2.0"
+    },
+    "suggests":{
+        "ControleOnline/rest-essentials": "*",
+        "ControleOnline/speed-up-essentials": "*"        
     }
 }
