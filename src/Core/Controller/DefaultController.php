@@ -24,14 +24,33 @@ class DefaultController extends \Zend\Mvc\Controller\AbstractActionController {
     private function initialize() {
 
         $method_request = strtoupper($this->params()->fromQuery('method') ? : filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
-        $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod'));
-        $this->_config = $this->getServiceLocator()->get('Config');        
+        $viewMethod_request = $this->detectViewMethod();
+        $this->_config = $this->getServiceLocator()->get('Config');
         $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
         $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_viewMethods) ? $viewMethod_request : 'html';
-        $this->_model = new DiscoveryModel($this->getEntityManager(), $this->_method, $this->_viewMethod, $this->getRequest(),$this->_config['Core']);
+        $this->_model = new DiscoveryModel($this->getEntityManager(), $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
         $this->_view = new ViewModel();
         $this->_entity_children = $this->params('entity_children');
         $this->_entity = $this->params('entity');
+    }
+
+    protected function detectViewMethod() {
+        $request = $this->getRequest();
+        $headers = $request->getHeaders();
+        $uri = $request->getUri()->getPath();
+        $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod'));
+        if ($headers->has('accept')) {
+            $viewMethod_request = 'json';
+        } else {
+            foreach ($this->_allowed_viewMethods AS $compare) {
+                $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
+                if ($return) {
+                    $viewMethod_request = $return;
+                }
+            }
+        }
+
+        return $viewMethod_request;
     }
 
     public function setEntityManager(\Doctrine\ORM\EntityManager $em) {
