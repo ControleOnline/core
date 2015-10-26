@@ -6,8 +6,6 @@ use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Http\Response;
 use Zend\Json\Json;
-use Zend\View\Resolver\TemplatePathStack;
-use Zend\View\Resolver\TemplateMapResolver;
 use Core\Helper\Url;
 
 class Module {
@@ -42,34 +40,39 @@ class Module {
         $this->setResponseType($e);
         if (isset($config['doctrine']['connection']['orm_default']['params'])) {
             $dbConfig = $config['doctrine']['connection']['orm_default']['params'];
-            $entity = new DiscoveryEntity($this->em, $dbConfig, $config['Core']);
+            $entity = new DiscoveryEntity($this->em, $dbConfig, $this->config);
             $entity->checkEntities();
         }
         $this->configDefaultViewOptions($eventManager);
     }
 
-    private function configDefaultViewOptions($eventManager) {
-        $eventManager->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $event) {
-
-            $baseDir = getcwd() . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . $this->module . DIRECTORY_SEPARATOR . 'view';
-
-            $sm = $event->getParam('application')->getServiceManager();
-            /** @var TemplateMapResolver $viewResolverMap */
-            $viewResolverMap = $sm->get('ViewTemplateMapResolver');
-
+    private function addDefaultTemplates($event, $baseDirs) {
+        $sm = $event->getParam('application')->getServiceManager();
+        $viewResolverMap = $sm->get('ViewTemplateMapResolver');
+        $viewResolverPathStack = $sm->get('ViewTemplatePathStack');
+        foreach ($baseDirs AS $baseDir) {
             if (is_file($baseDir . '/layout/layout.phtml')) {
                 $viewResolverMap->add('layout/layout', $baseDir . '/layout/layout.phtml');
+                $viewResolverMap->add('layout', $baseDir . '/layout/layout.phtml');
             }
             if (is_file($baseDir . '/error/404.phtml')) {
                 $viewResolverMap->add('error/404', $baseDir . '/error/404.phtml');
+                $viewResolverMap->add('404', $baseDir . '/error/404.phtml');
             }
             if (is_file($baseDir . '/error/index.phtml')) {
                 $viewResolverMap->add('error/index', $baseDir . '/error/index.phtml');
+                $viewResolverMap->add('error', $baseDir . '/error/index.phtml');
             }
-            /** @var TemplatePathStack $viewResolverPathStack */
-            $viewResolverPathStack = $sm->get('ViewTemplatePathStack');
             $viewResolverPathStack->addPath($baseDir);
             $viewResolverPathStack->addPath(__DIR__ . DIRECTORY_SEPARATOR . 'view');
+        }
+    }
+
+    private function configDefaultViewOptions($eventManager) {
+        $eventManager->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $event) {
+            $baseDirs[] = getcwd() . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . $this->module . DIRECTORY_SEPARATOR . 'view';
+            $baseDirs[] = getcwd() . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . $this->config['DefaultModule'] . DIRECTORY_SEPARATOR . 'view';
+            $this->addDefaultTemplates($event, $baseDirs);
         }, 10);
     }
 
@@ -145,7 +148,7 @@ class Module {
 
     public function getConfig() {
         $this->config = $this->getDefaultConfig(
-                (isset($this->config['Core']) ? $config['Core'] : array())
+                (isset($this->config['Core']) ? $this->config['Core'] : array())
         );
         $config = \Zend\Stdlib\ArrayUtils::merge(array('Core' => $this->config), (include __DIR__ . '/config/module.config.php'));
         $config['doctrine']['driver']['Entity']['paths'][] = $this->config['EntityPath'];
