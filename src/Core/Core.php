@@ -34,14 +34,14 @@ class Core implements RouteInterface {
     public function match(Request $request, $pathOffset = null) {
         if (!method_exists($request, 'getUri')) {
             return null;
-        }
+        }        
         $uri = $request->getUri();
         $fullPath = $uri->getPath();
         $path = substr($fullPath, $pathOffset);
         $alias = trim($path, '/');
-        $discovery = new DiscoveryRoute($this->defaults);
+        $discovery = new DiscoveryRoute($this->defaults);                                
         $discovery->setUrl($alias);
-        $options = $discovery->getRoute();
+        $options = $discovery->getRoute();        
         $discovery->setGetParams($request);
         $discovery->setMethod($request, $uri);
         return new RouteMatch($options);

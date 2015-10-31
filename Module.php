@@ -25,8 +25,6 @@ class Module {
     }
 
     public function onBootstrap(\Zend\Mvc\MvcEvent $e) {
-
-
         $this->sm = $e->getApplication()->getServiceManager();
         $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
         $config = $this->sm->get('config');
@@ -82,8 +80,9 @@ class Module {
         $uri = array_values(array_filter(explode('/', $_SERVER['REQUEST_URI'])));
         if (isset($uri[0]) && isset($uri[1])) {
             $class = '\\' . ucfirst(Url::removeSufix($uri[0])) . '\\Controller\\' . ucfirst(Url::removeSufix($uri[1])) . 'Controller';
+            $defaultClass = '\\' . ucfirst(Url::removeSufix($uri[0])) . '\\Controller\\' . $config['DefaultController'] . 'Controller';
             $this->module = ucfirst(Url::removeSufix($uri[0]));
-            $this->controller = $class;
+            $this->controller = class_exists($class) ? $class : $defaultClass;
         } elseif (isset($uri[0])) {
             $controller = $config['DefaultController'];
             $class = '\\' . ucfirst(Url::removeSufix($uri[0])) . '\\Controller\\' . $controller . 'Controller';
@@ -95,7 +94,7 @@ class Module {
             $class = '\\' . $module . '\\Controller\\' . $controller . 'Controller';
             $this->module = $module;
             $this->controller = $class;
-        }
+        }        
     }
 
     public function getControllerConfig() {

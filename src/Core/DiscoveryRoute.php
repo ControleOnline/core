@@ -61,26 +61,38 @@ class DiscoveryRoute {
     }
 
     protected function discoveryByController($routes) {
-
         $defaultRoute = $this->getDefaultRoute();
         $module = $this->camelCase((isset($routes[0]) ? Url::removeSufix($routes[0]) : $defaultRoute['module']));
         $class_name = $this->camelCase((isset($routes[1]) ? Url::removeSufix($routes[1]) : $defaultRoute['controller']));
-        $controller = $this->formatClass($class_name, 'Controller', $module) . 'Controller';
+        $controller = $this->getControllerName($class_name, $module);
         if (class_exists($controller)) {
             $this->setModule($module);
             $this->setController($controller);
-            $url = $this->getUrl();
-            unset($url[0]);
-            unset($url[1]);
-            $this->setUrl($url);
         }
     }
 
-    protected function discoveryAction($routes) {
+    protected function getControllerName($class_name, $module) {
         $defaultRoute = $this->getDefaultRoute();
-        $action = lcfirst($this->camelCase((isset($routes[2]) ? $routes[2] : $defaultRoute['action'])));
+        $class = $this->formatClass($class_name, 'Controller', $module) . 'Controller';
+        $url = $this->getUrl();
+        if (!class_exists($class)) {            
+            $class = $this->formatClass($defaultRoute['controller'], 'Controller', $module) . 'Controller';
+            unset($url[0]);
+        } else {            
+            unset($url[0]);
+            unset($url[1]);
+        }        
+        $this->setUrl($url);
+        return $class;
+    }
+
+    protected function discoveryAction() {
+        $defaultRoute = $this->getDefaultRoute();
+        $url = $this->getUrl();
+        $action = lcfirst($this->camelCase((isset($url[0]) ? $url[0] : $defaultRoute['action'])));
         $class = $this->getController();
         $testClass = new $class();
+
         if (method_exists($testClass, $action . 'Action')) {
             $this->setAction($action);
             $url = $this->getUrl();
@@ -105,7 +117,6 @@ class DiscoveryRoute {
             'entity' => $this->camelCase($this->getEntity()),
             'entity_children' => $this->camelCase($this->getEntityChildren())
         );
-
         return array_merge($default, $return);
     }
 
