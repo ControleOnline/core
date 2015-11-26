@@ -29,7 +29,7 @@ class GenericController extends DefaultController {
         $this->_model = new DiscoveryModel($this->getServiceLocator(), $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
         $this->_view = new ViewModel();
         $this->_entity_children = $this->params('entity_children');
-        $this->_entity = $this->params('entity');
+        $this->_entity = $this->params('entity');  
     }
 
     protected function detectViewMethod() {

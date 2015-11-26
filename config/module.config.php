@@ -30,7 +30,7 @@ return array(
                     'defaults' => array(
                         'discoveryModule' => 'Core',
                         'module' => 'Home',
-                        'controller' => 'Default',
+                        'controller' => 'Generic',
                         'action' => 'index',
                     ),
                 ),
