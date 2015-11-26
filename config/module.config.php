@@ -3,7 +3,7 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Core\Controller\Default' => 'Core\Controller\DefaultController',
+            'Core\Controller\Default' => 'Core\Controller\GenericController',
         ),
     ),
     'router' => array(
