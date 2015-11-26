@@ -20,7 +20,7 @@ class Module {
 
     public function getDefaultConfig($config) {
         $config['DefaultModule'] = isset($config['DefaultModule']) ? $config['DefaultModule'] : 'Home';
-        $config['GenericController'] = isset($config['GenericController']) ? $config['GenericController'] : 'Default';
+        $config['DefaultController'] = isset($config['DefaultController']) ? $config['DefaultController'] : 'Default';
         $config['LogChanges'] = isset($config['LogChanges']) ? $config['LogChanges'] : true;
         $config['EntityPath'] = isset($config['EntityPath']) ? $config['EntityPath'] : getcwd() . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR;
         return $config;
@@ -83,17 +83,17 @@ class Module {
         $uri = array_values(array_filter(explode('/', $_SERVER['REQUEST_URI'])));
         if (isset($uri[0]) && isset($uri[1])) {
             $class = '\\' . ucfirst(Url::removeSufix($uri[0])) . '\\Controller\\' . ucfirst(Url::removeSufix($uri[1])) . 'Controller';
-            $defaultClass = '\\' . ucfirst(Url::removeSufix($uri[0])) . '\\Controller\\' . $config['GenericController'] . 'Controller';
+            $defaultClass = '\\' . ucfirst(Url::removeSufix($uri[0])) . '\\Controller\\' . $config['DefaultController'] . 'Controller';
             $this->module = ucfirst(Url::removeSufix($uri[0]));
             $this->controller = class_exists($class) ? $class : $defaultClass;
         } elseif (isset($uri[0])) {
-            $controller = $config['GenericController'];
+            $controller = $config['DefaultController'];
             $class = '\\' . ucfirst(Url::removeSufix($uri[0])) . '\\Controller\\' . $controller . 'Controller';
             $this->module = ucfirst(Url::removeSufix($uri[0]));
             $this->controller = $class;
         } else {
             $module = $config['DefaultModule'];
-            $controller = $config['GenericController'];
+            $controller = $config['DefaultController'];
             $class = '\\' . $module . '\\Controller\\' . $controller . 'Controller';
             $this->module = $module;
             $this->controller = $class;

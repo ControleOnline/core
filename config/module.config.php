@@ -3,7 +3,7 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Core\Controller\Default' => 'Core\Controller\GenericController',
+            'Core\Controller\Default' => 'Core\Controller\DefaultController',
         ),
     ),
     'router' => array(
@@ -30,7 +30,7 @@ return array(
                     'defaults' => array(
                         'discoveryModule' => 'Core',
                         'module' => 'Home',
-                        'controller' => 'Generic',
+                        'controller' => 'Default',
                         'action' => 'index',
                     ),
                 ),
