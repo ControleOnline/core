@@ -7,25 +7,49 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class DefaultModel {
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager $_em
      */
-    private $em;
+    protected $_em;
 
     /**
      * @var \Doctrine\ORM\EntityRepository          
      */
-    private $entity;
-    private $entity_name;
-    private $children_entity_name;
-    private $rows;
-    private $alias = [];
-    private $join = [];
-    private $current_deep = 0;
-    private $max_deep = 0;
-    private $config;
+    protected $entity;
 
-    public function __construct($em) {
-        $this->em = $em;
+    /**
+     * @var \Zend\ServiceManager\ServiceManager    
+     */
+    protected $_sm;
+    protected $entity_name;
+    protected $children_entity_name;
+    protected $rows;
+    protected $alias = [];
+    protected $join = [];
+    protected $current_deep = 0;
+    protected $max_deep = 0;
+    protected $config;
+
+    public function __construct(\Zend\ServiceManager\ServiceManager $sm, $entity = null) {
+        if (!$entity) {
+            $namespace = str_replace('Model', 'Entity', explode('\\', get_called_class()));
+            $namespace[] = str_replace('Entity', '', array_pop($namespace));
+            $entity = implode('\\', $namespace);
+        }
+        $this->setEntityManager($sm->get('Doctrine\ORM\EntityManager'));
+        $this->setSm($sm);
+        $this->setEntity($entity);
+    }
+
+    /**
+     * @return \Doctrine\ORM\EntityManager 
+     */
+    public function getEntityManager() {
+        return $this->_em;
+    }
+
+    public function setEntityManager(\Doctrine\ORM\EntityManager $em) {
+        $this->_em = $em;
+        return $this;
     }
 
     public function getConfig() {
@@ -37,17 +61,17 @@ class DefaultModel {
         return $this;
     }
 
-    public function getMax_deep() {
+    public function getMaxDeep() {
         return $this->max_deep;
     }
 
-    public function setMax_deep($max_deep) {
+    public function setMaxDeep($max_deep) {
         $this->max_deep = $max_deep;
         return $this;
     }
 
     public function setEntity($entity) {
-        $this->entity = $this->em->getRepository($entity);
+        $this->entity = class_exists($entity) ? $this->_em->getRepository($entity) : null;
         $this->entity_name = $entity;
         return $this;
     }
@@ -58,7 +82,7 @@ class DefaultModel {
 
     public function getMetadata() {
         $cmf = new \Doctrine\ORM\Tools\DisconnectedClassMetadataFactory();
-        $cmf->setEntityManager($this->em);
+        $cmf->setEntityManager($this->_em);
         return $cmf->getMetadataFor($this->entity_name);
     }
 
@@ -81,8 +105,8 @@ class DefaultModel {
     public function delete($id) {
         $entity = $this->entity->find($id);
         if ($entity) {
-            $this->em->remove($entity);
-            $this->em->flush();
+            $this->_em->remove($entity);
+            $this->_em->flush();
             return true;
         } else {
             return false;
@@ -94,8 +118,8 @@ class DefaultModel {
             $entity = $this->entity->find($params['id']);
             if (isset($entity) && $entity) {
                 $entity = $this->setData($entity, $params);
-                $this->em->persist($entity);
-                $this->em->flush();
+                $this->_em->persist($entity);
+                $this->_em->flush();
                 return true;
             } else {
                 return false;
@@ -113,8 +137,9 @@ class DefaultModel {
     public function insert(array $params) {
         $class = new $this->entity_name;
         $entity = $this->setData($class, $params);
-        $this->em->persist($entity);
-        $this->em->flush();
+        $this->_em->persist($entity);
+        $this->_em->flush();
+       // $this->_em->rollback();
         return array('id' => $entity->getId());
     }
 
@@ -131,7 +156,7 @@ class DefaultModel {
         foreach ($field_a_names as $field_a) {
             if (isset($params[$field_a . '_id'])) {
                 $f_a = ucfirst($field_a);
-                $object = $this->em->getRepository('Entity\\' . $f_a)->find($params[$field_a . '_id']);
+                $object = $this->_em->getRepository('Entity\\' . $f_a)->find($params[$field_a . '_id']);
                 $f_s = 'set' . $f_a;
                 $entity->$f_s($object);
             }
@@ -144,27 +169,27 @@ class DefaultModel {
     }
 
     public function getAssociationNames() {
-        return $this->em->getClassMetadata($this->entity_name)->getAssociationNames();
+        return $this->_em->getClassMetadata($this->entity_name)->getAssociationNames();
     }
 
     public function getFieldNames() {
-        return $this->em->getClassMetadata($this->entity_name)->getFieldNames();
+        return $this->_em->getClassMetadata($this->entity_name)->getFieldNames();
     }
 
-    private function getChilds(\Doctrine\ORM\QueryBuilder &$qb, $entity_name, $join_alias) {
+    protected function getChilds(\Doctrine\ORM\QueryBuilder &$qb, $entity_name, $join_alias) {
 
         if ($this->max_deep && $this->current_deep < $this->max_deep) {
-            $childs = $this->em->getClassMetadata($entity_name)->getAssociationMappings();
+            $childs = $this->_em->getClassMetadata($entity_name)->getAssociationMappings();
             foreach ($childs as $key => $child) {
                 if ($child['targetEntity'] && !in_array($child['targetEntity'], $this->join)) {
                     $this->current_deep ++;
                     $this->join[] = $child['targetEntity'];
                     $j = $this->generateAlias();
-                    $table = strtolower(str_replace('Entity\\', '', $child['targetEntity']));
+                    $table = $this->getEntityKey($child['targetEntity']);
                     $this->alias[] = $j;
                     $qb->select($this->alias);
                     $qb->leftJoin($join_alias . '.' . $table, $j);
-                    $table_child = $this->em->getClassMetadata('Entity\\' . ucfirst($table))->getAssociationMappings();
+                    $table_child = $this->_em->getClassMetadata('Entity\\' . ucfirst($table))->getAssociationMappings();
                     foreach ($table_child as $k => $p) {
                         $this->getChilds($qb, 'Entity\\' . ucfirst($table), $j);
                     }
@@ -173,7 +198,7 @@ class DefaultModel {
         }
     }
 
-    private function generateAlias($lenght = 10) {
+    protected function generateAlias($lenght = 10) {
         do {
             $alias = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $lenght);
         } while (in_array($alias, $this->alias));
@@ -197,9 +222,13 @@ class DefaultModel {
         $qb->where($alias_parent . '.id=' . $id);
         $query = $qb->setFirstResult($limit * ($page - 1))->setMaxResults($limit)->getQuery();
         $paginator = new Paginator($query);
-        $data[strtolower(str_replace('Entity\\', '', $this->children_entity_name))] = $query->getArrayResult();
+        $data[$this->getEntityKey($this->children_entity_name)] = $query->getArrayResult();
         $this->rows = $paginator->count();
         return $data;
+    }
+
+    protected function getEntityKey($entity) {
+        return strtolower(str_replace('Entity\\', '', $entity));
     }
 
     public function get($id = null, $page = 1, $limit = 100) {
@@ -213,15 +242,24 @@ class DefaultModel {
         }
         $this->getChilds($qb, $this->entity_name, $alias);
         $query = $qb->getQuery()->setFirstResult($limit * ($page - 1))->setMaxResults($limit);
-        $data[strtolower(str_replace('Entity\\', '', $this->entity_name))] = $query->getArrayResult();
+        $data[$this->getEntityKey($this->entity_name)] = $query->getArrayResult();
         $paginator = new Paginator($query);
         $this->rows = $paginator->count();
         return $data;
     }
 
-    public function toArray($data) {
-        $hydrator = new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($this->em, $this->entity_name);
+    public function toArray($data, $entity_name = null) {
+        $hydrator = new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($this->_em, $entity_name? : $this->entity_name);
         return $hydrator->extract($data);
+    }
+
+    public function getSm() {
+        return $this->_sm;
+    }
+
+    public function setSm($sm) {
+        $this->_sm = $sm;
+        return $this;
     }
 
 }

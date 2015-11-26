@@ -21,9 +21,29 @@ class DiscoveryEntity {
         $this->dbConfig = $dbConfig;
     }
 
-    public function prepareFolder() {
+    public function prepareFolder($force = false) {
+        if ($force && is_dir($this->entityFolder . DIRECTORY_SEPARATOR . 'Entity')) {
+            $this->rrmdir($this->entityFolder . DIRECTORY_SEPARATOR . 'Entity');
+        }
         is_dir($this->entityFolder . DIRECTORY_SEPARATOR . 'Entity')? : mkdir($this->entityFolder . DIRECTORY_SEPARATOR . 'Entity', 0777, true);
         is_dir($this->entityFolder . DIRECTORY_SEPARATOR . 'proxies')? : mkdir($this->entityFolder . DIRECTORY_SEPARATOR . 'proxies', 0777, true);
+    }
+
+    protected function rrmdir($dir) {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir . "/" . $object) == "dir") {
+                        rrmdir($dir . "/" . $object);
+                    } else {
+                        unlink($dir . "/" . $object);
+                    }
+                }
+            }
+            reset($objects);
+            rmdir($dir);
+        }
     }
 
     private function getDbConfigs() {
@@ -48,9 +68,9 @@ class DiscoveryEntity {
         $this->em = \Doctrine\ORM\EntityManager::create($connectionParams, $config);
     }
 
-    public function checkEntities() {
-        if (!is_dir($this->entityFolder . 'Entity')) {
-            $this->prepareFolder();
+    public function checkEntities($force = false) {
+        if (!is_dir($this->entityFolder . 'Entity') || $force) {
+            $this->prepareFolder($force);
             $this->configure();
 
             // custom datatypes (not mapped for reverse engineering)

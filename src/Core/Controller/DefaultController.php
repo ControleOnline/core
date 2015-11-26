@@ -4,6 +4,7 @@ namespace Core\Controller;
 
 use Core\DiscoveryModel;
 use Zend\View\Model\ViewModel;
+use Core\Model\ErrorModel;
 
 class DefaultController extends \Zend\Mvc\Controller\AbstractActionController {
 
@@ -28,7 +29,7 @@ class DefaultController extends \Zend\Mvc\Controller\AbstractActionController {
         $this->_config = $this->getServiceLocator()->get('Config');
         $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
         $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_viewMethods) ? $viewMethod_request : 'html';
-        $this->_model = new DiscoveryModel($this->getEntityManager(), $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
+        $this->_model = new DiscoveryModel($this->getServiceLocator(), $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
         $this->_view = new ViewModel();
         $this->_entity_children = $this->params('entity_children');
         $this->_entity = $this->params('entity');
@@ -178,6 +179,12 @@ class DefaultController extends \Zend\Mvc\Controller\AbstractActionController {
             $return['response']['method'] = $this->_method;
             $return['response']['view_method'] = $this->_viewMethod;
             $return['response']['success'] = isset($return['success']) ? $return['success'] : true;
+
+            if (ErrorModel::getErrors()) {
+                foreach (ErrorModel::getErrors() AS $error) {
+                    throw new \Exception($error);
+                }
+            }
         } catch (\Exception $e) {
             $return = array('response' => array('error' => array('code' => $e->getCode(), 'message' => $e->getMessage()), 'success' => false));
         }

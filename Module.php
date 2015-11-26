@@ -3,10 +3,12 @@
 namespace Core;
 
 use Zend\Mvc\ModuleRouteListener;
+use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\MvcEvent;
 use Zend\Http\Response;
 use Zend\Json\Json;
 use Core\Helper\Url;
+use Core\Model\InstallModel;
 
 class Module {
 
@@ -42,6 +44,7 @@ class Module {
             $entity->checkEntities();
         }
         $this->configDefaultViewOptions($eventManager);
+        $this->installEntities();
     }
 
     private function addDefaultTemplates($event, $baseDirs) {
@@ -68,8 +71,8 @@ class Module {
 
     private function configDefaultViewOptions($eventManager) {
         $eventManager->attach(MvcEvent::EVENT_RENDER, function(MvcEvent $event) {
-            $baseDirs[] = getcwd() . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . $this->module . DIRECTORY_SEPARATOR . 'view';
-            $baseDirs[] = getcwd() . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . $this->config['DefaultModule'] . DIRECTORY_SEPARATOR . 'view';
+            $baseDirs[] = realpath($this->getModulePath($this->module) . DIRECTORY_SEPARATOR . 'view');
+            $baseDirs[] = realpath($this->getModulePath($this->config['DefaultModule']) . DIRECTORY_SEPARATOR . 'view');
             $this->addDefaultTemplates($event, $baseDirs);
         }, 10);
     }
@@ -94,7 +97,30 @@ class Module {
             $class = '\\' . $module . '\\Controller\\' . $controller . 'Controller';
             $this->module = $module;
             $this->controller = $class;
-        }        
+        }
+    }
+
+    protected function getModulePath($module) {
+        if (class_exists($module . '\Module')) {
+            $reflector = new \ReflectionClass($module . '\Module');
+            $fn = $reflector->getFileName();
+            return dirname($fn) . DIRECTORY_SEPARATOR;
+        }
+        return dirname(__FILE__);
+    }
+
+    protected function installEntities() {
+        $module = $this->module;
+        $directory = realpath($this->getModulePath($module) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . 'Entity');
+
+        if (is_dir($directory) || is_link($directory)) {
+            $entities = glob($directory . DIRECTORY_SEPARATOR . '*.php');
+            array_walk($entities, function (&$value) use (&$module) {
+                $value = '' . $module . '\\Entity\\' . pathinfo($value)['filename'];
+            });
+            $install = new InstallModel($this->sm);
+            $install->installEntity($entities);
+        }
     }
 
     public function getControllerConfig() {
@@ -149,7 +175,7 @@ class Module {
         $this->config = $this->getDefaultConfig(
                 (isset($this->config['Core']) ? $this->config['Core'] : array())
         );
-        $config = \Zend\Stdlib\ArrayUtils::merge(array('Core' => $this->config), (include __DIR__ . '/config/module.config.php'));
+        $config = ArrayUtils::merge(array('Core' => $this->config), (include __DIR__ . '/config/module.config.php'));
         $config['doctrine']['driver']['Entity']['paths'][] = $this->config['EntityPath'];
 
         return $config;

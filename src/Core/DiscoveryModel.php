@@ -8,18 +8,33 @@ class DiscoveryModel {
      * @var \Doctrine\ORM\EntityManager
      */
     private $em;
+
+    /**
+     * @var \Zend\ServiceManager\ServiceManager
+     */
+    protected $_sm;
     private $params = [];
     private $method;
     private $viewMethod;
     private $rows;
     private $config;
 
-    public function __construct($em, $method, $viewMethod, $params, $config) {
-        $this->setEntityManager($em);
+    public function __construct(\Zend\ServiceManager\ServiceManager $sm, $method, $viewMethod, $params, $config) {
+        $this->setSm($sm);
+        $this->setEntityManager($sm->get('Doctrine\ORM\EntityManager'));
         $this->setMethod($method);
         $this->setViewMethod($viewMethod);
         $this->setParams($this->prepareParams($params, $method));
         $this->setConfig($config);
+    }
+
+    public function getSm() {
+        return $this->_sm;
+    }
+
+    public function setSm($sm) {
+        $this->_sm = $sm;
+        return $this;
     }
 
     public function getConfig() {
@@ -105,14 +120,17 @@ class DiscoveryModel {
 
     public function discovery($entity, $entity_parent = null, $from_form = false) {
 
-        $default_model = new Model\DefaultModel($this->getEntityManager());
+        $default_model = new Model\DefaultModel($this->getSm());
         $default_model->setConfig($this->config);
         $default_model->setEntity('Entity\\' . $entity);
-        ((isset($this->params['deep'])) ? $default_model->setMax_deep($this->params['deep']) : 0);
+        ((isset($this->params['deep'])) ? $default_model->setMaxDeep($this->params['deep']) : 0);
 
         if (!$from_form) {
+            if (!$default_model->getEntity()) {
+                Model\ErrorModel::addError('404 Not found');
+                return;
+            }
             switch ($this->getMethod()) {
-
                 case 'POST':
                     $data = $default_model->insert($this->params);
                     break;
