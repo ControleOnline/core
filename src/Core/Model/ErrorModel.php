@@ -11,7 +11,30 @@ class ErrorModel {
     }
 
     public static function addError($error, array $values = array()) {
-        self::$_errors = array_merge(is_array($error) ? $error : array(vsprintf($error, $values)), self::$_errors);
+
+        $return = $error;
+        if (!is_array($error)) {
+            $return = array('code' => self::discoveryErrorCode($error), 'message' => vsprintf($error, $values));
+        } elseif (!isset($error['message']) || !isset($error['code'])) {
+            foreach ($error AS $key => $e) {
+                $return[$key]['code'] = self::discoveryErrorCode($e);
+                $return[$key]['message'] = vsprintf($e, $values);
+            }
+        } else {
+            $return['code'] = $error['code'];
+            $return['message'] = vsprintf($error['message'], $values);
+        }
+        self::$_errors[] = $return;
+    }
+
+    public static function discoveryErrorCode($error) {
+        return 0;
+    }
+
+    public function __destruct() {
+        foreach (self::getErrors() AS $error) {
+            throw new \Exception($error);
+        }
     }
 
 }

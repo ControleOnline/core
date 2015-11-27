@@ -6,6 +6,7 @@ use Core\DiscoveryModel;
 use Zend\View\Model\ViewModel;
 use Core\Model\ErrorModel;
 use Core\Controller\AbstractController;
+use Core\Helper\Format;
 
 class DefaultController extends AbstractController {
 
@@ -34,16 +35,13 @@ class DefaultController extends AbstractController {
 
     protected function detectViewMethod() {
         $request = $this->getRequest();
-        $headers = $request->getHeaders();
         $uri = $request->getUri()->getPath();
         $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod'));
-        if ($headers->has('accept')) {
-            $viewMethod_request = 'json';
-        } else {
+        if (!$viewMethod_request) {
             foreach ($this->_allowed_viewMethods AS $compare) {
                 $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
                 if ($return) {
-                    $viewMethod_request = $return;
+                    $viewMethod_request = $compare;
                 }
             }
         }
@@ -69,24 +67,11 @@ class DefaultController extends AbstractController {
     }
 
     private function alterData() {
-        $return = [];
-        $data = $this->_model->discovery($this->_entity);
-        if ($data) {
-            $return['success'] = true;
-        } else {
-            $return['error']['code'] = 0;
-            $return['error']['message'] = 'No register with this ID';
-            $return['success'] = false;
-        }
-        return $return;
+        return Format::returnData($this->_model->discovery($this->_entity));
     }
 
     private function insertData() {
-        $data = $this->_model->discovery($this->_entity);
-        $return = array(
-            'data' => $data
-        );
-        return $return;
+        return Format::returnData($this->_model->discovery($this->_entity));
     }
 
     private function getDataById($id) {
@@ -110,7 +95,7 @@ class DefaultController extends AbstractController {
                 'page' => (int) $page
             );
         }
-        return $return;
+        return Format::returnData($return);
     }
 
     private function getAllData() {
@@ -123,7 +108,7 @@ class DefaultController extends AbstractController {
             'total' => (int) $this->_model->getTotalResults(),
             'page' => (int) $page
         );
-        return $return;
+        return Format::returnData($return);
     }
 
     private function getData() {
@@ -143,13 +128,13 @@ class DefaultController extends AbstractController {
             switch ($this->_method) {
                 case 'DELETE':
                 case 'PUT':
-                    $return['response'] = $this->alterData();
+                    $return = $this->alterData();
                     break;
                 case 'POST':
-                    $return['response'] = $this->insertData();
+                    $return = $this->insertData();
                     break;
                 case 'GET':
-                    $return['response'] = ($this->_viewMethod == 'form') ? [] : $this->getData();
+                    $return = ($this->_viewMethod == 'form') ? [] : $this->getData();
                     break;
             }
             switch ($this->_viewMethod) {
@@ -159,13 +144,6 @@ class DefaultController extends AbstractController {
             }
             $return['response']['method'] = $this->_method;
             $return['response']['view_method'] = $this->_viewMethod;
-            $return['response']['success'] = isset($return['success']) ? $return['success'] : true;
-
-            if (ErrorModel::getErrors()) {
-                foreach (ErrorModel::getErrors() AS $error) {
-                    throw new \Exception($error);
-                }
-            }
         } catch (\Exception $e) {
             $return = array('response' => array('error' => array('code' => $e->getCode(), 'message' => $e->getMessage()), 'success' => false));
         }

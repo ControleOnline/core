@@ -7,12 +7,12 @@ use Core\Helper\Url;
 
 class DiscoveryRoute {
 
+    protected static $_url;
     protected $_controller;
     protected $_module;
     protected $_action;
     protected $_entity;
     protected $_vars;
-    protected $_url;
     protected $_defaultRoute;
     protected $_EntityChildren;
 
@@ -75,13 +75,13 @@ class DiscoveryRoute {
         $defaultRoute = $this->getDefaultRoute();
         $class = $this->formatClass($class_name, 'Controller', $module) . 'Controller';
         $url = $this->getUrl();
-        if (!class_exists($class)) {            
+        if (!class_exists($class)) {
             $class = $this->formatClass($defaultRoute['controller'], 'Controller', $module) . 'Controller';
-            unset($url[0]);
-        } else {            
-            unset($url[0]);
-            unset($url[1]);
-        }        
+            //unset($url[0]);
+        } else {
+            $url = $this->removeClassFromUrl($this->getUrl(), $module);
+            $url = $this->removeClassFromUrl($this->getUrl(), $class_name);
+        }
         $this->setUrl($url);
         return $class;
     }
@@ -95,8 +95,7 @@ class DiscoveryRoute {
 
         if (method_exists($testClass, $action . 'Action')) {
             $this->setAction($action);
-            $url = $this->getUrl();
-            unset($url[0]);
+            $url = $this->removeClassFromUrl($this->getUrl(), $action);
             $this->setUrl($url);
         } else {
             $this->setAction($defaultRoute['action']);
@@ -145,7 +144,7 @@ class DiscoveryRoute {
     }
 
     public function getUrl() {
-        return array_values($this->_url);
+        return array_values(self::$_url);
     }
 
     public function setController($controller) {
@@ -179,7 +178,7 @@ class DiscoveryRoute {
         } else {
             $routes = array_filter(explode('/', $url));
         }
-        $this->_url = array_values($routes);
+        self::$_url = array_values($routes);
         return $this;
     }
 
@@ -199,6 +198,13 @@ class DiscoveryRoute {
     public function setEntityChildren($EntityChildren) {
         $this->_EntityChildren = $EntityChildren;
         return $this;
+    }
+
+    protected function removeClassFromUrl($url, $name = null, $index = 0) {
+        if (is_array($url) && (!$name || strtolower($name) == strtolower($url[$index]))) {
+            unset($url[$index]);
+        }
+        return $url;
     }
 
 }

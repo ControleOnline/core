@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Core\Model\ErrorModel;
+
 class DiscoveryModel {
 
     /**
@@ -22,7 +24,7 @@ class DiscoveryModel {
     public function __construct(\Zend\ServiceManager\ServiceManager $sm, $method, $viewMethod, $params, $config) {
         $this->setSm($sm);
         $this->setEntityManager($sm->get('Doctrine\ORM\EntityManager'));
-        $this->setMethod($method);
+        $this->setMethod($method);       
         $this->setViewMethod($viewMethod);
         $this->setParams($this->prepareParams($params, $method));
         $this->setConfig($config);
@@ -127,7 +129,7 @@ class DiscoveryModel {
 
         if (!$from_form) {
             if (!$default_model->getEntity()) {
-                Model\ErrorModel::addError('404 Not found');
+                ErrorModel::addError(array('code' => '404', 'message' => 'Error 404: %1$s %2$s not found'), array('Entity', $default_model->getEntityName()));
                 return;
             }
             switch ($this->getMethod()) {

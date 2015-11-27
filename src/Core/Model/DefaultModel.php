@@ -114,16 +114,24 @@ class DefaultModel {
     }
 
     public function edit(array $params) {
-        if (isset($params['id'])) {
-            $entity = $this->entity->find($params['id']);
-            if (isset($entity) && $entity) {
-                $entity = $this->setData($entity, $params);
-                $this->_em->persist($entity);
-                $this->_em->flush();
-                return true;
-            } else {
-                return false;
-            }
+        if (!isset($params['id'])) {
+            ErrorModel::addError(array('code' => 'need_id_for_this_operation', 'message' => 'Need id for this operation'));
+            return;
+        }
+        $entity = $this->entity->find($params['id']);
+        if (!$entity) {
+            ErrorModel::addError(array('code' => 'no_register_with_this_id', 'message' => 'No register with this ID: %1$s'), array($params['id']));
+            return;
+        }
+        try {
+            $insert = $this->setData($entity, $params);
+            $this->_em->persist($insert);
+            $this->_em->flush();
+            return $this->toArray($insert);
+        } catch (Exception $e) {
+            ErrorModel::addError(array('code' => $e->getCode(), 'message' => 'Error on edit this data'));
+            ErrorModel::addError(array('code' => $e->getCode(), 'message' => $e->getMessage()));
+            $this->_em->rollback();
         }
     }
 
@@ -135,12 +143,17 @@ class DefaultModel {
     }
 
     public function insert(array $params) {
-        $class = new $this->entity_name;
-        $entity = $this->setData($class, $params);
-        $this->_em->persist($entity);
-        $this->_em->flush();
-       // $this->_em->rollback();
-        return array('id' => $entity->getId());
+        try {
+            $class = new $this->entity_name;
+            $entity = $this->setData($class, $params);
+            $this->_em->persist($entity);
+            $this->_em->flush();
+            return $this->toArray($entity);
+        } catch (Exception $e) {
+            ErrorModel::addError(array('code' => 'no_insert_this_data', 'message' => 'Not insert this data'));
+            ErrorModel::addError(array('code' => $e->getCode(), 'message' => $e->getMessage()));
+            $this->_em->rollback();
+        }
     }
 
     public function setData($entity, $params) {
@@ -259,6 +272,15 @@ class DefaultModel {
 
     public function setSm($sm) {
         $this->_sm = $sm;
+        return $this;
+    }
+
+    public function getEntityName() {
+        return $this->entity_name;
+    }
+
+    public function setEntityName($entity_name) {
+        $this->entity_name = $entity_name;
         return $this;
     }
 
