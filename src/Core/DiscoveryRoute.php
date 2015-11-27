@@ -201,7 +201,7 @@ class DiscoveryRoute {
     }
 
     protected function removeClassFromUrl($url, $name = null, $index = 0) {
-        if (is_array($url) && (!$name || strtolower($name) == strtolower($url[$index]))) {
+        if (is_array($url) && array_key_exists($index, $url)&&(!$name || strtolower($name) == strtolower($url[$index]))) {
             unset($url[$index]);
         }
         return $url;
