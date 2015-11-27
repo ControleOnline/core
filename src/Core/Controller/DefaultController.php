@@ -75,40 +75,18 @@ class DefaultController extends AbstractController {
     }
 
     private function getDataById($id) {
-        $return = [];
-        $page = $this->params()->fromQuery('page') ? : 1;
         if ($this->_entity_children) {
             $this->_model->setMethod('GET');
             $data = $this->_model->discovery($this->_entity_children, $this->_entity);
-            $return = array(
-                'data' => $data,
-                'count' => isset($data[strtolower($this->_entity)][0][strtolower($this->_entity_children)]) ? count($data[strtolower($this->_entity)][0][strtolower($this->_entity_children)]) : 0,
-                'total' => (int) $this->_model->getTotalResults(),
-                'page' => (int) $page
-            );
         } elseif ($id) {
             $data = $this->_model->discovery($this->_entity);
-            $return = array(
-                'data' => $data,
-                'count' => isset($data[strtolower($this->_entity)]) ? count($data[strtolower($this->_entity)]) : 0,
-                'total' => (int) $this->_model->getTotalResults(),
-                'page' => (int) $page
-            );
         }
-        return Format::returnData($return);
+        return Format::returnData($data, $this->params()->fromQuery('page')? : 1, $this->_model->getTotalResults());
     }
 
     private function getAllData() {
-        $page = $this->params()->fromQuery('page') ? : 1;
         $data = $this->_model->discovery($this->_entity);
-
-        $return = array(
-            'data' => $data,
-            'count' => count($data[strtolower($this->_entity)]),
-            'total' => (int) $this->_model->getTotalResults(),
-            'page' => (int) $page
-        );
-        return Format::returnData($return);
+        return Format::returnData($data, $this->params()->fromQuery('page')? : 1, $this->_model->getTotalResults());
     }
 
     private function getData() {
