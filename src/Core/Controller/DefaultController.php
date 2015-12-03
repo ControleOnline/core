@@ -11,7 +11,7 @@ use Core\Helper\Format;
 class DefaultController extends AbstractController {
 
     protected $_allowed_methods = array('GET', 'POST', 'PUT', 'DELETE', 'FORM');
-    protected $_allowed_viewMethods = array('json', 'html', 'form');
+    protected $_allowed_view_methods = array('json', 'html', 'form');
     protected $_method;
     protected $_viewMethod;
     protected $_model;
@@ -26,7 +26,7 @@ class DefaultController extends AbstractController {
         $viewMethod_request = $this->detectViewMethod();
         $this->_config = $this->getServiceLocator()->get('Config');
         $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
-        $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_viewMethods) ? $viewMethod_request : 'html';
+        $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_view_methods) ? $viewMethod_request : 'html';
         $this->_model = new DiscoveryModel($this->getServiceLocator(), $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
         $this->_view = new ViewModel();
         $this->_entity_children = $this->params('entity_children');
@@ -38,7 +38,7 @@ class DefaultController extends AbstractController {
         $uri = $request->getUri()->getPath();
         $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod'));
         if (!$viewMethod_request) {
-            foreach ($this->_allowed_viewMethods AS $compare) {
+            foreach ($this->_allowed_view_methods AS $compare) {
                 $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
                 if ($return) {
                     $viewMethod_request = $compare;

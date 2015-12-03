@@ -40,7 +40,7 @@ class DiscoveryRoute {
     private function getMethodType($uri, array $search = array('json', 'form')) {
         foreach ($search AS $compare) {
             $c = '.' . $compare;
-            $method = substr_compare($uri, $c, strlen($uri) - strlen($c), strlen($c)) === 0;
+            $method = substr_compare($uri->getPath(), $c, strlen($uri->getPath()) - strlen($c), strlen($c)) === 0;
             $return = $method ? $compare : null;
         }
         return $return;
@@ -201,7 +201,7 @@ class DiscoveryRoute {
     }
 
     protected function removeClassFromUrl($url, $name = null, $index = 0) {
-        if (is_array($url) && array_key_exists($index, $url)&&(!$name || strtolower($name) == strtolower($url[$index]))) {
+        if (is_array($url) && array_key_exists($index, $url) && (!$name || strtolower($name) == strtolower($url[$index]))) {
             unset($url[$index]);
         }
         return $url;

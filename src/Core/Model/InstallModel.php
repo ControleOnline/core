@@ -5,6 +5,7 @@ namespace Core\Model;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Core\Helper\String;
+use Core\DiscoveryEntity;
 
 class InstallModel {
 
@@ -68,7 +69,17 @@ class InstallModel {
                         return $query;
                     }
                 })? : array());
+
         return $this->persist($queries? : array());
+    }
+
+    protected function checkEntities($queries) {
+        $config = $this->_sm->get('config');
+        if (isset($config['doctrine']['connection']['orm_default']['params']) && $queries) {
+            $dbConfig = $config['doctrine']['connection']['orm_default']['params'];
+            $entity = new DiscoveryEntity($this->_em, $dbConfig, $config);
+            $entity->checkEntities();
+        }
     }
 
     public function updateEntity(array $entity) {
@@ -85,6 +96,7 @@ class InstallModel {
         foreach ($queries AS $query) {
             $this->_em->getConnection()->prepare($query)->execute();
         }
+        $this->checkEntities($queries);
     }
 
     protected function getSm() {

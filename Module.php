@@ -119,7 +119,7 @@ class Module {
                 $value = '' . $module . '\\Entity\\' . pathinfo($value)['filename'];
             });
             $install = new InstallModel($this->sm);
-            //$install->installEntity($entities);
+            $install->installEntity($entities);
         }
     }
 
