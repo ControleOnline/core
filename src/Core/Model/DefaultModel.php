@@ -98,7 +98,7 @@ class DefaultModel {
             $return['childs'][$a]['fields'] = $this->getMetadata('Entity\\' . ucfirst($a))->fieldMappings;
         }
         $data = (isset($params['id']) && $params['id']) ? $this->get($params['id']) : null;
-        $return['data'] = isset($data[strtolower($entity)]) ? $data[strtolower($entity)][0] : null;
+        $return['data'] = isset($data[strtolower($entity)]) && isset($data[strtolower($entity)][0]) ? $data[strtolower($entity)][0] : null;
         return $return;
     }
 

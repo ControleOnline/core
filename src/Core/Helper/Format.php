@@ -12,10 +12,10 @@ class Format {
             $return['error'] = ErrorModel::getErrors();
             $return['success'] = false;
         } else {
-            array_key_exists('data', $data) ? $return = $data : ($data ? $return['data'] = $data : false);
+            is_array($data) && array_key_exists('data', $data) ? $return = $data : ($data ? $return['data'] = $data : $return = false);
             $total_results ? $return['total'] = $total_results : false;
             $total_results ? $return['page'] = (int) $page : false;
-            $return['count'] = (int) count($return['data'][array_shift(array_keys($return['data']))]);
+            $return['data'] ? ($return['count'] = (int) count(is_array($return['data']) ? $return['data'][array_shift(array_keys($return['data']))] : $return['data'])) : false;
             $return['success'] = true;
         }
         return array('response' => $return);
