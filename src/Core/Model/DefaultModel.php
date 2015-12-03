@@ -80,22 +80,22 @@ class DefaultModel {
         return $this->entity;
     }
 
-    public function getMetadata() {
+    public function getMetadata($entity_name) {
         $cmf = new \Doctrine\ORM\Tools\DisconnectedClassMetadataFactory();
         $cmf->setEntityManager($this->_em);
-        return $cmf->getMetadataFor($this->entity_name);
+        return $cmf->getMetadataFor($entity_name);
     }
 
     public function form($entity, $params = false) {
         $return = [];
         $return['form_name'] = strtolower($entity);
-        $metadata = $this->getMetadata();
+        $metadata = $this->getMetadata($this->entity_name);
         if ($metadata->fieldMappings) {
             $return['fields'] = $metadata->fieldMappings;
         }
-        $assoc = $this->getAssociationNames();
-        if ($assoc) {
-            $return['assoc'] = $assoc;
+        $assoc = $this->getAssociationNames()? : array();
+        foreach ($assoc AS $a) {
+            $return['childs'][$a]['fields'] = $this->getMetadata('Entity\\' . ucfirst($a))->fieldMappings;
         }
         $data = (isset($params['id']) && $params['id']) ? $this->get($params['id']) : null;
         $return['data'] = isset($data[strtolower($entity)]) ? $data[strtolower($entity)][0] : null;
@@ -127,7 +127,7 @@ class DefaultModel {
             $insert = $this->setData($entity, $params);
             $this->_em->persist($insert);
             $this->_em->flush();
-            return $this->toArray($insert);
+            return $this->get($insert->getId());
         } catch (Exception $e) {
             ErrorModel::addError(array('code' => $e->getCode(), 'message' => 'Error on edit this data'));
             ErrorModel::addError(array('code' => $e->getCode(), 'message' => $e->getMessage()));
@@ -148,7 +148,7 @@ class DefaultModel {
             $entity = $this->setData($class, $params);
             $this->_em->persist($entity);
             $this->_em->flush();
-            return $this->toArray($entity);
+            return $this->get($entity->getId());
         } catch (Exception $e) {
             ErrorModel::addError(array('code' => 'no_insert_this_data', 'message' => 'Not insert this data'));
             ErrorModel::addError(array('code' => $e->getCode(), 'message' => $e->getMessage()));

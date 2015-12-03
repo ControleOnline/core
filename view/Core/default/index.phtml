@@ -1,58 +1,10 @@
-<?php if (isset($response['form']) && $response['form']) { ?>
-    <?php if (isset($response['form']['children'])): ?>
-        <form onSubmit="if (!confirm('Really remove this <?= ucfirst($response['form']['form_name']) ?>?')) {
-                    return false;
-                }" action="<?= ((isset($response['form']['data']) && isset($response['form']['data']['id']) && $response['form']['data']['id']) ? '/' . $response['form']['form_name'] . '/id/' . $response['form']['data']['id'] : '/' . $response['form']['form_name'] ) . '.form' ?>" method="POST" name="form-<?= $response['form']['children']['form_name'] ?>">        
-            <input name="method" value="<?= $response['form']['method'] ?>" type="hidden">
-            <div class="form-group">        
-                <label id="label-<?= $response['form']['form_name'] ?>" for="input-<?= $response['form']['form_name'] ?>"><?= ucfirst($response['form']['form_name']) ?>: </label>
-                <input id="input-<?= $response['form']['form_name'] ?>" name="<?= $response['form']['form_name'] ?>_id" type="hidden" value="<?= $response['form']['id'] ?>" disabled>            
-                <p class="form-control-static"><?= $response['form']['id'] ?></p>
-            </div>
-            <?php foreach ($response['form']['children']['fields'] as $key => $fields): ?>
-                <div class="form-group">
-                    <label id="label-<?= $key ?>" for="input-<?= $key ?>"><?= ucfirst($key) ?>: </label>
-                    <input id="input-<?= $key ?>" value="<?= (isset($response['form']['data']) && isset($response['form']['data'][strtolower($key)])) ? $response['form']['data'][strtolower($key)] : null ?>" name="<?= $key ?>" type="text" data-propreties='<?= json_encode($fields) ?>' placeholder="Enter <?= ucfirst($key) ?>">
-                </div>
-            <?php endforeach ?>
-            <button type="submit" class="btn btn-default">Save</button>
-        </form>    
-        <?php if (isset($response['form']['data']) && isset($response['form']['data']['id']) && $response['form']['data']['id']) { ?>
-            <form action="<?= '/' . $response['form']['form_name'] . '.html' ?>" method="POST" name="form-<?= $response['form']['form_name'] ?>" role="form">
-                <input name="method" value="DELETE" type="hidden"> 
-                <input value="<?= $response['form']['data']['id'] ?>" id="delete-id" name="id" type="hidden">
-                <button type="submit" class="btn btn-default">Delete</button>   
-            </form>
-        <?php } ?>
-    <?php elseif (isset($response['form']['fields'])): ?>
-        <form action="<?= ((isset($response['form']['data']) && isset($response['form']['data']['id']) && $response['form']['data']['id']) ? '/' . $response['form']['form_name'] . '/id/' . $response['form']['data']['id'] : '/' . $response['form']['form_name'] ) . '.form' ?>" method="POST" name="form-<?= $response['form']['form_name'] ?>" role="form">
-            <input name="method" value="<?= $response['form']['method'] ?>" type="hidden">         
-            <?php foreach ($response['form']['fields'] as $key => $fields): ?>
-                <?php if ($key == 'id') { ?>
-                    <input value="<?= (isset($response['form']['data']) && isset($response['form']['data'][strtolower($key)])) ? $response['form']['data'][strtolower($key)] : null ?>" id="input-<?= $key ?>" name="<?= $key ?>" type="hidden" data-propreties='<?= json_encode($fields) ?>' placeholder="Enter <?= ucfirst($key) ?>">
-                <?php } else { ?>
-                    <div class="form-group">
-                        <label id="label-<?= $key ?>" for="input-<?= $key ?>"><?= ucfirst($key) ?>: </label>
-                        <input value="<?= (isset($response['form']['data']) && isset($response['form']['data'][strtolower($key)])) ? $response['form']['data'][strtolower($key)] : null ?>" id="input-<?= $key ?>" name="<?= $key ?>" type="text" data-propreties='<?= json_encode($fields) ?>' placeholder="Enter <?= ucfirst($key) ?>">
-                    </div>
-                <?php } ?>
-            <?php endforeach ?>        
-            <button type="submit" class="btn btn-default">Save</button>        
-        </form>
-        <?php if (isset($response['form']['data']) && isset($response['form']['data']['id']) && $response['form']['data']['id']) { ?>
-            <form onSubmit="if (!confirm('Really remove this <?= ucfirst($response['form']['form_name']) ?>?')) {
-                        return false;
-                    }" action="<?= '/' . $response['form']['form_name'] . '.html' ?>" method="POST" name="form-<?= $response['form']['form_name'] ?>" role="form">
-                <input name="method" value="DELETE" type="hidden"> 
-                <input value="<?= $response['form']['data']['id'] ?>" id="delete-id" name="id" type="hidden">
-                <button type="submit" class="btn btn-default">Delete</button>   
-            </form>
-        <?php } ?>
-    <?php endif; ?>
-<?php } else { ?>
-    <pre>
-        <?php
-        print_r($response);
-        ?>
-    </pre>
-<?php } ?>
+<?php
+
+if (isset($response['form']) && $response['form']) {
+    $form = $response['form'];
+    include(dirname(__FILE__) . '/form.phtml');
+} else {
+    echo '<pre>';
+    print_r($response);
+    echo '</pre>';
+} 

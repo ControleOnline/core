@@ -78,7 +78,7 @@ class InstallModel {
         if (isset($config['doctrine']['connection']['orm_default']['params']) && $queries) {
             $dbConfig = $config['doctrine']['connection']['orm_default']['params'];
             $entity = new DiscoveryEntity($this->_em, $dbConfig, $config);
-            $entity->checkEntities();
+            $entity->checkEntities(true);
         }
     }
 

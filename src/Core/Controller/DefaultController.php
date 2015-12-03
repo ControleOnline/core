@@ -50,6 +50,7 @@ class DefaultController extends AbstractController {
     }
 
     private function getForm($entity_id = null) {
+
         $return = [];
         $id = $entity_id ? : $this->params()->fromQuery('id');
         $this->_model->setViewMethod('form');
