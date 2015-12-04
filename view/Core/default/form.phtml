@@ -3,7 +3,7 @@ $data = isset($form['data']) ? $form['data'] : array();
 $fields = isset($form['fields']) ? $form['fields'] : array();
 if ($fields) {
     ?>
-    <form action="<?= ((isset($data['id']) && $data['id']) ? '/' . $form['form_name'] . '/id/' . $data['id'] : '/' . $form['form_name'] ) . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form">
+    <form class="api-form" action="<?= '/' . ((isset($data['id']) && $data['id']) ? $form['form_name'] . '/id/' . $data['id'] : $form['form_name'] ) . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form" data-childs='<?= json_encode(array_keys($form['childs'])) ?>'>
         <input name="method" value="<?= $form['method'] ?>" type="hidden">         
         <?php foreach ($fields AS $key => $field) { ?>
             <?php if ($key == 'id') { ?>
@@ -18,9 +18,7 @@ if ($fields) {
         <button type="submit" class="btn btn-default">Save</button>        
     </form>
     <?php if (isset($data) && isset($data['id']) && $data['id']) { ?>
-        <form onSubmit="if (!confirm('Really remove this <?= ucfirst($form['form_name']) ?>?')) {
-                    return false;
-                }" action="<?= '/' . $form['form_name'] . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form">
+        <form onSubmit="return confirmDelete('<?= ucfirst($form['form_name']) ?>')" action="<?= '/' . $form['form_name'] . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form">
             <input name="method" value="DELETE" type="hidden"> 
             <input value="<?= $data['id'] ?>" id="delete-id" name="id" type="hidden">
             <button type="submit" class="btn btn-default">Delete</button>   
@@ -28,7 +26,11 @@ if ($fields) {
         <?php
     }
 }
-echo '<pre>';
-print_r($form['childs']);
-echo '</pre>';
 ?>
+<script>
+    function confirmDelete(name) {
+        if (!confirm('Really remove this ' + name + '?')) {
+            return false;
+        }
+    }
+</script>

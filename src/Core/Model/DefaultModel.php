@@ -107,6 +107,7 @@ class DefaultModel {
         if ($entity) {
             $this->_em->remove($entity);
             $this->_em->flush();
+            $this->_em->clear();
             return true;
         } else {
             return false;
@@ -127,6 +128,7 @@ class DefaultModel {
             $insert = $this->setData($entity, $params);
             $this->_em->persist($insert);
             $this->_em->flush();
+            $this->_em->clear();
             return $this->get($insert->getId());
         } catch (Exception $e) {
             ErrorModel::addError(array('code' => $e->getCode(), 'message' => 'Error on edit this data'));
@@ -148,6 +150,7 @@ class DefaultModel {
             $entity = $this->setData($class, $params);
             $this->_em->persist($entity);
             $this->_em->flush();
+            $this->_em->clear();
             return $this->get($entity->getId());
         } catch (Exception $e) {
             ErrorModel::addError(array('code' => 'no_insert_this_data', 'message' => 'Not insert this data'));
