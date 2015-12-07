@@ -121,7 +121,7 @@ class DefaultModel {
         }
         $entity = $this->entity->find($params['id']);
         if (!$entity) {
-            ErrorModel::addError(array('code' => 'no_register_with_this_id', 'message' => 'No register with this ID: %1$s'), array($params['id']));
+            ErrorModel::addError(array('code' => 'no_register_with_this_id', 'message' => 'No register with this ID: %1$s', 'values' => array($params['id'])));
             return;
         }
         try {

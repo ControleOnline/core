@@ -10,25 +10,29 @@ class ErrorModel {
         return self::$_errors;
     }
 
-    public static function addError($error, array $values = array()) {
+    public static function addError($error) {
 
         $return = $error;
         if (!is_array($error)) {
-            $return = array('code' => self::discoveryErrorCode($error), 'message' => vsprintf($error, $values));
-        } elseif (!isset($error['message']) || !isset($error['code'])) {
-            foreach ($error AS $key => $e) {
-                $return[$key]['code'] = self::discoveryErrorCode($e);
-                $return[$key]['message'] = vsprintf($e, $values);
+            $return['code'] = self::discoveryErrorCode($error);
+            $return['message'] = self::discoveryMessage($return['code'], $error, null);
+        } elseif (!isset($error['message']) && !isset($error['code'])) {
+            foreach ($error AS $e) {
+                $return = self::discoveryErrorCode($e);
             }
         } else {
-            $return['code'] = $error['code'];
-            $return['message'] = vsprintf($error['message'], $values);
+            $return['code'] = isset($error['code']) ? $error['code'] : self::discoveryErrorCode($error['message']);
+            $return['message'] = self::discoveryMessage($return['code'], $error['message'], isset($error['values']) ? $error['values'] : array());
         }
         self::$_errors[] = $return;
     }
 
-    public static function discoveryErrorCode($error) {
-        return 0;
+    public static function discoveryErrorCode($message) {
+        return md5($message);
+    }
+
+    public static function discoveryMessage($code, $message, array $values = array()) {
+        return vsprintf($message, $values);
     }
 
     public function __destruct() {
