@@ -20,10 +20,10 @@
         "component-dir": "public/components"
     },
     "require": {
-        "php": ">=5.5",
+        "php": "~7.0",
         "zendframework/zendframework": "~2.0",
         "doctrine/doctrine-orm-module": "~0.7.0",
-        "doctrine/migrations": "dev-master"
+        "doctrine/migrations": "*"
     },
     "suggest": {
         "ControleOnline/rest-essentials": "Automatic create your REST API",
