@@ -2,12 +2,6 @@
 
 namespace Core;
 
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Session\SaveHandler\DbTableGateway;
-use Zend\Session\SaveHandler\DbTableGatewayOptions;
-use Zend\Session;
-use Zend\Session\SessionManager;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\MvcEvent;
@@ -15,6 +9,9 @@ use Zend\Http\Response;
 use Zend\Json\Json;
 use Core\Helper\Url;
 use Core\Model\InstallModel;
+use Zend\ModuleManager\ModuleManagerInterface;
+use Zend\ModuleManager\ModuleEvent;
+use Zend\ModuleManager\ModuleManager;
 
 class Module {
 
@@ -36,10 +33,10 @@ class Module {
         $this->sm = $e->getApplication()->getServiceManager();
         $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
         $config = $this->sm->get('config');
-        
+
         $storage = $e->getApplication()->getServiceManager()->get('Core\Storage\SessionStorage');
         $storage->setSessionStorage();
-        
+
         $this->config = $this->getDefaultConfig(
                 (isset($config['Core']) ? $config['Core'] : array())
         );
@@ -87,7 +84,8 @@ class Module {
     }
 
     public function init(\Zend\ModuleManager\ModuleManager $mm) {
-
+        $sharedManager = $mm->getEventManager()->getSharedManager();
+        $sharedManager->attach(get_class($mm), ModuleEvent::EVENT_LOAD_MODULES_POST, new Listener\ModuleLoaderListener(), 9000);
         $config = $this->getDefaultConfig($this->config);
         $uri = array_values(array_filter(explode('/', $_SERVER['REQUEST_URI'])));
         if (isset($uri[0]) && isset($uri[1])) {

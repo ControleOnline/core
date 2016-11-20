@@ -25,8 +25,6 @@ class DiscoveryEntity {
         if ($force && is_dir($this->entityFolder . DIRECTORY_SEPARATOR . 'Entity')) {
             $this->rrmdir($this->entityFolder . DIRECTORY_SEPARATOR . 'Entity');
         }
-        is_dir($this->entityFolder . DIRECTORY_SEPARATOR . 'Entity')? : mkdir($this->entityFolder . DIRECTORY_SEPARATOR . 'Entity', 0777, true);
-        is_dir($this->entityFolder . DIRECTORY_SEPARATOR . 'proxies')? : mkdir($this->entityFolder . DIRECTORY_SEPARATOR . 'proxies', 0777, true);
     }
 
     protected function rrmdir($dir) {
