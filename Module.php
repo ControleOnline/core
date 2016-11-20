@@ -2,6 +2,12 @@
 
 namespace Core;
 
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Session\SaveHandler\DbTableGateway;
+use Zend\Session\SaveHandler\DbTableGatewayOptions;
+use Zend\Session;
+use Zend\Session\SessionManager;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Mvc\MvcEvent;
@@ -30,7 +36,10 @@ class Module {
         $this->sm = $e->getApplication()->getServiceManager();
         $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
         $config = $this->sm->get('config');
-
+        
+        $storage = $e->getApplication()->getServiceManager()->get('Core\Storage\SessionStorage');
+        $storage->setSessionStorage();
+        
         $this->config = $this->getDefaultConfig(
                 (isset($config['Core']) ? $config['Core'] : array())
         );

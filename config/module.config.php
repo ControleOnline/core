@@ -1,6 +1,13 @@
 <?php
 
 return array(
+
+    'service_manager' => array(
+        'factories' => array(
+            'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
+            'Core\Storage\SessionStorage' => 'Core\Factory\SessionFactory',
+        )
+    ),
     'controllers' => array(
         'invokables' => array(
             'Core\Controller\Default' => 'Core\Controller\DefaultController',
