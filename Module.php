@@ -50,7 +50,7 @@ class Module {
             $entity->checkEntities();
         }
         $this->configDefaultViewOptions($eventManager);
-        $this->installEntities();
+        //$this->installEntities();
     }
 
     private function addDefaultTemplates($event, $baseDirs) {

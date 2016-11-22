@@ -2,7 +2,7 @@
 
 namespace Core\Helper;
 
-class String {
+class StringHelper {
 
     public static function decamelize($word) {
         return preg_replace(

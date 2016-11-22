@@ -15,7 +15,7 @@ class ErrorModel {
         $return = $error;
         if (!is_array($error)) {
             $return['code'] = self::discoveryErrorCode($error);
-            $return['message'] = self::discoveryMessage($return['code'], $error, null);
+            $return['message'] = self::discoveryMessage($return['code'], $error);
         } elseif (!isset($error['message']) && !isset($error['code'])) {
             foreach ($error AS $e) {
                 $return = self::discoveryErrorCode($e);

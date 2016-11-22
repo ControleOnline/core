@@ -22,7 +22,7 @@ class DefaultController extends AbstractController {
 
     private function initialize() {
 
-        $method_request = strtoupper($this->params()->fromQuery('method') ? : filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
+        $method_request = strtoupper($this->params()->fromQuery('method') ?: filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
         $viewMethod_request = $this->detectViewMethod();
         $this->_config = $this->getServiceLocator()->get('Config');
         $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
@@ -36,23 +36,22 @@ class DefaultController extends AbstractController {
     protected function detectViewMethod() {
         $request = $this->getRequest();
         $uri = $request->getUri()->getPath();
-        $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod'));
-        if (!$viewMethod_request) {
-            foreach ($this->_allowed_view_methods AS $compare) {
-                $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
-                if ($return) {
-                    $viewMethod_request = $compare;
-                }
+        foreach ($this->_allowed_view_methods AS $compare) {
+            $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
+            if ($return) {
+                $viewMethod_request = $compare;
             }
         }
-
+        if (!isset($viewMethod_request)) {
+            $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod')) ?: 'html';
+        }
         return $viewMethod_request;
     }
 
     private function getForm($entity_id = null) {
 
         $return = [];
-        $id = $entity_id ? : $this->params()->fromQuery('id');
+        $id = $entity_id ?: $this->params()->fromQuery('id');
         $this->_model->setViewMethod('form');
         $this->_model->setParam('id', $id);
         $this->_view->setTerminal(true);
@@ -82,12 +81,12 @@ class DefaultController extends AbstractController {
         } elseif ($id) {
             $data = $this->_model->discovery($this->_entity);
         }
-        return Format::returnData($data, $this->params()->fromQuery('page')? : 1, $this->_model->getTotalResults());
+        return Format::returnData($data, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
     }
 
     private function getAllData() {
         $data = $this->_model->discovery($this->_entity);
-        return Format::returnData($data, $this->params()->fromQuery('page')? : 1, $this->_model->getTotalResults());
+        return Format::returnData($data, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
     }
 
     private function getData() {

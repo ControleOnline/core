@@ -4,7 +4,7 @@ namespace Core\Model;
 
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
-use Core\Helper\String;
+use Core\Helper\StringHelper;
 use Core\DiscoveryEntity;
 
 class InstallModel {
@@ -40,7 +40,7 @@ class InstallModel {
     }
 
     protected function getTableName($entity) {
-        return String::decamelize(end(explode('\\', $entity)));
+        return StringHelper::decamelize(end(explode('\\', $entity)));
     }
 
     protected function tableExistis($table) {

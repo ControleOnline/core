@@ -48,8 +48,8 @@ class DiscoveryRoute {
 
     public function setMethod(Request $request, $uri) {
         $method = $this->getMethodType($uri);
-        $request->getQuery()->set('viewMethod', strtolower($method? : 'html'));
-        $request->getQuery()->set('method', strtoupper($request->getQuery()->get('method')? : $request->getPost()->get('method')? : filter_input(INPUT_SERVER, 'REQUEST_METHOD')));
+        $request->getQuery()->set('viewMethod', strtolower($method ?: 'html'));
+        $request->getQuery()->set('method', strtoupper($request->getQuery()->get('method') ?: $request->getPost()->get('method') ?: filter_input(INPUT_SERVER, 'REQUEST_METHOD')));
     }
 
     protected function formatClass($class, $type, $module = null) {
@@ -89,10 +89,9 @@ class DiscoveryRoute {
     protected function discoveryAction() {
         $defaultRoute = $this->getDefaultRoute();
         $url = $this->getUrl();
-        $action = lcfirst($this->camelCase((isset($url[0]) ? $url[0] : $defaultRoute['action'])));
+        $action = lcfirst($this->camelCase((isset($url[1]) ? $url[1] : $defaultRoute['action'])));
         $class = $this->getController();
         $testClass = new $class();
-
         if (method_exists($testClass, $action . 'Action')) {
             $this->setAction($action);
             $url = $this->removeClassFromUrl($this->getUrl(), $action);
@@ -120,7 +119,7 @@ class DiscoveryRoute {
     }
 
     protected function camelCase($string) {
-        return str_replace(' ', '', ucfirst($string));
+        return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
     }
 
     public function getController() {
