@@ -21,9 +21,11 @@
     },
     "require": {
         "php": "~7.0",
-        "zendframework/zendframework": "~2.0",
+        "zendframework/zendframework": "~2.4",
         "doctrine/doctrine-orm-module": "~0.7.0",
-        "doctrine/migrations": "*"
+        "doctrine/migrations": "*",                        
+        "zendframework/zftool": "*",
+        "zendframework/zend-developer-tools": "*"
     },
     "suggest": {
         "ControleOnline/rest-essentials": "Automatic create your REST API",
