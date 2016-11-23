@@ -60,7 +60,7 @@ class Header {
     protected static function getSystemVersion() {
         if (is_file(getcwd() . '.version')) {
             $contents = file_get_contents(getcwd() . '.version');
-            $contents ? $version = trim(array_shift(array_values(preg_split('/\r\n|\r|\n/', $contents, 2)))) : '';
+            $version = $contents ? trim(array_shift(array_values(preg_split('/\r\n|\r|\n/', $contents, 2)))) : false;
         }
         return $version ?: date('Y-m-d-H');
     }
