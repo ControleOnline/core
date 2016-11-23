@@ -62,7 +62,7 @@ class Header {
             $contents = file_get_contents(getcwd() . '.version');
             $version = $contents ? trim(array_shift(array_values(preg_split('/\r\n|\r|\n/', $contents, 2)))) : false;
         }
-        return $version ?: date('Y-m-d-H');
+        return isset($version) && $version ? $version : date('Y-m-d-H');
     }
 
 }
