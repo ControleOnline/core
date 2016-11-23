@@ -149,3 +149,39 @@ Do not forget to return a ViewModel on your controller:
         $this->_view->setVariables(\ControleOnline\Core\Helper\Format::returnData(array('Test')));
         return $view;
 ```
+### AUTOMATIC ADD JS/CSS FILES ###
+To add your js / css files simply place them following this structure:
+```
+public/js/modules/<module>.js"
+public/js/modules/<module>/<controller>.js"
+public/js/modules/<module>/<controller>/<action>.js"
+
+
+public/css/modules/<module>.css"
+public/css/modules/<module>/<controller>.css"
+public/css/modules/<module>/<controller>/<action>.css"
+```
+
+If these files exist, they will be added in head:
+```
+<script type="text/javascript" src="/js/modules/<module>.js"></script>
+<script type="text/javascript" src="/js/modules/<module>/<controller>.js"></script>
+<script type="text/javascript" src="/js/modules/<module>/<controller>/<action>.js"></script>
+
+<link href="/css/modules/<module.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/css/modules/<module/<controller>.css" media="screen" rel="stylesheet" type="text/css">
+<link href="/css/modules/<module/<controller>/<action>.css" media="screen" rel="stylesheet" type="text/css">
+```
+
+Do not forget to keep in the layout file the call to the headers:
+```
+<html lang="en">
+    <head>
+        <?= $this->headLink() ?>
+        <?= $this->headStyle() ?>
+        <?= $this->headScript() ?>
+    </head>    
+    <body>
+    </body>
+</html>   
+```

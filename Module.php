@@ -9,9 +9,8 @@ use Zend\Http\Response;
 use Zend\Json\Json;
 use Core\Helper\Url;
 use Core\Model\InstallModel;
-use Zend\ModuleManager\ModuleManagerInterface;
 use Zend\ModuleManager\ModuleEvent;
-use Zend\ModuleManager\ModuleManager;
+use Core\Helper\Header;
 
 class Module {
 
@@ -20,6 +19,7 @@ class Module {
     protected $em;
     protected $controller;
     protected $module;
+    protected $default_route;
 
     public function getDefaultConfig($config) {
         $config['DefaultModule'] = isset($config['DefaultModule']) ? $config['DefaultModule'] : 'Home';
@@ -35,6 +35,7 @@ class Module {
         $config = $this->sm->get('config');
         $storage = $e->getApplication()->getServiceManager()->get('Core\Storage\SessionStorage');
         $storage->setSessionStorage();
+        $this->default_route = $config ['router']['routes']['default']['options']['defaults'];
         $this->config = $this->getDefaultConfig(
                 (isset($config['Core']) ? $config['Core'] : array())
         );
@@ -49,7 +50,8 @@ class Module {
         }
         $this->configDefaultViewOptions($eventManager);
         $this->setViewTerminal($e, $config['view']['terminal_sufix']);
-        //$this->installEntities();
+
+        //$this->installEntities();                
     }
 
     private function setViewTerminal(\Zend\Mvc\MvcEvent $e, array $terminal_sufix = array('.html')) {
@@ -63,6 +65,9 @@ class Module {
                     $result->setTerminal(true);
                 }
             });
+        } else {
+            $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
+            Header::addDefaultHeaderFiles($renderer, $this->default_route,$uri);
         }
     }
 

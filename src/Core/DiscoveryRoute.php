@@ -20,7 +20,7 @@ class DiscoveryRoute {
         $this->setDefaultRoute($defaultRoute);
     }
 
-    public function getRoute() {
+    public function getRoute() {        
         $return = array_merge($this->getDefaultRoute(), array(
             'path' => implode('/', $this->getUrl())
         ));
