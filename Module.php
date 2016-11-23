@@ -33,10 +33,8 @@ class Module {
         $this->sm = $e->getApplication()->getServiceManager();
         $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
         $config = $this->sm->get('config');
-
         $storage = $e->getApplication()->getServiceManager()->get('Core\Storage\SessionStorage');
         $storage->setSessionStorage();
-
         $this->config = $this->getDefaultConfig(
                 (isset($config['Core']) ? $config['Core'] : array())
         );
@@ -50,7 +48,22 @@ class Module {
             $entity->checkEntities();
         }
         $this->configDefaultViewOptions($eventManager);
+        $this->setViewTerminal($e, $config['view']['terminal_sufix']);
         //$this->installEntities();
+    }
+
+    private function setViewTerminal(\Zend\Mvc\MvcEvent $e, array $terminal_sufix = array('.html')) {
+        $uri = $e->getRequest()->getUri()->getPath();
+        $extension = '.' . strtolower(pathinfo($uri, PATHINFO_EXTENSION));
+        if (in_array($extension, $terminal_sufix)) {
+            $sharedEvents = $e->getApplication()->getEventManager()->getSharedManager();
+            $sharedEvents->attach($this->module, 'dispatch', function($e) {
+                $result = $e->getResult();
+                if ($result instanceof \Zend\View\Model\ViewModel) {
+                    $result->setTerminal(true);
+                }
+            });
+        }
     }
 
     private function addDefaultTemplates($event, $baseDirs) {

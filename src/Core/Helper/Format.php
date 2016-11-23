@@ -21,4 +21,16 @@ class Format {
         return array('response' => $return);
     }
 
+    public static function objectToSimpleObject($object) {
+        $methods = get_class_methods($object);
+        $simpleObject = new \stdClass();
+        foreach ($methods AS $method) {
+            if (preg_match('/^get/', $method)) {
+                $field = strtolower(substr($method, 3, strlen($method)));
+                is_object($object->$method()) ?: $simpleObject->$field = $object->$method();
+            }
+        }
+        return $simpleObject;
+    }
+
 }
