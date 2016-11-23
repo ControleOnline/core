@@ -13,8 +13,22 @@ https://github.com/ControleOnline/doubleclick
 https://github.com/ControleOnline/table-essentials
 https://github.com/ControleOnline/zf2-essentials
 ```
+## Installation ##
+### Composer ###
+Add these lines to your composer.json:
 
+```
+    "require": {
+        "controleonline/rest-essentials": "*"        
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "git describe --abbrev=0 --tags > .version"
+        ]
+    },
 
+```
+## Settings ##
 ### Configure DB ###
 In your config/autoload/database.local.php confiruration add the following:
 
