@@ -45,14 +45,14 @@ class Header {
 
     protected static function addJsFile(\Zend\View\Renderer\RendererInterface $renderer, $src) {
         $path = DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'modules';
-        if (is_file(self::$basepath . $path)) {
+        if (is_file(self::$basepath . $path . $src)) {
             self::addJs($renderer, $path . $src);
         }
     }
 
     protected static function addCssFile(\Zend\View\Renderer\RendererInterface $renderer, $href) {
         $path = DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'modules';
-        if (is_file(self::$basepath . $path)) {
+        if (is_file(self::$basepath . $path . $href)) {
             self::addCss($renderer, $path . $href);
         }
     }
