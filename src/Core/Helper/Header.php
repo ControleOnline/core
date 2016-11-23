@@ -46,15 +46,23 @@ class Header {
     protected static function addJsFile(\Zend\View\Renderer\RendererInterface $renderer, $src) {
         $path = DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'modules';
         if (is_file(self::$basepath . $path . $src)) {
-            self::addJs($renderer, $path . $src);
+            self::addJs($renderer, $path . $src . '?v=' . self::getSystemVersion());
         }
     }
 
     protected static function addCssFile(\Zend\View\Renderer\RendererInterface $renderer, $href) {
         $path = DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'modules';
         if (is_file(self::$basepath . $path . $href)) {
-            self::addCss($renderer, $path . $href);
+            self::addCss($renderer, $path . $href . '?v=' . self::getSystemVersion());
         }
+    }
+
+    protected static function getSystemVersion() {
+        if (is_file(getcwd() . '.version')) {
+            $contents = file_get_contents(getcwd() . '.version');
+            $contents ? $version = trim(array_shift(array_values(preg_split('/\r\n|\r|\n/', $contents, 2)))) : '';
+        }
+        return $version ?: date('Y-m-d-H');
     }
 
 }
