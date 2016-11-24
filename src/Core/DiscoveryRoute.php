@@ -79,7 +79,7 @@ class DiscoveryRoute {
             $class = $this->formatClass($defaultRoute['controller'], 'Controller', $module) . 'Controller';
             //unset($url[0]);
         } else {
-            $url = $this->removeClassFromUrl($this->getUrl(), $module);
+            //$url = $this->removeClassFromUrl($this->getUrl(), $module);
             $url = $this->removeClassFromUrl($this->getUrl(), $class_name);
         }
         $this->setUrl($url);

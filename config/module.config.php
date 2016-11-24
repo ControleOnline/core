@@ -45,6 +45,7 @@ return array(
                         'module' => 'Home',
                         'controller' => 'Default',
                         'action' => 'index',
+                        'base_url' => 'api',
                     ),
                 ),
             )
