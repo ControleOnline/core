@@ -15,7 +15,8 @@ class Format {
             is_array($data) && array_key_exists('data', $data) ? $return = $data : ($data ? $return['data'] = $data : $return = false);
             $total_results ? $return['total'] = $total_results : false;
             $total_results ? $return['page'] = (int) $page : false;
-            $return['data'] ? ($return['count'] = (int) count(is_array($return['data']) ? $return['data'][array_shift(array_keys($return['data']))] : $return['data'])) : false;
+            $keys = is_array($return['data']) ? array_keys($return['data']) : null;
+            $return['data'] ? ($return['count'] = (int) count(is_array($return['data']) ? $return['data'][array_shift($keys)] : $return['data'])) : false;
             $return['success'] = true;
         }
         return array('response' => $return);

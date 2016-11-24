@@ -20,14 +20,16 @@ class DefaultController extends AbstractController {
     protected $_entity;
     protected $_config;
 
-    private function initialize() {
+    public function setConfig($config) {
+        $this->_config = $config;
+    }
 
+    private function initialize() {
         $method_request = strtoupper($this->params()->fromQuery('method') ?: filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
         $viewMethod_request = $this->detectViewMethod();
-        $this->_config = $this->getServiceLocator()->get('Config');
         $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
         $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_view_methods) ? $viewMethod_request : 'html';
-        $this->_model = new DiscoveryModel($this->getServiceLocator(), $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
+        $this->_model = new DiscoveryModel($this->serviceLocator, $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
         $this->_view = new ViewModel();
         $this->_entity_children = $this->params('entity_children');
         $this->_entity = $this->params('entity');

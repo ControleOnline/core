@@ -121,8 +121,8 @@ class DiscoveryModel {
     }
 
     public function discovery($entity, $entity_parent = null, $from_form = false) {
-
-        $default_model = new Model\DefaultModel($this->getSm());
+        $default_model = new Model\DefaultModel();
+        $default_model->initialize($this->getSm());
         $default_model->setConfig($this->config);
         $default_model->setEntity('Entity\\' . $entity);
         ((isset($this->params['deep'])) ? $default_model->setMaxDeep($this->params['deep']) : 0);

@@ -8,8 +8,10 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'Core\Storage\SessionStorage' => 'Core\Factory\SessionFactory',
+            'Zend\Db\Adapter\Adapter'       => 'Zend\Db\Adapter\AdapterServiceFactory',
+            'Core\Storage\SessionStorage'   => 'Core\Factory\SessionFactory',
+            'Core\Controller\Default'       => 'Core\Factory\DefaultControllerFactory',
+            'Core\Model\Default'            => 'Core\Factory\DefaultModelFactory',
         )
     ),
     'controllers' => array(

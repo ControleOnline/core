@@ -21,10 +21,6 @@ class AbstractController extends AbstractActionController {
      * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager() {
-        if (null === $this->_em) {
-            $this->_em = $this->getServiceLocator()->get('\Doctrine\ORM\EntityManager');
-        }
         return $this->_em;
     }
-
 }

@@ -19,7 +19,7 @@ class DefaultModel {
     /**
      * @var \Zend\ServiceManager\ServiceManager    
      */
-    protected $_sm;
+    protected $serviceLocator;
     protected $entity_name;
     protected $children_entity_name;
     protected $rows;
@@ -29,14 +29,13 @@ class DefaultModel {
     protected $max_deep = 0;
     protected $config;
 
-    public function __construct(\Zend\ServiceManager\ServiceManager $sm, $entity = null) {
-        if (!$entity) {
-            $namespace = str_replace('Model', 'Entity', explode('\\', get_called_class()));
-            $namespace[] = str_replace('Entity', '', array_pop($namespace));
-            $entity = implode('\\', $namespace);
-        }
-        $this->setEntityManager($sm->get('Doctrine\ORM\EntityManager'));
-        $this->setSm($sm);
+    public function initialize(\Zend\ServiceManager\ServiceManager $serviceLocator) {
+        $this->setServiceLocator($serviceLocator);
+        $this->setConfig($serviceLocator->get('Config'));
+        $this->setEntityManager($serviceLocator->get('\Doctrine\ORM\EntityManager'));
+        $namespace = str_replace('Model', 'Entity', explode('\\', get_called_class()));
+        $namespace[] = str_replace('Entity', '', array_pop($namespace));                
+        $entity = implode('\\', $namespace);
         $this->setEntity($entity);
     }
 
@@ -70,8 +69,8 @@ class DefaultModel {
         return $this;
     }
 
-    public function setEntity($entity) {
-        $this->entity = class_exists($entity) ? $this->_em->getRepository($entity) : null;
+    public function setEntity($entity) {        
+        $this->entity = class_exists($entity) ? $this->_em->getRepository($entity) : null;        
         $this->entity_name = $entity;
         return $this;
     }
@@ -93,7 +92,7 @@ class DefaultModel {
         if ($metadata->fieldMappings) {
             $return['fields'] = $metadata->fieldMappings;
         }
-        $assoc = $this->getAssociationNames()? : array();
+        $assoc = $this->getAssociationNames() ?: array();
         foreach ($assoc AS $a) {
             $return['childs'][$a]['fields'] = $this->getMetadata('Entity\\' . ucfirst($a))->fieldMappings;
         }
@@ -160,7 +159,7 @@ class DefaultModel {
     }
 
     public function setData($entity, $params) {
-        $field_names = $this->getFieldNames()? : array();
+        $field_names = $this->getFieldNames() ?: array();
         foreach ($field_names as $field) {
             if ($field != 'id' && isset($params[$field])) {
                 $f = 'set' . ucfirst($field);
@@ -168,7 +167,7 @@ class DefaultModel {
             }
         }
 
-        $field_a_names = $this->getAssociationNames()? : array();
+        $field_a_names = $this->getAssociationNames() ?: array();
         foreach ($field_a_names as $field_a) {
             if (isset($params[$field_a . '_id'])) {
                 $f_a = ucfirst($field_a);
@@ -265,16 +264,16 @@ class DefaultModel {
     }
 
     public function toArray($data, $entity_name = null) {
-        $hydrator = new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($this->_em, $entity_name? : $this->entity_name);
+        $hydrator = new \DoctrineModule\Stdlib\Hydrator\DoctrineObject($this->_em, $entity_name ?: $this->entity_name);
         return $hydrator->extract($data);
     }
 
-    public function getSm() {
-        return $this->_sm;
+    public function getServiceLocator() {
+        return $this->serviceLocator;
     }
 
-    public function setSm($sm) {
-        $this->_sm = $sm;
+    public function setServiceLocator($ServiceLocator) {
+        $this->serviceLocator = $ServiceLocator;
         return $this;
     }
 
