@@ -10,9 +10,7 @@ class ErrorModel {
         return self::$_errors;
     }
 
-    public static function addError($error) {
-
-        $return = $error;
+    public static function addError($error) {        
         if (!is_array($error)) {
             $return['code'] = self::discoveryErrorCode($error);
             $return['message'] = self::discoveryMessage($return['code'], $error);

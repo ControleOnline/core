@@ -4,7 +4,7 @@ namespace Core\Helper;
 
 use Core\Model\ErrorModel;
 
-class Format {
+class Format {    
 
     public static function returnData($data = false, $page = 1, $total_results = 0) {
 
@@ -20,18 +20,6 @@ class Format {
             $return['success'] = true;
         }
         return array('response' => $return);
-    }
-
-    public static function objectToSimpleObject($object) {
-        $methods = get_class_methods($object);
-        $simpleObject = new \stdClass();
-        foreach ($methods AS $method) {
-            if (preg_match('/^get/', $method)) {
-                $field = strtolower(substr($method, 3, strlen($method)));
-                is_object($object->$method()) ?: $simpleObject->$field = $object->$method();
-            }
-        }
-        return $simpleObject;
     }
 
 }
