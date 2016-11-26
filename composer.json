@@ -2,8 +2,7 @@
     "name": "controleonline/core",
     "description": "Core of Controle Online Systems",
     "license": "BSD-3-Clause",
-    "homepage": "http://controleonline.com/",
-    "type": "library",
+    "homepage": "http://controleonline.com/",    
     "keywords": [
         "ControleOnline"
     ],
@@ -17,7 +16,7 @@
     },
     "config": {
         "preferred-install": "dist",
-        "component-dir": "public/components"
+        "component-dir": "public/vendor"
     },
     "require": {
         "php": "~7.0",
@@ -26,9 +25,16 @@
         "doctrine/migrations": "*",                        
         "zendframework/zftool": "*",
         "zendframework/zend-developer-tools": "*"
-    },
-    "scripts": {
-        "post-update-cmd": [
+    },    
+    "scripts": {        
+        "pre-install-cmd": [
+            "echo '{\"directory\" : \"public/vendor/\"}' > .bowerrc"
+        ],
+        "post-install-cmd": [
+            "bower install controleonline-core-js"            
+        ],
+        "post-update-cmd": [            
+            "bower install controleonline-core-js",
             "git describe --abbrev=0 --tags > .version"
         ]
     },

@@ -23,7 +23,14 @@ Add these lines to your composer.json:
     },
     "scripts": {
         "post-update-cmd": [
-            "git describe --abbrev=0 --tags > .version"
+            "git describe --abbrev=0 --tags > .version",
+            "bower install controleonline\\core-js"
+        ],
+        "pre-install-cmd": [
+            "echo '{\"directory\" : \"public/vendor/\"}' > .bowerrc"
+        ],
+        "post-install-cmd": [               
+            "bower install controleonline-core-js"
         ]
     },
 
