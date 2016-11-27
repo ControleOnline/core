@@ -12,7 +12,7 @@ class LazyLoad {
     }
 
     protected static function setContent($content) {
-        self::$content = $content;        
+        self::$content = $content;
     }
 
     public static function getContent() {
@@ -63,6 +63,10 @@ class LazyLoad {
     }
 
     protected static function normalizeAttributes(array $attributes = array()) {
+        $return = array(
+            'img' => '',
+            'lazy_img' => ''
+        );
         foreach ($attributes AS $key => $att) {
             if (strtolower($key) == 'class') {
                 $att = $att . ' ' . self::$config['LazyLoadClass'];
