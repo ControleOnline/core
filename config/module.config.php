@@ -1,6 +1,13 @@
 <?php
 
 return array(
+    'LazyLoadImages' => array(
+        'LazyLoadImages' => true,
+        'LazyLoadClass' => 'lazy-load',
+        'LazyLoadPlaceHolder' => 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
+        'LazyLoadOnlyOnNoScript' => array('itemprop'),
+        'LazyLoadExcludeTags' => array('script', 'noscript', 'textarea')
+    ),
     'view' => array(
         'terminal_sufix' => array(
             '.html'
@@ -8,10 +15,10 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'Zend\Db\Adapter\Adapter'       => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'Core\Storage\SessionStorage'   => 'Core\Factory\SessionFactory',
-            'Core\Controller\Default'       => 'Core\Factory\DefaultControllerFactory',
-            'Core\Model\Default'            => 'Core\Factory\DefaultModelFactory',
+            'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
+            'Core\Storage\SessionStorage' => 'Core\Factory\SessionFactory',
+            'Core\Controller\Default' => 'Core\Factory\DefaultControllerFactory',
+            'Core\Model\Default' => 'Core\Factory\DefaultModelFactory',
         )
     ),
     'controllers' => array(

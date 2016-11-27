@@ -12,15 +12,45 @@ class Header {
     protected static $renderer;
     protected static $routes;
     protected static $basepath;
+    protected static $publicVendorBasepath = '/vendor/';
+
+    /**
+     * @var \Zend\View\Helper\HeadScript
+     */
+    protected static $x;
 
     public static function addJs(\Zend\View\Renderer\RendererInterface $renderer, $src, $type = 'text/javascript', $attrs = array()) {
         self::$renderer = $renderer;
-        self::$renderer->headScript()->appendFile(self::$renderer->basePath($src), $type, $attrs);
+        self::$renderer->headScript()->setAllowArbitraryAttributes(true)->appendFile(self::$renderer->basePath($src), $type, $attrs);
+    }
+
+    public static function addJsLib(\Zend\View\Renderer\RendererInterface $renderer, $src, $type = 'text/javascript', $attrs = array()) {
+        self::$renderer = $renderer;
+        $attrs['data-type'] = 'lib';
+        self::$renderer->headScript()->setAllowArbitraryAttributes(true)->prependFile(self::$renderer->basePath($src), $type, $attrs);
+    }
+
+    public static function addCssLib(\Zend\View\Renderer\RendererInterface $renderer, $href, $media = 'screen', $conditionalStylesheet = '', $extras = array()) {
+        $extras['data-type'] = 'lib';
+        self::$renderer = $renderer;
+        self::$renderer->headLink()->appendStylesheet(self::$renderer->basePath($href), $media, $conditionalStylesheet, $extras);
     }
 
     public static function addCss(\Zend\View\Renderer\RendererInterface $renderer, $href, $media = 'screen', $conditionalStylesheet = '', $extras = array()) {
         self::$renderer = $renderer;
         self::$renderer->headLink()->appendStylesheet(self::$renderer->basePath($href), $media, $conditionalStylesheet, $extras);
+    }
+
+    public static function addDefaultLibs(\Zend\View\Renderer\RendererInterface $renderer) {
+
+//        datatables: 'datatables/media/jquery.dataTables.min',
+//        highcharts: 'highcharts/highcharts'
+        self::addJsLib($renderer, '/vendor/controleonline-core-js/dist/js/LazyLoad.js', 'text/javascript', array('async' => true, 'defer' => true));
+        self::addJsLib($renderer, '/vendor/bootstrap/dist/js/bootstrap.min.js', 'text/javascript', array('async' => true, 'defer' => true));
+        self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
+        self::addJsLib($renderer, '/vendor/jquery/dist/jquery.min.js');
+        self::addCssLib($renderer, '/vendor/font-awesome/css/font-awesome.min.css');
+        self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
     }
 
     public static function addDefaultHeaderFiles(\Zend\View\Renderer\RendererInterface $renderer, $default_route, $uri) {

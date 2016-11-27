@@ -206,3 +206,20 @@ Do not forget to keep in the layout file the call to the headers:
     </body>
 </html>   
 ```
+
+### LazyLoad Images ###
+The LazyLoad settings can be changed this way in the config/module.config.php file:
+
+```
+<?php
+return array(
+    'LazyLoadImages' => array(
+        'LazyLoadImages' => true,
+        'LazyLoadClass' => 'lazy-load',
+        'LazyLoadPlaceHolder' => 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
+        'LazyLoadOnlyOnNoScript' => array('itemprop'),
+        'LazyLoadExcludeTags' => array('script', 'noscript', 'textarea')
+    ),
+//Another configs
+)
+```

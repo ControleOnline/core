@@ -50,7 +50,6 @@ class Module {
         }
         $this->configDefaultViewOptions($eventManager);
         $this->setViewTerminal($e, $config['view']['terminal_sufix']);
-
         //$this->installEntities();                
     }
 
@@ -67,8 +66,19 @@ class Module {
             });
         } else {
             $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
-            Header::addDefaultHeaderFiles($renderer, $this->default_route,$uri);
+            Header::addDefaultLibs($renderer);
+            Header::addDefaultHeaderFiles($renderer, $this->default_route, $uri);
+            $app = $e->getTarget();
+            $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
         }
+    }
+
+    public function lazyLoad(\Zend\Mvc\MvcEvent $e) {
+        $response = $e->getResponse();
+        $this->sm = $e->getApplication()->getServiceManager();
+        $config = $this->sm->get('config');
+        $html = Helper\LazyLoad::imgLazyLoad($response->getBody(), $config['LazyLoadImages']);
+        $response->setContent($html);
     }
 
     private function addDefaultTemplates($event, $baseDirs) {
