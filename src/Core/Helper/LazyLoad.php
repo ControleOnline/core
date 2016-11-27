@@ -12,8 +12,7 @@ class LazyLoad {
     }
 
     protected static function setContent($content) {
-        self::$content = $content;
-        return $this;
+        self::$content = $content;        
     }
 
     public static function getContent() {
