@@ -49,7 +49,7 @@ class Header {
         self::addJsLib($renderer, '/vendor/bootstrap/dist/js/bootstrap.min.js', 'text/javascript', array('async' => true, 'defer' => true));
         self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
         self::addJsLib($renderer, '/vendor/jquery/dist/jquery.min.js');
-        self::addCssLib($renderer, '/vendor/font-awesome/css/font-awesome.min.css');
+        self::addCssLib($renderer, '/vendor/fontawesome/css/font-awesome.min.css');
         self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
     }
 
