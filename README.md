@@ -3,6 +3,8 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/ControleOnline/core/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ControleOnline/core/)
 [![Build Status](https://scrutinizer-ci.com/g/ControleOnline/core/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ControleOnline/core/)
 
+More on [Controle Online](http://controleonline.com "Controle Online").
+
 # Core of Controle Online modules #
 
 Used by another projects:
