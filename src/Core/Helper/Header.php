@@ -25,8 +25,8 @@ class Header {
     }
 
     public static function addJsLib(\Zend\View\Renderer\RendererInterface $renderer, $src, $type = 'text/javascript', $attrs = array()) {
-        self::$renderer = $renderer;
         $attrs['data-type'] = 'lib';
+        self::$renderer = $renderer;
         self::$renderer->headScript()->setAllowArbitraryAttributes(true)->appendFile(self::$renderer->basePath($src), $type, $attrs);
     }
 
