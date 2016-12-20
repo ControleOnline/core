@@ -84,6 +84,7 @@ class LazyLoad {
             }
         }
         if (!array_key_exists('class', $attributes)) {
+            $return['lazy_img'] .= ' class="' . self::$config['LazyLoadClass'] . '"';
             $return['img'] .= ' class="' . self::$config['LazyLoadClass'] . '"';
         }
         return $return;
@@ -101,6 +102,7 @@ class LazyLoad {
             $img = '<img';
             $lazy_img = '<img';
             $att = self::normalizeAttributes($attributes);
+
             $img .= $att['img'];
             $lazy_img .= $att['lazy_img'];
             $img .= '>';
