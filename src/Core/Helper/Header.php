@@ -42,7 +42,15 @@ class Header {
     }
 
     public static function addDefaultLibs(\Zend\View\Renderer\RendererInterface $renderer) {
-        self::addJsLib($renderer, '/vendor/requirejs/require.js', 'text/javascript', array('data-main' => '/vendor/controleonline-core-js/dist/js/Core.js', 'async' => true, 'defer' => true));
+        /* Removing to use AMD load with requirejs
+          self::addJsLib($renderer, '/vendor/jquery/dist/jquery.min.js');
+          self::addJsLib($renderer, '/vendor/bootstrap/dist/js/bootstrap.min.js', 'text/javascript', array('async' => true, 'defer' => true));
+          self::addJsLib($renderer, '/vendor/controleonline-core-js/dist/js/LazyLoad.js', 'text/javascript', array('async' => true, 'defer' => true));
+          self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
+          self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
+          self::addCssLib($renderer, '/vendor/font-awesome/css/font-awesome.min.css');
+         */
+        self::addJsLib($renderer, self::$publicVendorBasepath . 'requirejs/require.js', 'text/javascript', array('data-main' => self::$publicVendorBasepath . 'controleonline-core-js/dist/js/Core.js', 'async' => true, 'defer' => true));
     }
 
     public static function addDefaultHeaderFiles(\Zend\View\Renderer\RendererInterface $renderer, $default_route, $uri) {
