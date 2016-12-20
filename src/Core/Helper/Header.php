@@ -50,7 +50,7 @@ class Header {
           self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
           self::addCssLib($renderer, '/vendor/font-awesome/css/font-awesome.min.css');
          */
-        self::addJsLib($renderer, self::$publicVendorBasepath . 'requirejs/require.js', 'text/javascript', array('data-main' => self::$publicVendorBasepath . 'controleonline-core-js/dist/js/Core.js', 'async' => true, 'defer' => true));
+        self::addJsLib($renderer, self::$publicVendorBasepath . 'requirejs/require.js', 'text/javascript', array('data-main' => self::$publicVendorBasepath . 'controleonline-core-js/dist/js/Core.js'));
     }
 
     public static function addDefaultHeaderFiles(\Zend\View\Renderer\RendererInterface $renderer, $default_route, $uri) {
