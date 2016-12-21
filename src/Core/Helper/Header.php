@@ -13,6 +13,7 @@ class Header {
     protected static $routes;
     protected static $basepath;
     protected static $publicVendorBasepath = '/vendor/';
+    protected static $requireJsFiles = [];
 
     /**
      * @var \Zend\View\Helper\HeadScript
@@ -54,6 +55,7 @@ class Header {
     }
 
     public static function addDefaultHeaderFiles(\Zend\View\Renderer\RendererInterface $renderer, $default_route, $uri) {
+
         $DiscoveryRoute = new DiscoveryRoute($default_route);
         $DiscoveryRoute->setUrl($uri);
         $routes = $DiscoveryRoute->getRoute();
@@ -64,9 +66,12 @@ class Header {
         self::$routes['action'] = strtolower($routes['action']);
         self::$basepath = getcwd() . DIRECTORY_SEPARATOR . 'public';
 
-        self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . '.js');
-        self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'] . '.js');
-        self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'] . DIRECTORY_SEPARATOR . self::$routes['action'] . '.js');
+        //self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . '.js');
+        self::addRequireJsFile(DIRECTORY_SEPARATOR . self::$routes['module'], self::$routes['module']);
+        //self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'] . '.js');
+        self::addRequireJsFile(DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'], self::$routes['module'] . '-' . self::$routes['controller']);
+        //self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'] . DIRECTORY_SEPARATOR . self::$routes['action'] . '.js');
+        self::addRequireJsFile(DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'] . DIRECTORY_SEPARATOR . self::$routes['action'], self::$routes['module'] . '-' . self::$routes['controller'] . '-' . self::$routes['action']);
 
         self::addCssFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . '.css');
         self::addCssFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'] . '.css');
@@ -78,6 +83,17 @@ class Header {
         if (is_file(self::$basepath . $path . $src)) {
             self::addJs($renderer, $path . $src . '?v=' . self::getSystemVersion());
         }
+    }
+
+    public static function addRequireJsFile($src, $name) {
+        $path = DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'modules';
+        if (is_file(self::$basepath . $path . $src . '.js')) {
+            self::$requireJsFiles[$name] = '..' . $path . $src;
+        }
+    }
+
+    public static function getRequireJsFiles() {
+        return self::$requireJsFiles;
     }
 
     protected static function addCssFile(\Zend\View\Renderer\RendererInterface $renderer, $href) {

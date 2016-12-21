@@ -66,8 +66,10 @@ class Module {
             });
         } else {
             $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
+            $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
             Header::addDefaultLibs($renderer);
             Header::addDefaultHeaderFiles($renderer, $this->default_route, $uri);
+            $viewModel->requireJsFiles = Header::getRequireJsFiles();
             $app = $e->getTarget();
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
         }
