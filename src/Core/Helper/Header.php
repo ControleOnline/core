@@ -22,24 +22,24 @@ class Header {
 
     public static function addJs(\Zend\View\Renderer\RendererInterface $renderer, $src, $type = 'text/javascript', $attrs = array()) {
         self::$renderer = $renderer;
-        self::$renderer->headScript()->setAllowArbitraryAttributes(true)->appendFile(self::$renderer->basePath($src), $type, $attrs);
+        self::$renderer->headScript()->setAllowArbitraryAttributes(true)->appendFile(self::$renderer->basePath($src . '?v=' . self::getSystemVersion()), $type, $attrs);
     }
 
     public static function addJsLib(\Zend\View\Renderer\RendererInterface $renderer, $src, $type = 'text/javascript', $attrs = array()) {
         $attrs['data-type'] = 'lib';
         self::$renderer = $renderer;
-        self::$renderer->headScript()->setAllowArbitraryAttributes(true)->appendFile(self::$renderer->basePath($src), $type, $attrs);
+        self::$renderer->headScript()->setAllowArbitraryAttributes(true)->appendFile(self::$renderer->basePath($src . '?v=' . self::getSystemVersion()), $type, $attrs);
     }
 
     public static function addCssLib(\Zend\View\Renderer\RendererInterface $renderer, $href, $media = 'screen', $conditionalStylesheet = '', $extras = array()) {
         $extras['data-type'] = 'lib';
         self::$renderer = $renderer;
-        self::$renderer->headLink()->appendStylesheet(self::$renderer->basePath($href), $media, $conditionalStylesheet, $extras);
+        self::$renderer->headLink()->appendStylesheet(self::$renderer->basePath($href . '?v=' . self::getSystemVersion()), $media, $conditionalStylesheet, $extras);
     }
 
     public static function addCss(\Zend\View\Renderer\RendererInterface $renderer, $href, $media = 'screen', $conditionalStylesheet = '', $extras = array()) {
         self::$renderer = $renderer;
-        self::$renderer->headLink()->appendStylesheet(self::$renderer->basePath($href), $media, $conditionalStylesheet, $extras);
+        self::$renderer->headLink()->appendStylesheet(self::$renderer->basePath($href . '?v=' . self::getSystemVersion()), $media, $conditionalStylesheet, $extras);
     }
 
     public static function addDefaultLibs(\Zend\View\Renderer\RendererInterface $renderer) {
@@ -52,6 +52,7 @@ class Header {
           self::addCssLib($renderer, '/vendor/font-awesome/css/font-awesome.min.css');
          */
         self::addJsLib($renderer, self::$publicVendorBasepath . 'requirejs/require.js', 'text/javascript', array('data-main' => self::$publicVendorBasepath . 'controleonline-core-js/dist/js/Core.js'));
+        self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
     }
 
     public static function addDefaultHeaderFiles(\Zend\View\Renderer\RendererInterface $renderer, $default_route, $uri) {
@@ -88,7 +89,7 @@ class Header {
     public static function addRequireJsFile($src, $name) {
         $path = DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'modules';
         if (is_file(self::$basepath . $path . $src . '.js')) {
-            self::$requireJsFiles[$name] = '..' . $path . $src;
+            self::$requireJsFiles[$name] = '..' . $path . $src . '?v=' . self::getSystemVersion();
         }
     }
 
@@ -108,7 +109,7 @@ class Header {
             $contents = file_get_contents(getcwd() . '.version');
             $version = $contents ? trim(array_shift(array_values(preg_split('/\r\n|\r|\n/', $contents, 2)))) : false;
         }
-        return isset($version) && $version ? $version : date('Y-m-d-H');
+        return isset($version) && $version ? $version : date('Y-m-d-H-m-i');
     }
 
 }

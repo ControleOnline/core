@@ -3,45 +3,65 @@ $data = isset($form['data']) ? $form['data'] : array();
 $fields = isset($form['fields']) ? $form['fields'] : array();
 ?>
 <?php if ($fields) { ?>
-    <fieldset>    
-        <form class="api-form form-horizontal" action="<?= '/' . ((isset($data['id']) && $data['id']) ? $form['form_name'] . '/id/' . $data['id'] : $form['form_name'] ) . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form" data-childs='<?= json_encode(array_keys($form['childs'])) ?>'>
 
-            <!-- Form Name -->
-            <legend><?= ucfirst($form['form_name']) ?></legend>
-            <input name="method" value="<?= $form['method'] ?>" type="hidden">         
-            <?php foreach ($fields AS $key => $field) { ?>
-                <?php if ($key == 'id') { ?>
-                    <input value="<?= (isset($data) && isset($data[strtolower($key)])) ? $data[strtolower($key)] : null ?>" id="input-<?= $key ?>" name="<?= $key ?>" type="hidden" data-propreties='<?= json_encode($field) ?>' placeholder="Enter <?= ucfirst($key) ?>">
-                <?php } elseif (!isset($data[strtolower($key)]) || (isset($data[strtolower($key)]) && !is_array($data[strtolower($key)]))) { ?>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" id="label-<?= $key ?>" for="input-<?= $key ?>"><?= ucfirst($key) ?>: </label>
-                        <div class="col-md-4">                        
-                            <input class="form-control input-md" value="<?= (isset($data) && isset($data[strtolower($key)])) ? $data[strtolower($key)] : null ?>" id="input-<?= $key ?>" name="<?= $key ?>" type="text" data-propreties='<?= json_encode($field) ?>' placeholder="Enter <?= ucfirst($key) ?>">
-                        </div>
-                    </div>
-                <?php } ?>
-            <?php } ?>
-            <!-- Button -->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="save"></label>
-                <div class="col-md-4">
-                    <button name="save" type="submit" class="btn btn-success">Save</button>    
+
+
+    <div class="modal fade" id="modal-<?= $form['form_name'] . '-' . ( $data['id'] ? $data['id'] : 'new' ) ?>" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><?= ucfirst($form['form_name']) ?></h4>
+                </div>
+                <div class="modal-body">
+                    <fieldset>    
+                        <form class="api-form form-horizontal" action="<?= '/' . ((isset($data['id']) && $data['id']) ? $form['form_name'] . '/id/' . $data['id'] : $form['form_name'] ) . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form" data-childs='<?= json_encode(array_keys($form['childs'])) ?>'>
+                            <!-- Form Name -->
+                            <legend><?= ucfirst($form['form_name']) ?></legend>
+                            <input name="method" value="<?= $form['method'] ?>" type="hidden">         
+                            <?php foreach ($fields AS $key => $field) { ?>
+                                <?php if ($key == 'id') { ?>
+                                    <input value="<?= (isset($data) && isset($data[strtolower($key)])) ? $data[strtolower($key)] : null ?>" id="input-<?= $key ?>" name="<?= $key ?>" type="hidden" data-propreties='<?= json_encode($field) ?>' placeholder="Enter <?= ucfirst($key) ?>">
+                                <?php } elseif (!isset($data[strtolower($key)]) || (isset($data[strtolower($key)]) && !is_array($data[strtolower($key)]))) { ?>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" id="label-<?= $key ?>" for="input-<?= $key ?>"><?= ucfirst($key) ?>: </label>
+                                        <div class="col-md-4">                        
+                                            <input class="form-control input-md" value="<?= (isset($data) && isset($data[strtolower($key)])) ? $data[strtolower($key)] : null ?>" id="input-<?= $key ?>" name="<?= $key ?>" type="text" data-propreties='<?= json_encode($field) ?>' placeholder="Enter <?= ucfirst($key) ?>">
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            <?php } ?>
+                            <!-- Button -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="save"></label>
+                                <div class="col-md-4">
+                                    <button data-save="<?= '/' . ((isset($data['id']) && $data['id']) ? $form['form_name'] . '/id/' . $data['id'] : $form['form_name'] ) . '.json' ?>" name="save" type="submit" class="btn btn-success">Save</button>    
+                                </div>
+                            </div>
+                        </form>
+                        <?php if (isset($data) && isset($data['id']) && $data['id']) { ?>
+                            <form class="form-horizontal" onSubmit="return confirmDelete('<?= ucfirst($form['form_name']) ?>')" action="<?= '/' . $form['form_name'] . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form">
+                                <input name="method" value="DELETE" type="hidden"> 
+                                <input value="<?= $data['id'] ?>" id="delete-id" name="id" type="hidden">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="delete"></label>
+                                    <div class="col-md-4">
+                                        <button name="delete" type="submit" class="btn btn-danger">Delete</button>   
+                                    </div>
+                                </div>
+                            </form>
+                        <?php } ?>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
                 </div>
             </div>
-        </form>
-        <?php if (isset($data) && isset($data['id']) && $data['id']) { ?>
-            <form class="form-horizontal" onSubmit="return confirmDelete('<?= ucfirst($form['form_name']) ?>')" action="<?= '/' . $form['form_name'] . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form">
-                <input name="method" value="DELETE" type="hidden"> 
-                <input value="<?= $data['id'] ?>" id="delete-id" name="id" type="hidden">
-                <div class="form-group">
-                    <label class="col-md-4 control-label" for="delete"></label>
-                    <div class="col-md-4">
-                        <button name="delete" type="submit" class="btn btn-danger">Delete</button>   
-                    </div>
-                </div>
-            </form>
-        <?php } ?>
-    </fieldset>
+        </div>
+    </div>
+
+
+
+
 <?php } ?>
 <script>
     function confirmDelete(name) {
