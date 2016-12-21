@@ -204,7 +204,10 @@ Do not forget to keep in the layout file the call to the headers:
         <?= $this->headStyle() ?>
         <?= $this->headScript() ?>
     </head>    
-    <body>
+    <body data-js-files='<?= $this->requireJsFiles ? json_encode($this->requireJsFiles) : '{}' ?>'>        
+        <div id="main-container" class="container">
+            <!-- This div (id #main-container) receives all system alerts  -->
+        </div>
     </body>
 </html>   
 ```
