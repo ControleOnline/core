@@ -51,7 +51,7 @@ class Header {
           self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
           self::addCssLib($renderer, '/vendor/font-awesome/css/font-awesome.min.css');
          */
-        self::addJsLib($renderer, self::$publicVendorBasepath . 'requirejs/require.js', 'text/javascript', array('data-main' => self::$publicVendorBasepath . 'controleonline-core-js/dist/js/Core.js'));
+        self::addJsLib($renderer, self::$publicVendorBasepath . 'requirejs/require.js', 'text/javascript', array('data-main' => self::$publicVendorBasepath . 'controleonline-core-js/dist/js/Core.js?v=' . self::getSystemVersion()));
         self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
     }
 

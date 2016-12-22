@@ -2,18 +2,16 @@
 $data = isset($form['data']) ? $form['data'] : array();
 $fields = isset($form['fields']) ? $form['fields'] : array();
 ?>
-<?php if ($fields) { ?>
-
-
-
+<?php if ($fields) { ?>    
     <div class="modal fade" id="modal-<?= $form['form_name'] . '-' . ( $data['id'] ? $data['id'] : 'new' ) ?>" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>                                        
                     <h4 class="modal-title"><?= ucfirst($form['form_name']) ?></h4>
                 </div>
                 <div class="modal-body">
+                    <div class="show-messages"></div>
                     <fieldset>    
                         <form class="api-form form-horizontal" action="<?= '/' . ((isset($data['id']) && $data['id']) ? $form['form_name'] . '/id/' . $data['id'] : $form['form_name'] ) . '.form' ?>" method="POST" name="form-<?= $form['form_name'] ?>" role="form" data-childs='<?= json_encode(array_keys($form['childs'])) ?>'>
                             <!-- Form Name -->
@@ -35,7 +33,9 @@ $fields = isset($form['fields']) ? $form['fields'] : array();
                             <div class="form-group">
                                 <label class="col-md-4 control-label" for="save"></label>
                                 <div class="col-md-4">
-                                    <button data-save="<?= '/' . ((isset($data['id']) && $data['id']) ? $form['form_name'] . '/id/' . $data['id'] : $form['form_name'] ) . '.json' ?>" name="save" type="submit" class="btn btn-success">Save</button>    
+                                    <button data-save="<?= '/' . ((isset($data['id']) && $data['id']) ? $form['form_name'] . '/id/' . $data['id'] : $form['form_name'] ) . '.json' ?>" name="save" type="submit" class="btn btn-success">                                        
+                                        Save
+                                    </button>    
                                 </div>
                             </div>
                         </form>
