@@ -47,12 +47,11 @@ class Header {
           self::addJsLib($renderer, '/vendor/jquery/dist/jquery.min.js');
           self::addJsLib($renderer, '/vendor/bootstrap/dist/js/bootstrap.min.js', 'text/javascript', array('async' => true, 'defer' => true));
           self::addJsLib($renderer, '/vendor/controleonline-core-js/dist/js/LazyLoad.js', 'text/javascript', array('async' => true, 'defer' => true));
-          self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
-          self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
-          self::addCssLib($renderer, '/vendor/font-awesome/css/font-awesome.min.css');
          */
         self::addJsLib($renderer, self::$publicVendorBasepath . 'requirejs/require.js', 'text/javascript', array('data-main' => self::$publicVendorBasepath . 'controleonline-core-js/dist/js/Core.js?v=' . self::getSystemVersion()));
         self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
+        self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
+        self::addCssLib($renderer, '/vendor/fontawesome/css/font-awesome.min.css');
     }
 
     public static function addDefaultHeaderFiles(\Zend\View\Renderer\RendererInterface $renderer, $default_route, $uri) {
