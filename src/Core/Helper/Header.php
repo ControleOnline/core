@@ -48,7 +48,7 @@ class Header {
             'system-version' => self::getSystemVersion()
         ));
         self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
-        self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
+        self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/Core.css');
         self::addCssLib($renderer, '/vendor/fontawesome/css/font-awesome.min.css');
         self::addCssLib($renderer, '/css/application.css');
     }
