@@ -204,7 +204,7 @@ Do not forget to keep in the layout file the call to the headers:
         <?= $this->headStyle() ?>
         <?= $this->headScript() ?>
     </head>    
-    <body data-js-files='<?= $this->requireJsFiles ? json_encode($this->requireJsFiles) : '{}' ?>' system-version='<?= $this->systemVersion ?>'>        
+    <body data-js-files='<?= $this->requireJsFiles ? json_encode($this->requireJsFiles) : '{}' ?>'>
         <div class="show-messages">
             <!-- This div (class .show-messages) receives all system alerts  -->
         </div>
