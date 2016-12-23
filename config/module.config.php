@@ -1,6 +1,11 @@
 <?php
 
 return array(
+    'view_helpers' => array(
+        'invokables' => array(
+            'render_entity_form' => 'Core\Helper\RenderEntityForm'
+        ),
+    ),
     'LazyLoadImages' => array(
         'LazyLoadImages' => true,
         'LazyLoadClass' => 'lazy-load',
