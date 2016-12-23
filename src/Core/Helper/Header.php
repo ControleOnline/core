@@ -15,11 +15,6 @@ class Header {
     protected static $publicVendorBasepath = '/vendor/';
     protected static $requireJsFiles = [];
 
-    /**
-     * @var \Zend\View\Helper\HeadScript
-     */
-    protected static $x;
-
     public static function addJs(\Zend\View\Renderer\RendererInterface $renderer, $src, $type = 'text/javascript', $attrs = array()) {
         self::$renderer = $renderer;
         self::$renderer->headScript()->setAllowArbitraryAttributes(true)->appendFile(self::$renderer->basePath($src . '?v=' . self::getSystemVersion()), $type, $attrs);
@@ -52,6 +47,7 @@ class Header {
         self::addCssLib($renderer, '/vendor/bootstrap/dist/css/bootstrap.min.css');
         self::addCssLib($renderer, '/vendor/controleonline-core-js/dist/css/LazyLoad.css');
         self::addCssLib($renderer, '/vendor/fontawesome/css/font-awesome.min.css');
+        self::addCssLib($renderer, '/css/application.css');
     }
 
     public static function addDefaultHeaderFiles(\Zend\View\Renderer\RendererInterface $renderer, $default_route, $uri) {
@@ -103,7 +99,7 @@ class Header {
         }
     }
 
-    protected static function getSystemVersion() {
+    public static function getSystemVersion() {
         if (is_file(getcwd() . '.version')) {
             $contents = file_get_contents(getcwd() . '.version');
             $version = $contents ? trim(array_shift(array_values(preg_split('/\r\n|\r|\n/', $contents, 2)))) : false;

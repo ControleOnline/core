@@ -70,6 +70,7 @@ class Module {
             Header::addDefaultLibs($renderer);
             Header::addDefaultHeaderFiles($renderer, $this->default_route, $uri);
             $viewModel->requireJsFiles = Header::getRequireJsFiles();
+            $viewModel->systemVersion = Header::getSystemVersion();
             $app = $e->getTarget();
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
         }
