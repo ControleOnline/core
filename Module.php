@@ -64,7 +64,7 @@ class Module {
                     $result->setTerminal(true);
                 }
             });
-        } else {
+        } elseif ($extension != '.json') {
             $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
             $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
             Header::addDefaultLibs($renderer);
@@ -170,10 +170,10 @@ class Module {
     }
 
     public function finishJsonStrategy(\Zend\Mvc\MvcEvent $e) {
-
         $response = new Response();
-        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');
-        $response->setContent(Json::encode($e->getResult()->getVariables(), true));
+        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');        
+        
+        $response->setContent(Json::encode($e->getResult()->getVariables(), true));        
         $e->setResponse($response);
     }
 
@@ -186,7 +186,7 @@ class Module {
         $headers = $request->getHeaders();
         $uri = $request->getUri()->getPath();
         $compare = '.json';
-        $is_json = substr_compare($uri, $compare, strlen($uri) - strlen($compare), strlen($compare)) === 0;
+        $is_json = substr_compare($uri, $compare, strlen($uri) - strlen($compare), strlen($compare)) === 0;        
         if ($headers->has('accept') || $is_json) {
             $accept = $headers->get('accept');
             $match = $accept->match('application/json');

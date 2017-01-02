@@ -89,7 +89,7 @@ class DiscoveryRoute {
     protected function discoveryAction() {
         $defaultRoute = $this->getDefaultRoute();
         $url = $this->getUrl();
-        $action = lcfirst($this->camelCase((isset($url[1]) ? $url[1] : $defaultRoute['action'])));
+        $action = lcfirst($this->camelCase((isset($url[1]) ? Url::removeSufix($url[1]) : $defaultRoute['action'])));
         $class = $this->getController();
         $testClass = new $class();
         if (method_exists($testClass, $action . 'Action')) {
@@ -115,6 +115,7 @@ class DiscoveryRoute {
             'entity' => $this->camelCase($this->getEntity()),
             'entity_children' => $this->camelCase($this->getEntityChildren())
         );
+        
         return array_merge($default, $return);
     }
 
