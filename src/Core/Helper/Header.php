@@ -65,6 +65,8 @@ class Header {
         self::$routes['action'] = strtolower($routes['action']);
         self::$basepath = getcwd() . DIRECTORY_SEPARATOR . 'public';
 
+
+        self::addRequireJsFile(DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app', 'App');
         //self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . '.js');
         self::addRequireJsFile(DIRECTORY_SEPARATOR . self::$routes['module'], self::$routes['module']);
         //self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'] . '.js');
@@ -87,7 +89,7 @@ class Header {
     public static function addRequireJsFile($src, $name) {
         $path = DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'modules';
         if (is_file(self::$basepath . $path . $src . '.js')) {
-            self::$requireJsFiles[$name] = '..' . $path . $src . '?v=' . self::getSystemVersion();
+            self::$requireJsFiles[$name] = '..' . $path . $src;
         }
     }
 
