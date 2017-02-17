@@ -66,7 +66,7 @@ class Header {
         self::$basepath = getcwd() . DIRECTORY_SEPARATOR . 'public';
 
 
-        self::addRequireJsFile(DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'app', 'App');
+        self::addRequireJsFile(DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'application', 'application');
         //self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . '.js');
         self::addRequireJsFile(DIRECTORY_SEPARATOR . self::$routes['module'], self::$routes['module']);
         //self::addJsFile($renderer, DIRECTORY_SEPARATOR . self::$routes['module'] . DIRECTORY_SEPARATOR . self::$routes['controller'] . '.js');
