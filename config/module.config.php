@@ -18,6 +18,10 @@ return array(
             '.html'
         )
     ),
+    'view_manager' => array(
+        'display_not_found_reason' => true,
+        'display_exceptions' => true,
+    ),
     'service_manager' => array(
         'factories' => array(
             'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
