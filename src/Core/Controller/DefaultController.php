@@ -5,11 +5,9 @@ namespace Core\Controller;
 use Core\Controller\AbstractController;
 use Core\Helper\Format;
 
-
 class DefaultController extends AbstractController {
 
     protected $_allowed_methods = array('GET', 'POST', 'PUT', 'DELETE', 'FORM');
-    protected $_allowed_view_methods = array('json', 'html', 'form');
     protected $_method;
     protected $_viewMethod;
     protected $_model;
@@ -20,8 +18,6 @@ class DefaultController extends AbstractController {
     public function setConfig($config) {
         $this->_config = $config;
     }
-
-
 
     private function getForm($entity_id = null) {
         $return = [];
@@ -55,12 +51,12 @@ class DefaultController extends AbstractController {
         } elseif ($id) {
             $data = $this->_model->discovery($this->_entity);
         }
-        return Format::returnData($data, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
+        return Format::returnData($data, false, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
     }
 
     private function getAllData() {
         $data = $this->_model->discovery($this->_entity);
-        return Format::returnData($data, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
+        return Format::returnData($data, false, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
     }
 
     private function getData() {

@@ -44,21 +44,19 @@ class Module {
         $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
-
+        $this->setResponseType($e);
         if (isset($config['doctrine']['connection']['orm_default']['params'])) {
             $dbConfig = $config['doctrine']['connection']['orm_default']['params'];
             $entity = new DiscoveryEntity($this->em, $dbConfig, $this->config);
             $entity->checkEntities();
         }
-        if (!$this->verifyJsonStrategy($e)) {
-            $this->configDefaultViewOptions($eventManager);
-            $this->setViewTerminal($e, $config['view']['terminal_sufix']);
-        }
-
+        $this->configDefaultViewOptions($eventManager);
+        $this->setViewTerminal($e, $config['view']['terminal_sufix']);
         //$this->installEntities();                
     }
 
     private function setViewTerminal(\Zend\Mvc\MvcEvent $e, array $terminal_sufix = array('.html')) {
+        $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
         $uri = $e->getRequest()->getUri()->getPath();
         $extension = '.' . strtolower(pathinfo($uri, PATHINFO_EXTENSION));
         if (in_array($extension, $terminal_sufix)) {
@@ -71,7 +69,7 @@ class Module {
             });
         } elseif ($extension != '.json') {
             $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
-            $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
+
             Header::addDefaultLibs($renderer);
             Header::addDefaultHeaderFiles($renderer, $this->default_route, $uri);
             $viewModel->requireJsFiles = Header::getRequireJsFiles();
@@ -79,10 +77,10 @@ class Module {
             $userModel = new UserModel();
             $userModel->initialize($e->getApplication()->getServiceManager());
             $viewModel->_userModel = $userModel;
-
             $app = $e->getTarget();
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
         }
+        $viewModel->setVariables(Format::returnData($viewModel->getVariables()));
     }
 
     public function lazyLoad(\Zend\Mvc\MvcEvent $e) {
@@ -181,9 +179,12 @@ class Module {
     public function finishJsonStrategy(\Zend\Mvc\MvcEvent $e) {
         $response = new Response();
         $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');
-
         $response->setContent(Json::encode(Format::returnData($e->getResult()->getVariables()), true));
         $e->setResponse($response);
+    }
+
+    public function setResponseType(\Zend\Mvc\MvcEvent $e) {
+        $this->verifyJsonStrategy($e);
     }
 
     public function verifyJsonStrategy(\Zend\Mvc\MvcEvent $e) {
@@ -195,7 +196,7 @@ class Module {
         if ($headers->has('accept') || $is_json) {
             $accept = $headers->get('accept');
             $match = $accept->match('application/json');
-            if ($match && $match->getTypeString() != '*/*' || $is_json) {                
+            if ($match && $match->getTypeString() != '*/*' || $is_json) {
                 $e->getApplication()->getEventManager()->attach('render', array($this, 'registerJsonStrategy'), 100);
                 $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_FINISH, array($this, 'finishJsonStrategy'));
                 return true;

@@ -9,8 +9,8 @@ use Core\Controller\DefaultController;
 class GenericController extends DefaultController {
 
     protected $_allowed_methods = array('GET', 'POST', 'PUT', 'DELETE', 'FORM');
-    protected $_method;
     protected $_viewMethod;
+    protected $_method;
     protected $_model;
     protected $_entity_children;
     protected $_entity;

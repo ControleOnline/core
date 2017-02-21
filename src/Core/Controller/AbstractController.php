@@ -10,6 +10,8 @@ use Zend\Mvc\MvcEvent;
 
 class AbstractController extends AbstractActionController {
 
+    protected $_allowed_view_methods = array('json', 'html', 'form');
+
     /**
      * @var Doctrine\ORM\EntityManager
      */
@@ -57,22 +59,14 @@ class AbstractController extends AbstractActionController {
 
     protected function detectViewMethod() {
         $request = $this->getRequest();
-        $headers = $request->getHeaders();
         $uri = $request->getUri()->getPath();
-        if ($headers->has('accept')) {
-            $viewMethod_request = 'json';
-        } else {
-            foreach ($this->_allowed_view_methods AS $compare) {
-                $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
-                if ($return) {
-                    $viewMethod_request = $compare;
-                }
+        foreach ($this->_allowed_view_methods AS $compare) {
+            $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
+            if ($return) {
+                $viewMethod_request = $compare;
             }
         }
-        if (!isset($viewMethod_request)) {
-            $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod')) ?: 'html';
-        }
-        return $viewMethod_request;
+        return $viewMethod_request ?: strtolower($this->params()->fromQuery('viewMethod')) ?: 'html';
     }
 
 }
