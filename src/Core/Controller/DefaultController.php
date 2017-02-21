@@ -2,11 +2,9 @@
 
 namespace Core\Controller;
 
-use Core\DiscoveryModel;
-use Zend\View\Model\ViewModel;
-use Core\Model\ErrorModel;
 use Core\Controller\AbstractController;
 use Core\Helper\Format;
+
 
 class DefaultController extends AbstractController {
 
@@ -15,7 +13,6 @@ class DefaultController extends AbstractController {
     protected $_method;
     protected $_viewMethod;
     protected $_model;
-    protected $_view;
     protected $_entity_children;
     protected $_entity;
     protected $_config;
@@ -24,34 +21,9 @@ class DefaultController extends AbstractController {
         $this->_config = $config;
     }
 
-    private function initialize() {
-        $method_request = strtoupper($this->params()->fromQuery('method') ?: filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
-        $viewMethod_request = $this->detectViewMethod();
-        $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
-        $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_view_methods) ? $viewMethod_request : 'html';
-        $this->_model = new DiscoveryModel($this->serviceLocator, $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
-        $this->_view = new ViewModel();
-        $this->_entity_children = $this->params('entity_children');
-        $this->_entity = $this->params('entity');
-    }
 
-    protected function detectViewMethod() {
-        $request = $this->getRequest();
-        $uri = $request->getUri()->getPath();
-        foreach ($this->_allowed_view_methods AS $compare) {
-            $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
-            if ($return) {
-                $viewMethod_request = $compare;
-            }
-        }
-        if (!isset($viewMethod_request)) {
-            $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod')) ?: 'html';
-        }
-        return $viewMethod_request;
-    }
 
     private function getForm($entity_id = null) {
-
         $return = [];
         $id = $entity_id ?: $this->params()->fromQuery('id');
         $this->_model->setViewMethod('form');

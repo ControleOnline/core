@@ -3,93 +3,17 @@
 namespace Core\Controller;
 
 use Core\DiscoveryModel;
-use Zend\View\Model\ViewModel;
 use Core\Model\ErrorModel;
 use Core\Controller\DefaultController;
 
 class GenericController extends DefaultController {
 
     protected $_allowed_methods = array('GET', 'POST', 'PUT', 'DELETE', 'FORM');
-    protected $_allowed_viewMethods = array('json', 'html', 'form');
     protected $_method;
     protected $_viewMethod;
     protected $_model;
-    protected $_view;
     protected $_entity_children;
     protected $_entity;
-    protected $_config;
-
-    public function setConfig($config) {
-        $this->_config = $config;
-    }
-
-    private function initialize() {
-        $method_request = strtoupper($this->params()->fromQuery('method') ?: filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
-        $viewMethod_request = $this->detectViewMethod();
-        $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
-        $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_viewMethods) ? $viewMethod_request : 'html';
-        $this->_model = new DiscoveryModel($this->serviceLocator, $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
-        $this->_view = new ViewModel();
-        $this->_entity_children = $this->params('entity_children');
-        $this->_entity = $this->params('entity');
-    }
-
-    protected function detectViewMethod() {
-        $request = $this->getRequest();
-        $headers = $request->getHeaders();
-        $uri = $request->getUri()->getPath();
-        $viewMethod_request = strtolower($this->params()->fromQuery('viewMethod'));
-        if ($headers->has('accept')) {
-            $viewMethod_request = 'json';
-        } else {
-            foreach ($this->_allowed_viewMethods AS $compare) {
-                $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
-                if ($return) {
-                    $viewMethod_request = $return;
-                }
-            }
-        }
-
-        return $viewMethod_request;
-    }
-
-    private function getForm($entity_id = null) {
-        $return = [];
-        $id = $entity_id ?: $this->params()->fromQuery('id');
-        $this->_model->setViewMethod('form');
-        $this->_model->setParam('id', $id);
-        $this->_view->setTerminal(true);
-        if ($this->_entity) {
-            $return = $this->_model->discovery($this->_entity, null, true);
-        }
-        if ($this->_entity_children) {
-            $return['id'] = $id;
-            $return['children'] = $this->_model->discovery($this->_entity_children, $this->_entity, true);
-        }
-        $return['method'] = $id ? 'PUT' : 'POST';
-        return $return;
-    }
-
-    private function alterData() {
-        $return = [];
-        $data = $this->_model->discovery($this->_entity);
-        if ($data) {
-            $return['success'] = true;
-        } else {
-            $return['error']['code'] = 0;
-            $return['error']['message'] = 'No register with this ID';
-            $return['success'] = false;
-        }
-        return $return;
-    }
-
-    private function insertData() {
-        $data = $this->_model->discovery($this->_entity);
-        $return = array(
-            'data' => $data
-        );
-        return $return;
-    }
 
     private function getDataById($id) {
         $return = [];

@@ -107,7 +107,6 @@ class DiscoveryRoute {
         if ($this->getController()) {
             $this->discoveryAction($routes);
         }
-
         $return = array(
             'module' => $this->camelCase($this->getModule()),
             'controller' => $this->getController(),

@@ -21,7 +21,7 @@ class DiscoveryModel {
     private $rows;
     private $config;
 
-    public function __construct(\Zend\ServiceManager\ServiceManager $sm, $method, $viewMethod, $params, $config) {
+    public function __construct(\Zend\ServiceManager\ServiceManager $sm, $method, $viewMethod, $params, $config) {        
         $this->setSm($sm);
         $this->setEntityManager($sm->get('Doctrine\ORM\EntityManager'));
         $this->setMethod($method);

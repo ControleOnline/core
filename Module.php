@@ -12,6 +12,7 @@ use Core\Model\InstallModel;
 use Zend\ModuleManager\ModuleEvent;
 use Core\Helper\Header;
 use User\Model\UserModel;
+use Core\Helper\Format;
 
 class Module {
 
@@ -43,14 +44,17 @@ class Module {
         $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
-        $this->setResponseType($e);
+
         if (isset($config['doctrine']['connection']['orm_default']['params'])) {
             $dbConfig = $config['doctrine']['connection']['orm_default']['params'];
             $entity = new DiscoveryEntity($this->em, $dbConfig, $this->config);
             $entity->checkEntities();
         }
-        $this->configDefaultViewOptions($eventManager);
-        $this->setViewTerminal($e, $config['view']['terminal_sufix']);
+        if (!$this->verifyJsonStrategy($e)) {
+            $this->configDefaultViewOptions($eventManager);
+            $this->setViewTerminal($e, $config['view']['terminal_sufix']);
+        }
+
         //$this->installEntities();                
     }
 
@@ -74,7 +78,7 @@ class Module {
             $viewModel->systemVersion = Header::getSystemVersion();
             $userModel = new UserModel();
             $userModel->initialize($e->getApplication()->getServiceManager());
-            $viewModel->_userModel = $userModel;            
+            $viewModel->_userModel = $userModel;
 
             $app = $e->getTarget();
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
@@ -178,12 +182,8 @@ class Module {
         $response = new Response();
         $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');
 
-        $response->setContent(Json::encode($e->getResult()->getVariables(), true));
+        $response->setContent(Json::encode(Format::returnData($e->getResult()->getVariables()), true));
         $e->setResponse($response);
-    }
-
-    public function setResponseType(\Zend\Mvc\MvcEvent $e) {
-        $this->verifyJsonStrategy($e);
     }
 
     public function verifyJsonStrategy(\Zend\Mvc\MvcEvent $e) {
@@ -195,7 +195,7 @@ class Module {
         if ($headers->has('accept') || $is_json) {
             $accept = $headers->get('accept');
             $match = $accept->match('application/json');
-            if ($match && $match->getTypeString() != '*/*' || $is_json) {
+            if ($match && $match->getTypeString() != '*/*' || $is_json) {                
                 $e->getApplication()->getEventManager()->attach('render', array($this, 'registerJsonStrategy'), 100);
                 $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_FINISH, array($this, 'finishJsonStrategy'));
                 return true;
