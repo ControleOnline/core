@@ -7,6 +7,17 @@ use Zend\View\Variables;
 
 class Format {
 
+    public static function removeUrlParameters($url) {
+        return parse_url($url, PHP_URL_PATH);
+    }
+
+    public static function getModulePath($module) {
+        if ($module) {
+            $reflector = new \ReflectionClass('\\' . $module . '\\Module');
+            return dirname($reflector->getFileName());
+        }
+    }
+
     public static function returnData($data = false, $convert_to_array = false, $page = 1, $total_results = 0) {
 
         if (ErrorModel::getErrors()) {

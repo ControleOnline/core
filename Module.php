@@ -10,7 +10,7 @@ use Zend\Json\Json;
 use Core\Helper\Url;
 use Core\Model\InstallModel;
 use Zend\ModuleManager\ModuleEvent;
-use Core\Helper\Header;
+use Assets\Helper\Header;
 use User\Model\UserModel;
 use Core\Helper\Format;
 
@@ -69,10 +69,10 @@ class Module {
             });
         } elseif ($extension != '.json') {
             $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
-
-            Header::addDefaultLibs($renderer);
-            Header::addDefaultHeaderFiles($renderer, $this->default_route, $uri);
+            Header::init($renderer,$this->default_route,$uri);                        
+            Header::addJsLibs('lazyLoad', 'controleonline-core-js/dist/js/LazyLoad.js');
             $viewModel->requireJsFiles = Header::getRequireJsFiles();
+            $viewModel->requireJsLibs = Header::requireJsLibs();
             $viewModel->systemVersion = Header::getSystemVersion();
             $userModel = new UserModel();
             $userModel->initialize($e->getApplication()->getServiceManager());
