@@ -24,7 +24,8 @@
         "doctrine/doctrine-orm-module": "~0.7.0",
         "doctrine/migrations": "*",                        
         "zendframework/zftool": "*",
-        "zendframework/zend-developer-tools": "*"
+        "zendframework/zend-developer-tools": "*",
+        "controleonline/assets-essentials": "*"
     },    
     "scripts": {        
         "pre-install-cmd": [
