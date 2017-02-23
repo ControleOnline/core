@@ -178,7 +178,7 @@ class Module {
 
     public function finishJsonStrategy(\Zend\Mvc\MvcEvent $e) {
         $response = new Response();
-        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');
+        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');                        
         $response->setContent(Json::encode(Format::returnData($e->getResult()->getVariables()), true));
         $e->setResponse($response);
     }
@@ -192,13 +192,13 @@ class Module {
         $headers = $request->getHeaders();
         $uri = $request->getUri()->getPath();
         $compare = '.json';
-        $is_json = substr_compare($uri, $compare, strlen($uri) - strlen($compare), strlen($compare)) === 0;
+        $is_json = substr_compare($uri, $compare, strlen($uri) - strlen($compare), strlen($compare)) === 0;        
         if ($headers->has('accept') || $is_json) {
             $accept = $headers->get('accept');
             $match = $accept->match('application/json');
             if ($match && $match->getTypeString() != '*/*' || $is_json) {
                 $e->getApplication()->getEventManager()->attach('render', array($this, 'registerJsonStrategy'), 100);
-                $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_FINISH, array($this, 'finishJsonStrategy'));
+                $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_FINISH, array($this, 'finishJsonStrategy'));                
                 return true;
             } else {
                 return false;

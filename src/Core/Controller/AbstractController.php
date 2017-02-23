@@ -50,7 +50,7 @@ class AbstractController extends AbstractActionController {
         $method_request = strtoupper($this->params()->fromQuery('method') ?: filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
         $viewMethod_request = $this->detectViewMethod();
         $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
-        $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_view_methods) ? $viewMethod_request : 'html';
+        $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_view_methods) ? $viewMethod_request : 'html';        
         $this->_view = ($this->_viewMethod == 'json') ? new JsonModel() : new ViewModel();
         $this->_model = new DiscoveryModel($this->serviceLocator, $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
         $this->_entity_children = $this->params('entity_children');
