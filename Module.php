@@ -59,6 +59,10 @@ class Module {
         $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
         $uri = $e->getRequest()->getUri()->getPath();
         $extension = '.' . strtolower(pathinfo($uri, PATHINFO_EXTENSION));
+        $userModel = new UserModel();
+        $userModel->initialize($e->getApplication()->getServiceManager());
+        $viewModel->user = $userModel;
+
         if (in_array($extension, $terminal_sufix)) {
             $sharedEvents = $e->getApplication()->getEventManager()->getSharedManager();
             $sharedEvents->attach($this->module, 'dispatch', function($e) {
@@ -69,14 +73,11 @@ class Module {
             });
         } elseif ($extension != '.json') {
             $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
-            Header::init($renderer,$this->default_route,$uri);                        
+            Header::init($renderer, $this->default_route, $uri);
             Header::addJsLibs('lazyLoad', 'controleonline-core-js/dist/js/LazyLoad.js');
             $viewModel->requireJsFiles = Header::getRequireJsFiles();
             $viewModel->requireJsLibs = Header::requireJsLibs();
             $viewModel->systemVersion = Header::getSystemVersion();
-            $userModel = new UserModel();
-            $userModel->initialize($e->getApplication()->getServiceManager());
-            $viewModel->_userModel = $userModel;
             $app = $e->getTarget();
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
         }
@@ -178,7 +179,7 @@ class Module {
 
     public function finishJsonStrategy(\Zend\Mvc\MvcEvent $e) {
         $response = new Response();
-        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');                        
+        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');
         $response->setContent(Json::encode(Format::returnData($e->getResult()->getVariables()), true));
         $e->setResponse($response);
     }
@@ -192,13 +193,13 @@ class Module {
         $headers = $request->getHeaders();
         $uri = $request->getUri()->getPath();
         $compare = '.json';
-        $is_json = substr_compare($uri, $compare, strlen($uri) - strlen($compare), strlen($compare)) === 0;        
+        $is_json = substr_compare($uri, $compare, strlen($uri) - strlen($compare), strlen($compare)) === 0;
         if ($headers->has('accept') || $is_json) {
             $accept = $headers->get('accept');
             $match = $accept->match('application/json');
             if ($match && $match->getTypeString() != '*/*' || $is_json) {
                 $e->getApplication()->getEventManager()->attach('render', array($this, 'registerJsonStrategy'), 100);
-                $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_FINISH, array($this, 'finishJsonStrategy'));                
+                $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_FINISH, array($this, 'finishJsonStrategy'));
                 return true;
             } else {
                 return false;
