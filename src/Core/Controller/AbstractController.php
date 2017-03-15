@@ -9,7 +9,7 @@ use Zend\View\Model\JsonModel;
 use Zend\Mvc\MvcEvent;
 
 class AbstractController extends AbstractActionController {
-    
+
     protected $_allowed_view_methods = array('json', 'html', 'form');
 
     /**
@@ -21,12 +21,11 @@ class AbstractController extends AbstractActionController {
      * @var Zend\View\Model\ViewModel
      */
     protected $_view;
-    
+
     /**
      * @var Zend\View\Renderer\RendererInterface
      */
     protected $_renderer;
-    
 
     public function setEntityManager(\Doctrine\ORM\EntityManager $em) {
         $this->_em = $em;
@@ -55,13 +54,13 @@ class AbstractController extends AbstractActionController {
     protected function initialize() {
         $method_request = strtoupper($this->params()->fromQuery('method') ?: filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
         $viewMethod_request = $this->detectViewMethod();
-        $this->_method = in_array($method_request, $this->_allowed_methods) ? $method_request : 'GET';
+        $this->_method = in_array($method_request, $this->_allowed_methods ?: array()) ? $method_request : 'GET';
         $this->_viewMethod = in_array($viewMethod_request, $this->_allowed_view_methods) ? $viewMethod_request : 'html';
         $this->_view = ($this->_viewMethod == 'json') ? new JsonModel() : new ViewModel();
         $this->_model = new DiscoveryModel($this->serviceLocator, $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
         $this->_entity_children = $this->params('entity_children');
         $this->_entity = $this->params('entity');
-        $this->_renderer =  $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        $this->_renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
     }
 
     protected function detectViewMethod() {
