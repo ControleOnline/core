@@ -66,6 +66,7 @@ class AbstractController extends AbstractActionController {
     protected function detectViewMethod() {
         $request = $this->getRequest();
         $uri = $request->getUri()->getPath();
+        $viewMethod_request = null;
         foreach ($this->_allowed_view_methods AS $compare) {
             $return = substr_compare($uri, '.' . $compare, strlen($uri) - strlen('.' . $compare), strlen('.' . $compare)) === 0;
             if ($return) {

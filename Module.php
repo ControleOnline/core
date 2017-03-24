@@ -62,7 +62,7 @@ class Module {
         $userModel = new UserModel();
         $userModel->initialize($e->getApplication()->getServiceManager());
         $viewModel->user = $userModel;
-
+        
         if (in_array($extension, $terminal_sufix)) {
             $sharedEvents = $e->getApplication()->getEventManager()->getSharedManager();
             $sharedEvents->attach($this->module, 'dispatch', function($e) {
@@ -80,7 +80,7 @@ class Module {
             $viewModel->systemVersion = Header::getSystemVersion();
             $app = $e->getTarget();
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
-        }
+        }        
         $viewModel->setVariables(Format::returnData($viewModel->getVariables()));
     }
 
