@@ -11,7 +11,6 @@ use Core\Helper\Url;
 use Core\Model\InstallModel;
 use Zend\ModuleManager\ModuleEvent;
 use Assets\Helper\Header;
-use User\Model\UserModel;
 use Core\Helper\Format;
 
 class Module {
@@ -59,10 +58,6 @@ class Module {
         $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
         $uri = $e->getRequest()->getUri()->getPath();
         $extension = '.' . strtolower(pathinfo($uri, PATHINFO_EXTENSION));
-        $userModel = new UserModel();
-        $userModel->initialize($e->getApplication()->getServiceManager());
-        $viewModel->user = $userModel;
-        
         if (in_array($extension, $terminal_sufix)) {
             $sharedEvents = $e->getApplication()->getEventManager()->getSharedManager();
             $sharedEvents->attach($this->module, 'dispatch', function($e) {
@@ -78,10 +73,23 @@ class Module {
             $viewModel->requireJsFiles = Header::getRequireJsFiles();
             $viewModel->requireJsLibs = Header::requireJsLibs();
             $viewModel->systemVersion = Header::getSystemVersion();
+
             $app = $e->getTarget();
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
-        }        
+            $app->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER, array($this, 'setDefaultVariables'), 100);
+        }
+
         $viewModel->setVariables(Format::returnData($viewModel->getVariables()));
+    }
+
+    public function setDefaultVariables(\Zend\Mvc\MvcEvent $e) {
+        $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
+        $userModel = new \User\Model\UserModel();
+        $userModel->initialize($e->getApplication()->getServiceManager());
+        $viewModel->user = $userModel->getLoggedUser();
+        $viewModel->userPeople = $userModel->getLoggedUserPeople();
+        $viewModel->userModel = $userModel;
+        $viewModel->defaultCompany = $userModel->getDefaultCompany();
     }
 
     public function lazyLoad(\Zend\Mvc\MvcEvent $e) {
