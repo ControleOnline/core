@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="modules", uniqueConstraints={@ORM\UniqueConstraint(name="UX_MODULE_NAME", columns={"name"})}, indexes={@ORM\Index(name="IX_ACTIVE_MODULE", columns={"active"})})
  * @ORM\Entity
  */
-class Modules {
-
+class Modules
+{
     /**
      * @var integer
      *
@@ -49,12 +49,14 @@ class Modules {
      */
     private $active = '0';
 
+
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -64,7 +66,8 @@ class Modules {
      * @param string $name
      * @return Modules
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->name = $name;
 
         return $this;
@@ -75,7 +78,8 @@ class Modules {
      *
      * @return string 
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -85,7 +89,8 @@ class Modules {
      * @param string $description
      * @return Modules
      */
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
 
         return $this;
@@ -96,7 +101,8 @@ class Modules {
      *
      * @return string 
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
@@ -106,7 +112,8 @@ class Modules {
      * @param integer $order
      * @return Modules
      */
-    public function setOrder($order) {
+    public function setOrder($order)
+    {
         $this->order = $order;
 
         return $this;
@@ -117,7 +124,8 @@ class Modules {
      *
      * @return integer 
      */
-    public function getOrder() {
+    public function getOrder()
+    {
         return $this->order;
     }
 
@@ -127,7 +135,8 @@ class Modules {
      * @param boolean $active
      * @return Modules
      */
-    public function setActive($active) {
+    public function setActive($active)
+    {
         $this->active = $active;
 
         return $this;
@@ -138,8 +147,8 @@ class Modules {
      *
      * @return boolean 
      */
-    public function getActive() {
+    public function getActive()
+    {
         return $this->active;
     }
-
 }

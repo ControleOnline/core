@@ -17,7 +17,7 @@ class DiscoveryEntity {
         $this->em = $em;
         $this->config = $config;
         $this->entityFolder = $this->config['EntityPath'];
-        $this->namespace = 'Entity\\';
+        $this->namespace = 'Core\\Entity\\';
         $this->dbConfig = $dbConfig;
     }
 

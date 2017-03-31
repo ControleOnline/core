@@ -3,6 +3,7 @@
 namespace Core\Model;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Core\Model\ErrorModel;
 
 class DefaultModel {
 
@@ -30,12 +31,15 @@ class DefaultModel {
     protected $config;
 
     public function initialize(\Zend\ServiceManager\ServiceManager $serviceLocator) {
+        
         $this->setServiceLocator($serviceLocator);
         $this->setConfig($serviceLocator->get('Config'));
         $this->setEntityManager($serviceLocator->get('\Doctrine\ORM\EntityManager'));
-        $namespace = str_replace('Model', 'Entity', explode('\\', get_called_class()));
-        $namespace[] = str_replace('Entity', '', array_pop($namespace));                
-        $entity = implode('\\', $namespace);
+        $namespace = str_replace('Model', 'Entity', explode('\\', get_called_class()));                
+        $namespace[0] = 'Core';
+        $namespace[] = str_replace('Entity', '', array_pop($namespace));        
+        $entity = implode('\\', $namespace);                
+        
         $this->setEntity($entity);
     }
 
@@ -69,8 +73,8 @@ class DefaultModel {
         return $this;
     }
 
-    public function setEntity($entity) {        
-        $this->entity = class_exists($entity) ? $this->_em->getRepository($entity) : null;        
+    public function setEntity($entity) {
+        $this->entity = class_exists($entity) ? $this->_em->getRepository($entity) : null;
         $this->entity_name = $entity;
         return $this;
     }
@@ -94,7 +98,7 @@ class DefaultModel {
         }
         $assoc = $this->getAssociationNames() ?: array();
         foreach ($assoc AS $a) {
-            $return['childs'][$a]['fields'] = $this->getMetadata('Entity\\' . ucfirst($a))->fieldMappings;
+            $return['childs'][$a]['fields'] = $this->getMetadata('Core\\Entity\\' . ucfirst($a))->fieldMappings;
         }
         $data = (isset($params['id']) && $params['id']) ? $this->get($params['id']) : null;
         $return['data'] = isset($data[strtolower($entity)]) && isset($data[strtolower($entity)][0]) ? $data[strtolower($entity)][0] : null;
@@ -171,7 +175,7 @@ class DefaultModel {
         foreach ($field_a_names as $field_a) {
             if (isset($params[$field_a . '_id'])) {
                 $f_a = ucfirst($field_a);
-                $object = $this->_em->getRepository('Entity\\' . $f_a)->find($params[$field_a . '_id']);
+                $object = $this->_em->getRepository('Core\\Entity\\' . $f_a)->find($params[$field_a . '_id']);
                 $f_s = 'set' . $f_a;
                 $entity->$f_s($object);
             }
@@ -204,9 +208,9 @@ class DefaultModel {
                     $this->alias[] = $j;
                     $qb->select($this->alias);
                     $qb->leftJoin($join_alias . '.' . $table, $j);
-                    $table_child = $this->_em->getClassMetadata('Entity\\' . ucfirst($table))->getAssociationMappings();
+                    $table_child = $this->_em->getClassMetadata('Core\\Entity\\' . ucfirst($table))->getAssociationMappings();
                     foreach ($table_child as $k => $p) {
-                        $this->getChilds($qb, 'Entity\\' . ucfirst($table), $j);
+                        $this->getChilds($qb, 'Core\\Entity\\' . ucfirst($table), $j);
                     }
                 }
             }
@@ -243,7 +247,7 @@ class DefaultModel {
     }
 
     protected function getEntityKey($entity) {
-        return strtolower(str_replace('Entity\\', '', $entity));
+        return strtolower(str_replace('Core\\Entity\\', '', $entity));
     }
 
     public function get($id = null, $page = 1, $limit = 100) {
@@ -284,6 +288,15 @@ class DefaultModel {
     public function setEntityName($entity_name) {
         $this->entity_name = $entity_name;
         return $this;
+    }
+
+    protected function addError($error) {
+        ErrorModel::addError($error);
+        return $this;
+    }
+
+    public function getErrors() {
+        return ErrorModel::getErrors();
     }
 
 }

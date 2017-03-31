@@ -1,5 +1,7 @@
 <?php
 
+namespace Core;
+
 return array(
     'view_helpers' => array(
         'invokables' => array(
@@ -68,16 +70,24 @@ return array(
         )
     ),
     'doctrine' => array(
+        'orm' => array(
+            'auto_mapping' => true
+        ),
         'driver' => array(
             'Entity' => array(
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
                 'cache' => 'array'
             ),
+            __NAMESPACE__ . '_driver' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/' . __NAMESPACE__ . '/Entity')
+            ),
             'orm_default' => array(
                 'drivers' => array(
-                    'Entity' => 'Entity'
+                    'Core\Entity' => __NAMESPACE__ . '_driver'
                 ),
             ),
         ),
-    )
+    ),
 );

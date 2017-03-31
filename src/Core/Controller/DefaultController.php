@@ -5,15 +5,7 @@ namespace Core\Controller;
 use Core\Controller\AbstractController;
 use Core\Helper\Format;
 
-class DefaultController extends AbstractController {
-
-    protected $_allowed_methods = array('GET', 'POST', 'PUT', 'DELETE', 'FORM');
-    protected $_method;
-    protected $_viewMethod;
-    protected $_model;
-    protected $_entity_children;
-    protected $_entity;
-    protected $_config;
+class DefaultController extends AbstractController {    
 
     public function setConfig($config) {
         $this->_config = $config;

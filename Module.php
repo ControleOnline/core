@@ -12,6 +12,7 @@ use Core\Model\InstallModel;
 use Zend\ModuleManager\ModuleEvent;
 use Assets\Helper\Header;
 use Core\Helper\Format;
+use Core\Helper\View;
 
 class Module {
 
@@ -56,6 +57,7 @@ class Module {
 
     private function setViewTerminal(\Zend\Mvc\MvcEvent $e, array $terminal_sufix = array('.html')) {
         $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
+        $app = $e->getTarget();
         $uri = $e->getRequest()->getUri()->getPath();
         $extension = '.' . strtolower(pathinfo($uri, PATHINFO_EXTENSION));
         if (in_array($extension, $terminal_sufix)) {
@@ -73,23 +75,15 @@ class Module {
             $viewModel->requireJsFiles = Header::getRequireJsFiles();
             $viewModel->requireJsLibs = Header::requireJsLibs();
             $viewModel->systemVersion = Header::getSystemVersion();
-
-            $app = $e->getTarget();
+            
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
-            $app->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER, array($this, 'setDefaultVariables'), 100);
         }
-
+        $app->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER, array($this, 'setDefaultVariables'), 100);
         $viewModel->setVariables(Format::returnData($viewModel->getVariables()));
     }
 
     public function setDefaultVariables(\Zend\Mvc\MvcEvent $e) {
-        $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
-        $userModel = new \User\Model\UserModel();
-        $userModel->initialize($e->getApplication()->getServiceManager());
-        $viewModel->user = $userModel->getLoggedUser();
-        $viewModel->userPeople = $userModel->getLoggedUserPeople();
-        $viewModel->userModel = $userModel;
-        $viewModel->defaultCompany = $userModel->getDefaultCompany();
+        View::setDefaultVariables($e->getApplication()->getMvcEvent()->getViewModel(), $e->getApplication()->getServiceManager());
     }
 
     public function lazyLoad(\Zend\Mvc\MvcEvent $e) {
@@ -170,7 +164,7 @@ class Module {
         if (is_dir($directory) || is_link($directory)) {
             $entities = glob($directory . DIRECTORY_SEPARATOR . '*.php');
             array_walk($entities, function (&$value) use (&$module) {
-                $value = '' . $module . '\\Entity\\' . pathinfo($value)['filename'];
+                $value = '' . $module . '\\Core\\Entity\\' . pathinfo($value)['filename'];
             });
             $install = new InstallModel($this->sm);
             $install->installEntity($entities);

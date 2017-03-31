@@ -7,6 +7,7 @@ use Core\DiscoveryModel;
 use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\MvcEvent;
+use Core\Helper\View;
 
 class AbstractController extends AbstractActionController {
 
@@ -26,6 +27,13 @@ class AbstractController extends AbstractActionController {
      * @var Zend\View\Renderer\RendererInterface
      */
     protected $_renderer;
+    protected $_allowed_methods = array('GET', 'POST', 'PUT', 'DELETE', 'FORM');
+    protected $_method;
+    protected $_viewMethod;
+    protected $_model;
+    protected $_entity_children;
+    protected $_entity;
+    protected $_config;
 
     public function setEntityManager(\Doctrine\ORM\EntityManager $em) {
         $this->_em = $em;
@@ -61,6 +69,7 @@ class AbstractController extends AbstractActionController {
         $this->_entity_children = $this->params('entity_children');
         $this->_entity = $this->params('entity');
         $this->_renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
+        View::setDefaultVariables($this->_view, $this->serviceLocator);
     }
 
     protected function detectViewMethod() {

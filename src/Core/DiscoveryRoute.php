@@ -56,7 +56,7 @@ class DiscoveryRoute {
         if ($module) {
             return '\\' . $this->camelCase($module) . '\\' . $this->camelCase($type) . '\\' . $this->camelCase($class);
         } else {
-            return '\\' . $this->camelCase($type) . '\\' . $this->camelCase($class);
+            return '\\Core\\' . $this->camelCase($type) . '\\' . $this->camelCase($class);
         }
     }
 
