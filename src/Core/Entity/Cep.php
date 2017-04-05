@@ -31,7 +31,7 @@ class Cep
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Core\Entity\Street", mappedBy="cep")
+     * @ORM\OneToMany(targetEntity="Core\Entity\Street", mappedBy="street")
      */
     private $street;
 

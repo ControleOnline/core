@@ -13,8 +13,8 @@ class Url {
         $compareUrl[] = '/company/create/';
         $compareUrl[] = '/company/create-user-company/';
         $compareUrl[] = '/user/profile-image/';
-        $compareUrl[] = '/user/login/';
-        $compareUrl[] = '/user/logout/';                
+        $compareUrl[] = '/user/login/';        
+        $compareUrl[] = '/user/logout/';
         $pregGrep = ($url != '/') ? preg_grep('/^' . \addcslashes(self::removeSufix($url) . '/', '/') . '/i', $compareUrl) : false;
         return $pregGrep ? false : true;
     }

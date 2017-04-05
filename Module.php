@@ -72,10 +72,11 @@ class Module {
             $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
             Header::init($renderer, $this->default_route, $uri);
             Header::addJsLibs('lazyLoad', 'controleonline-core-js/dist/js/LazyLoad.js');
+            Header::addJsLibs('GMaps', 'controleonline-core-js/dist/js/GMaps.js');
             $viewModel->requireJsFiles = Header::getRequireJsFiles();
             $viewModel->requireJsLibs = Header::requireJsLibs();
             $viewModel->systemVersion = Header::getSystemVersion();
-            
+
             $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
         }
         $app->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER, array($this, 'setDefaultVariables'), 100);
@@ -97,7 +98,7 @@ class Module {
     private function addDefaultTemplates($event, $baseDirs) {
         $sm = $event->getParam('application')->getServiceManager();
         $viewResolverMap = $sm->get('ViewTemplateMapResolver');
-        $viewResolverPathStack = $sm->get('ViewTemplatePathStack');
+        $viewResolverPathStack = $sm->get('ViewTemplatePathStack');        
         foreach ($baseDirs AS $baseDir) {
             if (is_file($baseDir . '/layout/layout.phtml')) {
                 $viewResolverMap->add('layout/layout', $baseDir . '/layout/layout.phtml');
@@ -111,7 +112,9 @@ class Module {
                 $viewResolverMap->add('error/index', $baseDir . '/error/index.phtml');
                 $viewResolverMap->add('error', $baseDir . '/error/index.phtml');
             }
-            $viewResolverPathStack->addPath($baseDir);
+            if ($baseDir) {
+                $viewResolverPathStack->addPath($baseDir);
+            }
             $viewResolverPathStack->addPath(__DIR__ . DIRECTORY_SEPARATOR . 'view');
         }
     }
