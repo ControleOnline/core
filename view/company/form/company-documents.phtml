@@ -1,0 +1,34 @@
+<div class="panel-body">
+    <!-- Text input-->
+    <fieldset>
+        <form class="api-form form-horizontal" action="/<?=$this->module_name?>/document.form<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" method="POST" name="form-company-document" id="form-company-document" role="form" data-childs="[&quot;people&quot;,&quot;log&quot;]">
+            <!-- Form Name -->
+            <i title="<?= $this->translate('Add new document for this company') ?>" class="fa fa-plus pull-right" data-add-form="/<?=$this->module_name?>/add-document.form<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" aria-hidden="true"></i>
+            <legend><?= $this->translate('Documents') ?></legend>            
+            <div id="container-delete-document-{id}" class="form-group hidden clone highlight" data-clone="add-company-document">                
+                <label class="col-md-3 control-label" id="label-document-{id}" for="input-document">{document_type}: </label>
+                <div class="col-md-6">                        
+                    <input readonly class="form-control input-md" value="" id="input-document-{id}" name="document" type="text" >
+                </div>
+                <div class="col-md-3">
+                    <button data-container-remove="container-delete-document" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this document?') ?>" data-body="{document}" data-toggle="modal" data-target="#confirm-delete" data-id="{id}" data-delete-confirm="/<?=$this->module_name?>/delete-document.json<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" name="confirm-delete-{id}" id="confirm-delete-{id}" type="submit" class="confirm-delete btn btn-danger">
+                        <?= $this->translate('Delete') ?>
+                    </button>
+                </div>
+            </div>                                        
+            <?php foreach ($this->_currentCompany->getDocument() AS $company_document) { ?>
+                <div id="container-delete-document-<?= $company_document->getId() ?>" class="form-group highlight">                    
+                    <label class="col-md-3 control-label" id="label-document-<?= $company_document->getId() ?>" for="input-document"><?= $company_document->getDocumentType()->getDocumentType() ?>: </label>
+                    <div class="col-md-6">                        
+                        <input readonly class="form-control input-md" value="<?= $company_document->getDocument() ?>" id="input-document-<?= $company_document->getId() ?>" name="document" type="text" >
+                    </div>                                                
+                    <div class="col-md-3">
+                        <button  data-container-remove="container-delete-document" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this document?') ?>" data-body="<?= $company_document->getDocument() ?>" data-toggle="modal" data-target="#confirm-delete" data-id="<?= $company_document->getId() ?>" data-delete-confirm="/<?=$this->module_name?>/delete-document.json<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" name="confirm-delete-<?= $company_document->getId() ?>" id="confirm-delete-<?= $company_document->getId() ?>" type="button" class="confirm-delete btn btn-danger">
+                            <?= $this->translate('Delete') ?>
+                        </button>
+                    </div>
+                </div>                                        
+            <?php } ?>
+        </form>
+    </fieldset>
+</div>                              

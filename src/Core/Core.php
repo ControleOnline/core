@@ -41,7 +41,7 @@ class Core implements RouteInterface {
         $alias = trim($path, '/');
         $discovery = new DiscoveryRoute($this->defaults);                                
         $discovery->setUrl($alias);
-        $options = $discovery->getRoute();        
+        $options = $discovery->getRoute();                
         $discovery->setGetParams($request);
         $discovery->setMethod($request, $uri);
         return new RouteMatch($options);

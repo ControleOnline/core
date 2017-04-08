@@ -5,12 +5,12 @@ namespace Core\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PeopleEmployee
+ * PeopleCarrier
  *
- * @ORM\Table(name="people_employee", uniqueConstraints={@ORM\UniqueConstraint(name="employee_id", columns={"employee_id", "company_id"})}, indexes={@ORM\Index(name="company_id", columns={"company_id"}), @ORM\Index(name="IDX_2C6E59348C03F15C", columns={"employee_id"})})
+ * @ORM\Table(name="people_carrier", uniqueConstraints={@ORM\UniqueConstraint(name="carrier_id", columns={"carrier_id", "company_id"})}, indexes={@ORM\Index(name="company_id", columns={"company_id"}), @ORM\Index(name="IDX_2C6E59348C03F15C", columns={"carrier_id"})})
  * @ORM\Entity
  */
-class PeopleEmployee {
+class PeopleCarrier {
 
     /**
      * @var integer
@@ -24,7 +24,7 @@ class PeopleEmployee {
     /**
      * @var \Core\Entity\People
      *
-     * @ORM\ManyToOne(targetEntity="Core\Entity\People", inversedBy="peopleCompany")
+     * @ORM\ManyToOne(targetEntity="Core\Entity\People", inversedBy="peopleCarrier")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="company_id", referencedColumnName="id")
      * })
@@ -34,12 +34,12 @@ class PeopleEmployee {
     /**
      * @var \Core\Entity\People
      *
-     * @ORM\ManyToOne(targetEntity="Core\Entity\People", inversedBy="peopleEmployee")
+     * @ORM\ManyToOne(targetEntity="Core\Entity\People", inversedBy="peopleCompany")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="employee_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="carrier_id", referencedColumnName="id")
      * })
      */
-    private $employee;
+    private $carrier;
 
     /**
      * Get id
@@ -54,7 +54,7 @@ class PeopleEmployee {
      * Set company
      *
      * @param \Core\Entity\People $company
-     * @return PeopleEmployee
+     * @return PeopleCarrier
      */
     public function setCompany(\Core\Entity\People $company = null) {
         $this->company = $company;
@@ -72,24 +72,24 @@ class PeopleEmployee {
     }
 
     /**
-     * Set employee
+     * Set carrier
      *
-     * @param \Core\Entity\People $employee
-     * @return PeopleEmployee
+     * @param \Core\Entity\Carrier $carrier
+     * @return PeopleCarrier
      */
-    public function setEmployee(\Core\Entity\People $employee = null) {
-        $this->employee = $employee;
+    public function setCarrier(\Core\Entity\Carrier $carrier = null) {
+        $this->carrier = $carrier;
 
         return $this;
     }
 
     /**
-     * Get employee
+     * Get carrier
      *
-     * @return \Core\Entity\People 
+     * @return \Core\Entity\Carrier
      */
-    public function getEmployee() {
-        return $this->employee;
+    public function getCarrier() {
+        return $this->carrier;
     }
 
 }

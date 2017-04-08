@@ -1,0 +1,203 @@
+<div class="panel-body" id="form-company-adress">
+    <i title="<?= $this->translate('Add new adress to this company') ?>" class="fa fa-plus pull-right" data-add-form="/<?=$this->module_name?>/add-adress.form<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" aria-hidden="true"></i>
+    <legend><?= $this->translate('Adress') ?></legend>
+
+    <fieldset class="box-adress hidden clone highlight" id="container-delete-company-adress-{id}" data-clone="add-company-adress">
+        <div class="row">
+            <div class="form-suggestion">
+                <h2>{nickname}</h2>
+            </div>                                
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">     
+                    <label for="street"><?= $this->translate('street') ?>:</label>
+                    <div class="input-group">                        
+                        <span class="input-group-addon" id="basic-addon4">
+                            <i class="fa fa-key" aria-hidden="true"></i></span>
+                        <input id="street-{id}" name="street" value="{street}" type="text" placeholder="<?= $this->translate('Enter adress of your Company') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>                        
+            </div>
+
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">     
+                    <label for="adress-number"><?= $this->translate('Number') ?>:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon4"><i class="fa fa-key" aria-hidden="true"></i></span>
+                        <input id="adress-number-{id}" name="adress-number" value="{number}" type="text" placeholder="<?= $this->translate('Enter adress number') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>                        
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="form-group">     
+                    <label for="complement"><?= $this->translate('Complement') ?>:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon4">
+                            <i class="fa fa-key" aria-hidden="true"></i></span>
+                        <input id="complement-{id}" name="complement" value="{complement}" type="text" placeholder="<?= $this->translate('Enter complement of your adress') ?>" class="form-control input-md" required readonly>
+                    </div>  
+                </div>                        
+            </div>                                
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="form-group">     
+                    <label for="cep"><?= $this->translate('Cep') ?>:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon4">
+                            <i class="fa fa-key" aria-hidden="true"></i></span>
+                        <input id="cep-{id}" name="cep" value="{cep}" type="text" placeholder="<?= $this->translate('Enter CEP of your adress') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>       
+            </div>                        
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">     
+                    <label for="neighborhood"><?= $this->translate('Neighborhood') ?>:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon4">
+                            <i class="fa fa-key" aria-hidden="true"></i></span>
+                        <input id="neighborhood-{id}" name="neighborhood" value="{neighborhood}" type="text" placeholder="<?= $this->translate('Enter neighborhood of your adress') ?>" class="form-control input-md" required readonly>
+                    </div> 
+                </div>                        
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="form-group">     
+                    <label for="city"><?= $this->translate('City') ?>:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon4">
+                            <i class="fa fa-key" aria-hidden="true"></i></span>
+                        <input id="city-{id}" name="city" value="{city}" type="text" placeholder="<?= $this->translate('Enter city of your adress') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>                        
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">     
+                    <label for="state"><?= $this->translate('State') ?>:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon4">
+                            <i class="fa fa-key" aria-hidden="true"></i></span>
+                        <input id="state-name" name="state-name" type="hidden">
+                        <input id="state-{id}" name="state" value="{state}" type="text" placeholder="<?= $this->translate('Enter state of your adress') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>                        
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="form-group">     
+                    <label for="country"><?= $this->translate('Country') ?>:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="basic-addon4">
+                            <i class="fa fa-key" aria-hidden="true"></i></span>
+                        <input id="country-code" name="country-code" type="hidden">
+                        <input id="country-{id}" name="country" value="{country}" type="text" placeholder="<?= $this->translate('Enter country of your adress') ?>" class="form-control input-md" required readonly>
+                    </div>         
+                </div>                        
+            </div>
+        </div>
+        <div class="row pull-right">
+            <button data-container-remove="container-delete-company-adress" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this adress?') ?>" data-body="{nickname}" data-toggle="modal" data-target="#confirm-delete" data-id="{id}" data-delete-confirm="/<?=$this->module_name?>/delete-adress.json<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" name="confirm-delete-{id}" id="confirm-delete-{id}" type="submit" class="confirm-delete btn btn-danger">
+                <?= $this->translate('Delete') ?>
+            </button>
+        </div>            
+    </fieldset>            
+    <?php foreach ($this->_currentCompany->getAdress() AS $adress) { ?>    
+        <fieldset class="box-adress highlight" id="container-delete-company-adress-<?= $adress->getId() ?>">
+            <div class="row">
+                <div class="form-suggestion">
+                    <h2><?= $adress->getNickname() ?></h2>
+                </div>                                
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">     
+                        <label for="street"><?= $this->translate('Street') ?>:</label>
+                        <div class="input-group">                        
+                            <span class="input-group-addon" id="basic-addon4">
+                                <i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input id="street-<?= $adress->getId() ?>" name="street" value="<?= $this->translate($adress->getStreet()->getStreet()) ?>" type="text" placeholder="<?= $this->translate('Enter adress of your Company') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>                        
+                </div>
+
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group">     
+                        <label for="adress-number"><?= $this->translate('Number') ?>:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4"><i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input id="adress-number-<?= $adress->getId() ?>" name="adress-number" value="<?= $adress->getNumber() ?>" type="text" placeholder="<?= $this->translate('Enter adress number') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div class="form-group">     
+                        <label for="complement"><?= $this->translate('Complement') ?>:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4">
+                                <i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input id="complement-<?= $adress->getId() ?>" name="complement" value="<?= $adress->getComplement() ?>" type="text" placeholder="<?= $this->translate('Enter complement of your adress') ?>" class="form-control input-md" required readonly>
+                        </div>  
+                    </div>                        
+                </div>                                
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div class="form-group">     
+                        <label for="cep"><?= $this->translate('Cep') ?>:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4">
+                                <i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input id="cep-<?= $adress->getId() ?>" name="cep" value="<?= $adress->getStreet()->getCep()->getCep() ?>" type="text" placeholder="<?= $this->translate('Enter CEP of your adress') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>       
+                </div>                        
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">     
+                        <label for="neighborhood"><?= $this->translate('Neighborhood') ?>:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4">
+                                <i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input id="neighborhood-<?= $adress->getId() ?>" name="neighborhood" value="<?= $this->translate($adress->getStreet()->getNeighborhood()->getNeighborhood()) ?>" type="text" placeholder="<?= $this->translate('Enter neighborhood of your adress') ?>" class="form-control input-md" required readonly>
+                        </div> 
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div class="form-group">     
+                        <label for="city"><?= $this->translate('City') ?>:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4">
+                                <i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input id="city-<?= $adress->getId() ?>" name="city" value="<?= $this->translate($adress->getStreet()->getNeighborhood()->getCity()->getCity()) ?>" type="text" placeholder="<?= $this->translate('Enter city of your adress') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group">     
+                        <label for="state"><?= $this->translate('State') ?>:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4">
+                                <i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input id="state-name" name="state-name" type="hidden">
+                            <input id="state-<?= $adress->getId() ?>" name="state" value="<?= $this->translate($adress->getStreet()->getNeighborhood()->getCity()->getState()->getUf()) ?>" type="text" placeholder="<?= $this->translate('Enter state of your adress') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div class="form-group">     
+                        <label for="country"><?= $this->translate('Country') ?>:</label>
+                        <div class="input-group">
+                            <span class="input-group-addon" id="basic-addon4">
+                                <i class="fa fa-key" aria-hidden="true"></i></span>
+                            <input id="country-code" name="country-code" type="hidden">
+                            <input id="country-<?= $adress->getId() ?>" name="country" value="<?= $this->translate($adress->getStreet()->getNeighborhood()->getCity()->getState()->getCountry()->getCountryName()) ?>" type="text" placeholder="<?= $this->translate('Enter country of your adress') ?>" class="form-control input-md" required readonly>
+                        </div>         
+                    </div>                        
+                </div>
+            </div>
+            <div class="row pull-right">
+                <button data-container-remove="container-delete-company-adress" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this adress?') ?>" data-body="<?= $adress->getNickname() ?>" data-toggle="modal" data-target="#confirm-delete" data-id="<?= $adress->getId() ?>" data-delete-confirm="/<?=$this->module_name?>/delete-adress.json<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" name="confirm-delete-<?= $adress->getId() ?>" id="confirm-delete-<?= $adress->getId() ?>" type="submit" class="confirm-delete btn btn-danger">
+                    <?= $this->translate('Delete') ?>
+                </button>
+            </div>            
+        </fieldset>
+    <?php } ?>    
+</div>

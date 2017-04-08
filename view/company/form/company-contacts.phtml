@@ -1,0 +1,47 @@
+<div class="panel-body">
+    <i title="<?= $this->translate('Add new contact to this company') ?>" class="fa fa-plus pull-right" data-add-form="/<?= $this->module_name ?>/add-contact.form<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id=' . $this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" aria-hidden="true"></i>
+    <legend><?= $this->translate('Contacts') ?></legend>        
+    <div class="col-lg-3 col-sm-6 highlight hidden clone" data-clone="add-company-contact"  id="company-contact-{id}">
+        <div class="user-card hoveruser-card">                    
+            <div class="card-background user-cardheader">                    
+                <img class="user-cardheader profile-img card-bkimg lazy-loaded lazy-load"  src="<?= $this->default_user_image_profile ?>">                    
+            </div>
+            <div class="avatar">
+                <img alt="{name}" src="<?= $this->default_user_image_profile ?>">
+            </div>
+            <div class="info">
+                <div class="title">
+                    <a href="#">{name}</a>
+                </div>                
+                <div class="desc">({ddd}) {phone}</div>                                
+                <div class="desc">{email}</div>
+            </div>                
+        </div>
+    </div> 
+
+    <div class="row" id="contacts-container">        
+        <?php foreach ($this->userCompany->getPeopleCompany() AS $people) { ?>
+            <div class="col-lg-3 col-sm-6 highlight" id="company-contact-<?= $people->getEmployee()->getId() ?>">
+                <div class="user-card hoveruser-card">                    
+                    <div class="card-background user-cardheader">                    
+                        <img class="user-cardheader profile-img card-bkimg lazy-loaded lazy-load"  src="<?= $people->getEmployee()->getImage() ? $people->getEmployee()->getImage()->getUrl() : $this->default_user_image_profile ?>">                    
+                    </div>
+                    <div class="avatar">
+                        <img alt="<?= $people->getEmployee()->getName() ?>" src="<?= $people->getEmployee()->getImage() ? $people->getEmployee()->getImage()->getUrl() : $this->default_user_image_profile ?>">
+                    </div>
+                    <div class="info">
+                        <div class="title">
+                            <a href="#"><?= $people->getEmployee()->getName() ?></a>
+                        </div>
+                        <?php foreach ($people->getEmployee()->getPhone() AS $phone) { ?>
+                            <div class="desc">(<?= $phone->getDdd() ?>) <?= $phone->getPhone() ?></div>
+                        <?php } ?>
+                        <?php foreach ($people->getEmployee()->getEmail() AS $email) { ?>
+                            <div class="desc"><?= $email->getEmail() ?></div>
+                        <?php } ?>                                               
+                    </div>                
+                </div>
+            </div> 
+        <?php } ?>
+    </div>
+</div>

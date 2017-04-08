@@ -22,6 +22,10 @@ class Format {
         return strtolower(preg_replace('/(?<=\d)(?=[A-Za-z])|(?<=[A-Za-z])(?=\d)|(?<=[a-z])(?=[A-Z])/', $separator, $string));
     }
 
+    public static function onlyNumbers($string) {
+        return preg_replace("/[^0-9]/", "", $string);
+    }
+
     public static function returnData($data = false, $convert_to_array = false, $page = 1, $total_results = 0) {
 
         if (ErrorModel::getErrors()) {

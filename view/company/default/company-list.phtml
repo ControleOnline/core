@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="card">
+            <div class="panel-body">
+                <i title="<?= $this->translate('Add new ' . $this->module_name) ?>" class="fa fa-plus pull-right" data-add-form="/<?= $this->module_name ?>/add-company.form<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id=' . $this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" aria-hidden="true"></i>
+                <legend><?= $this->translate(ucfirst($this->module_name)) ?></legend>                        
+                <div class="col-lg-3 col-sm-6 highlight hidden clone" data-clone="add-<?= $this->module_name ?>" id="<?= $this->module_name ?>-{id}">
+                    <a href="/<?= $this->module_name ?>/{id}">
+                        <div class="user-card hoveruser-card">                    
+                            <div class="card-background user-cardheader">                    
+                                <img class="user-cardheader profile-img card-bkimg lazy-loaded lazy-load"  src="<?= $this->default_company_logo ?>">
+                            </div>
+                            <div class="avatar">
+                                <img alt="{name}" src="<?= $this->default_company_logo ?>">
+                            </div>
+                            <div class="info">
+                                <div class="title">
+                                    <a href="/<?= $this->module_name ?>/{id}">{name}</a>
+                                </div>                
+                                <!--<div class="desc">({ddd}) {phone}</div>-->
+                                <!--<div class="desc">{email}</div>-->
+                            </div>                
+                        </div>
+                    </a>
+                </div> 
+                <div class="row" id="company-container">        
+                    <?php
+                    $name = 'getPeople' . ucfirst($this->module_name);
+                    $name_child = 'get' . ucfirst($this->module_name);
+                    foreach ($this->userModel->getUserCompany()->$name() AS $people) {
+                        ?>                                              
+                        <div class="col-lg-3 col-sm-6 highlight" id="company-contact-<?= $people->$name_child()->getId() ?>">
+                            <a href="/<?= $this->module_name ?>/<?= $people->$name_child()->getId() ?>">
+                                <div class="user-card hoveruser-card">                    
+                                    <div class="card-background user-cardheader">                    
+                                        <img class="user-cardheader profile-img card-bkimg lazy-loaded lazy-load"  src="<?= $people->$name_child()->getImage() ? $people->$name_child()->getImage()->getUrl() : $this->default_company_logo ?>">                    
+                                    </div>
+                                    <div class="avatar">
+                                        <img alt="<?= $people->$name_child()->getName() ?>" src="<?= $people->$name_child()->getImage() ? $people->$name_child()->getImage()->getUrl() : $this->default_company_logo ?>">
+                                    </div>
+                                    <div class="info">
+                                        <div class="title">
+                                            <a href="/<?= $this->module_name ?>/<?= $people->$name_child()->getId() ?>"><?= $people->$name_child()->getName() ?></a>
+                                        </div>
+                                        <?php foreach ($people->$name_child()->getPhone() AS $phone) { ?>
+                                            <div class="desc">(<?= $phone->getDdd() ?>) <?= $phone->getPhone() ?></div>
+                                        <?php } ?>
+                                        <?php foreach ($people->$name_child()->getEmail() AS $email) { ?>
+                                            <div class="desc"><?= $email->getEmail() ?></div>
+                                        <?php } ?>                                               
+                                    </div>                
+                                </div>
+                            </a>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

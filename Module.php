@@ -13,6 +13,7 @@ use Zend\ModuleManager\ModuleEvent;
 use Assets\Helper\Header;
 use Core\Helper\Format;
 use Core\Helper\View;
+use User\Model\UserModel;
 
 class Module {
 
@@ -52,7 +53,27 @@ class Module {
         }
         $this->configDefaultViewOptions($eventManager);
         $this->setViewTerminal($e, $config['view']['terminal_sufix']);
+
+        $this->ckeckLogin($e);
+
+
         //$this->installEntities();                
+    }
+
+    private function ckeckLogin(\Zend\Mvc\MvcEvent $e) {
+        $userModel = new UserModel();
+        $userModel->initialize($e->getApplication()->getServiceManager());
+        $uri = $e->getRequest()->getUri()->getPath();        
+        
+        $verify = preg_grep('/^' . \addcslashes('/user/login.json', '/') . '/i', array($uri));
+        if (!$userModel->loggedIn() && \Core\Helper\Url::isRedirectUrl($uri) && !$verify) {
+            $params = $e->getRequest()->getUri()->getQueryAsArray() ?: array();
+            $response = $e->getResponse();
+            $response->getHeaders()->addHeaderLine('Location', '/user/login/' . ($uri != '/user/logout' ? '?login-referrer=' . $uri . ($params ? rawurlencode('&' . http_build_query($params)) : '') : ''));
+            $response->setStatusCode(302);
+            $response->sendHeaders();
+            exit;
+        }
     }
 
     private function setViewTerminal(\Zend\Mvc\MvcEvent $e, array $terminal_sufix = array('.html')) {
@@ -84,7 +105,11 @@ class Module {
     }
 
     public function setDefaultVariables(\Zend\Mvc\MvcEvent $e) {
-        View::setDefaultVariables($e->getApplication()->getMvcEvent()->getViewModel(), $e->getApplication()->getServiceManager());
+        $controller = new \stdClass();
+        $controller->_view = $e->getApplication()->getMvcEvent()->getViewModel();
+        $controller->_module_name = strtolower(substr($e->getRouteMatch()->getParam('controller'), 1, strpos($e->getRouteMatch()->getParam('controller'), '\\', 1) - 1));
+        $controller->_event = $e;
+        View::setDefaultVariables($controller, $e->getApplication()->getServiceManager());
     }
 
     public function lazyLoad(\Zend\Mvc\MvcEvent $e) {
@@ -98,7 +123,7 @@ class Module {
     private function addDefaultTemplates($event, $baseDirs) {
         $sm = $event->getParam('application')->getServiceManager();
         $viewResolverMap = $sm->get('ViewTemplateMapResolver');
-        $viewResolverPathStack = $sm->get('ViewTemplatePathStack');        
+        $viewResolverPathStack = $sm->get('ViewTemplatePathStack');
         foreach ($baseDirs AS $baseDir) {
             if (is_file($baseDir . '/layout/layout.phtml')) {
                 $viewResolverMap->add('layout/layout', $baseDir . '/layout/layout.phtml');

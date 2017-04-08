@@ -3,12 +3,13 @@
 namespace Core\Model;
 
 use Core\Model\DefaultModel;
+use Core\Helper\Format;
 
 class AdressModel extends DefaultModel {
 
     public function addPeopleAdress(\Core\Entity\People $people, array $params) {
         if ($this->checkAdressData($params)) {
-            $cep = $this->discoveryCep($params['cep']);
+            $cep = $this->discoveryCep(Format::onlyNumbers($params['cep']));
             $country = $this->discoveryCountry($params['country-code']);
             $state = $this->discoveryState($params, $country);
             $city = $this->discoveryCity($params, $state);
@@ -25,7 +26,7 @@ class AdressModel extends DefaultModel {
         }
         $entity = $this->_em->getRepository('\Core\Entity\Adress')->findOneBy(array(
             'people' => $people,
-            'number' => $params['adress-number'],
+            'number' => Format::onlyNumbers($params['adress-number']),
             'street' => $street,
             'complement' => $params['complement']
         ));
@@ -33,13 +34,12 @@ class AdressModel extends DefaultModel {
             $entity = new \Core\Entity\Adress();
             $entity->setComplement($params['complement']);
             $entity->setNickname($params['adress-nickname']);
-            $entity->setNumber($params['adress-number']);
+            $entity->setNumber(Format::onlyNumbers($params['adress-number']));
             $entity->setPeople($people);
             $entity->setStreet($street);
             $this->_em->persist($entity);
-            $this->_em->flush();
-            $this->_em->clear();
         }
+
         return $entity;
     }
 
@@ -54,8 +54,6 @@ class AdressModel extends DefaultModel {
             $entity->setNeighborhood($neighborhood);
             $entity->setStreet($params['street']);
             $this->_em->persist($entity);
-            $this->_em->flush();
-            $this->_em->clear();
         }
         return $entity;
     }
@@ -70,8 +68,6 @@ class AdressModel extends DefaultModel {
             $entity->setCity($city);
             $entity->setNeighborhood($params['neighborhood']);
             $this->_em->persist($entity);
-            $this->_em->flush();
-            $this->_em->clear();
         }
         return $entity;
     }
@@ -86,8 +82,6 @@ class AdressModel extends DefaultModel {
             $entity->setState($state);
             $entity->setCity($params['city']);
             $this->_em->persist($entity);
-            $this->_em->flush();
-            $this->_em->clear();
         }
         return $entity;
     }
@@ -113,8 +107,6 @@ class AdressModel extends DefaultModel {
             $entity->setUf($params['state']);
             $entity->setState($params['state-name']);
             $this->_em->persist($entity);
-            $this->_em->flush();
-            $this->_em->clear();
         }
         return $entity;
     }
@@ -133,8 +125,6 @@ class AdressModel extends DefaultModel {
             $entity = new \Core\Entity\Cep();
             $entity->setCep($cep);
             $this->_em->persist($entity);
-            $this->_em->flush();
-            $this->_em->clear();
         }
         return $entity;
     }

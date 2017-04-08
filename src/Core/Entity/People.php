@@ -97,6 +97,20 @@ class People {
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
+     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleCarrier", mappedBy="company")
+     */
+    private $peopleCarrier;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleEmployee", mappedBy="company")
+     */
+    private $peopleCompany;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
      * @ORM\OneToMany(targetEntity="Core\Entity\User", mappedBy="people")
      */
     private $user;
@@ -110,6 +124,8 @@ class People {
         $this->email = new \Doctrine\Common\Collections\ArrayCollection();
         $this->peopleClient = new \Doctrine\Common\Collections\ArrayCollection();
         $this->peopleEmployee = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->peopleCarrier = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->peopleCompany = new \Doctrine\Common\Collections\ArrayCollection();
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phone = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -385,6 +401,66 @@ class People {
      */
     public function getPeopleEmployee() {
         return $this->peopleEmployee;
+    }
+
+    /**
+     * Add peopleCarrier
+     *
+     * @param \Core\Entity\peopleCarrier $peopleCarrier
+     * @return People
+     */
+    public function addPeopleCarrier(\Core\Entity\PeopleCarrier $peopleCarrier) {
+        $this->peopleCarrier[] = $peopleCarrier;
+
+        return $this;
+    }
+
+    /**
+     * Remove peopleCarrier
+     *
+     * @param \Core\Entity\peopleCarrier $peopleCarrier
+     */
+    public function removePeopleCarrier(\Core\Entity\PeopleCarrier $peopleCarrier) {
+        $this->peopleCarrier->removeElement($peopleCarrier);
+    }
+
+    /**
+     * Get peopleCarrier
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeopleCarrier() {
+        return $this->peopleCarrier;
+    }
+
+    /**
+     * Add peopleCompany
+     *
+     * @param \Core\Entity\PeopleEmployee $peopleCompany
+     * @return People
+     */
+    public function addPeopleCompany(\Core\Entity\PeopleEmployee $peopleCompany) {
+        $this->peopleCompany[] = $peopleCompany;
+
+        return $this;
+    }
+
+    /**
+     * Remove peopleCompany
+     *
+     * @param \Core\Entity\PeopleCompany $peopleCompany
+     */
+    public function removePeopleCompany(\Core\Entity\PeopleEmployee $peopleCompany) {
+        $this->peopleCompany->removeElement($peopleCompany);
+    }
+
+    /**
+     * Get peopleCompany
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeopleCompany() {
+        return $this->peopleCompany;
     }
 
     /**
