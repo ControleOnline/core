@@ -1,0 +1,31 @@
+<div class="container" id="user-container">
+    <form class="form-horizontal" method="POST" action="/user/change-user">
+        <fieldset>
+            <!-- Form Name -->
+            <legend><?= $this->translate('Change User'); ?></legend>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="name"><?= $this->translate('Name') ?></label>  
+                <div class="col-md-4">
+                    <input value="<?= $this->response['data']->getPeople()->getName(); ?>" id="name" name="name" type="text" placeholder="<?= $this->translate('Enter your name') ?>" class="form-control input-md" required>
+                </div>
+            </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="username"><?= $this->translate('Username') ?></label>  
+                <div class="col-md-4">
+                    <input value="<?= $this->response['data']->getUsername(); ?>" id="name" name="username" type="text" placeholder="<?= $this->translate('Enter your username') ?>" class="form-control input-md" required>
+                </div>
+            </div>
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="change-user"></label>
+                <div class="col-md-4">                                    
+                    <button class="pull-left btn" data-toggle="collapse" data-target="#change-password-container"><?= $this->translate('Change password?') ?></button>
+                    <button class="pull-right btn btn-success" id="change" name="change-user"><?= $this->translate('Change') ?></button>
+                </div>                
+
+            </div>
+        </fieldset>
+    </form>
+</div>
