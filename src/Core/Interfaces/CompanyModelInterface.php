@@ -6,9 +6,9 @@ interface CompanyModelInterface {
 
     function initialize(\Zend\ServiceManager\ServiceManager $serviceLocator);
 
-    function addCompanyAdress(array $params);
+    function addCompanyAddress(array $params);
 
-    function deleteAdress($id);
+    function deleteAddress($id);
 
     function discoveryDocumentType($document_type, $people_type);
 
@@ -44,11 +44,13 @@ interface CompanyModelInterface {
     function getDefaultCompany();
 
     function getAllCompanies();
-
+    
     /**
      * @return \Core\Entity\People
      */
     function addCompany(array $params);
-    
+
     function addCompanyLink($entity_people, $currentPeopleCompany);
+
+    function findByDistance($params, $distance = 600, $limit = 50);
 }

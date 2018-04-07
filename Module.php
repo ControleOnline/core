@@ -14,6 +14,9 @@ use Assets\Helper\Header;
 use Core\Helper\Format;
 use Core\Helper\View;
 use User\Model\UserModel;
+use Core\Model\ErrorModel;
+use Core\Helper\Config;
+use Core\Helper\Cron;
 
 class Module {
 
@@ -32,9 +35,21 @@ class Module {
         return $config;
     }
 
+    public function handleError(MvcEvent $e) {
+        ErrorModel::addError($e->getParam('exception'));
+    }
+
     public function onBootstrap(\Zend\Mvc\MvcEvent $e) {
         $this->sm = $e->getApplication()->getServiceManager();
+        ErrorModel::initialize($this->sm);
+        $cfg = new Config();
+        $cfg->initialize($this->sm);
+        $cron = new Cron();
+        $cron->initialize($this->sm);
+        Cron::run();
         $this->em = $this->sm->get('Doctrine\ORM\EntityManager');
+        $e->getApplication()->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'handleError'));
+        $e->getApplication()->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER_ERROR, array($this, 'handleError'));
         $config = $this->sm->get('config');
         $storage = $e->getApplication()->getServiceManager()->get('Core\Storage\SessionStorage');
         $storage->setSessionStorage();
@@ -56,20 +71,33 @@ class Module {
 
         $this->ckeckLogin($e);
 
-
+        $analytics = \Core\Helper\View::getAnalytics();
+        if ($analytics) {
+            $e->getTarget()->getServiceManager()
+                    ->get('viewhelpermanager')
+                    ->get('InlineScript')->appendScript($analytics);
+        }
+        $mautic = \Core\Helper\View::getMautic();
+        if ($mautic) {
+            $e->getTarget()->getServiceManager()
+                    ->get('viewhelpermanager')
+                    ->get('InlineScript')->appendScript($mautic);
+        }
         //$this->installEntities();                
     }
 
     private function ckeckLogin(\Zend\Mvc\MvcEvent $e) {
         $userModel = new UserModel();
         $userModel->initialize($e->getApplication()->getServiceManager());
-        $uri = $e->getRequest()->getUri()->getPath();        
-        
+        $userModel->checkLoginFromKey($e);
+        $uri = $e->getRequest()->getUri()->getPath();
+        \Core\Helper\Url::addDefaultUrlToNoLogin($this->module);
         $verify = preg_grep('/^' . \addcslashes('/user/login.json', '/') . '/i', array($uri));
-        if (!$userModel->loggedIn() && \Core\Helper\Url::isRedirectUrl($uri) && !$verify) {
-            $params = $e->getRequest()->getUri()->getQueryAsArray() ?: array();
+        if (!$userModel->loggedIn() && \Core\Helper\Url::isRedirectUrl($uri) && !$verify && $uri != '/') {
+            $module = $this->module && in_array(strtolower($this->module), array('carrier', 'client', 'company', 'provider', 'salesman')) ? strtolower($this->module) : 'user';
+            $params = $e->getRequest()->getUri()->getQueryAsArray() ? : array();
             $response = $e->getResponse();
-            $response->getHeaders()->addHeaderLine('Location', '/user/login/' . ($uri != '/user/logout' ? '?login-referrer=' . $uri . ($params ? rawurlencode('&' . http_build_query($params)) : '') : ''));
+            $response->getHeaders()->addHeaderLine('Location', '/' . $module . '/login/' . ($uri != '/' . $module . '/logout' ? '?login-referrer=' . $uri . ($params ? rawurlencode('?') . rawurlencode('&' . http_build_query($params)) : '') : ''));
             $response->setStatusCode(302);
             $response->sendHeaders();
             exit;
@@ -92,22 +120,44 @@ class Module {
         } elseif ($extension != '.json') {
             $renderer = $e->getApplication()->getServiceManager()->get('\Zend\View\Renderer\RendererInterface');
             Header::init($renderer, $this->default_route, $uri);
-            Header::addJsLibs('lazyLoad', 'controleonline-core-js/dist/js/LazyLoad.js');
-            Header::addJsLibs('GMaps', 'controleonline-core-js/dist/js/GMaps.js');
-            $viewModel->requireJsFiles = Header::getRequireJsFiles();
-            $viewModel->requireJsLibs = Header::requireJsLibs();
-            $viewModel->systemVersion = Header::getSystemVersion();
-
-            $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
+            $app->getEventManager()->attach(MvcEvent::EVENT_RENDER, array($this, 'headerRender'), 100);
         }
+        $app->getEventManager()->attach('finish', array($this, 'lazyLoad'), 100);
+        $app->getEventManager()->attach('finish', array($this, 'flush'), 1000);
         $app->getEventManager()->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER, array($this, 'setDefaultVariables'), 100);
         $viewModel->setVariables(Format::returnData($viewModel->getVariables()));
+    }
+
+    public function headerRender(MvcEvent $e) {
+        $viewModel = $e->getApplication()->getMvcEvent()->getViewModel();
+        Header::addJsLibs('lazyLoad', '/assets/js/core/LazyLoad.js');
+        Header::addJsLibs('Autocomplete', '/assets/js/core/Autocomplete.js');
+        Header::addJsLibs('GMaps', '/assets/js/core/GMaps.js');
+        Header::addJsLibs('Postmon', '/assets/js/core/Postmon.js');
+        Header::addJsLibs('GTranslator', '/assets/js/core/GTranslator.js');
+        $viewModel->requireJsFiles = Header::getRequireJsFiles();
+        $viewModel->requireJsLibs = Header::requireJsLibs();
+        $viewModel->systemVersion = Header::getSystemVersion();
+    }
+
+    public function flush() {
+        try {
+            /*
+            $this->em->flush();
+            $this->em->clear();
+             * 
+             */
+        } catch (Exception $e) {
+            ErrorModel::addError(array('code' => $e->getCode(), 'message' => 'Error on add this data'));
+            $this->em->rollback();
+        }
     }
 
     public function setDefaultVariables(\Zend\Mvc\MvcEvent $e) {
         $controller = new \stdClass();
         $controller->_view = $e->getApplication()->getMvcEvent()->getViewModel();
         $controller->_module_name = strtolower(substr($e->getRouteMatch()->getParam('controller'), 1, strpos($e->getRouteMatch()->getParam('controller'), '\\', 1) - 1));
+        $controller->_action_name = strtolower($e->getRouteMatch()->getParam('action'));
         $controller->_event = $e;
         View::setDefaultVariables($controller, $e->getApplication()->getServiceManager());
     }
@@ -210,7 +260,12 @@ class Module {
     public function finishJsonStrategy(\Zend\Mvc\MvcEvent $e) {
         $response = new Response();
         $response->getHeaders()->addHeaderLine('Content-Type', 'application/json; charset=utf-8');
-        $response->setContent(Json::encode(Format::returnData($e->getResult()->getVariables()), true));
+        if (method_exists($e->getResult(), 'getVariables')) {
+            $return = $e->getResult()->getVariables();
+        } else {
+            $return = array();
+        }
+        $response->setContent(Json::encode(Format::returnData($return), true));
         $e->setResponse($response);
     }
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PeopleClient
  *
- * @ORM\Table(name="people_client", uniqueConstraints={@ORM\UniqueConstraint(name="client_id", columns={"client_id", "provider_id"})}, indexes={@ORM\Index(name="provider_id", columns={"provider_id"}), @ORM\Index(name="IDX_B15326BF19EB6921", columns={"client_id"})})
+ * @ORM\Table(name="people_client", uniqueConstraints={@ORM\UniqueConstraint(name="client_id", columns={"client_id", "company_id"})}, indexes={@ORM\Index(name="company_id", columns={"company_id"}), @ORM\Index(name="IDX_2C6E59348C03F15C", columns={"client_id"})})
  * @ORM\Entity
  */
 class PeopleClient {
@@ -22,32 +22,25 @@ class PeopleClient {
     private $id;
 
     /**
-     * @var integer
+     * @var \Core\Entity\People
      *
-     * @ORM\Column(name="provider_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Core\Entity\People", inversedBy="peopleClient")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="company_id", referencedColumnName="id")
+     * })
      */
-    private $provider;
+    private $company;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \Core\Entity\People
      *
-     * @ORM\OneToMany(targetEntity="Core\Entity\People", mappedBy="peopleClient")
+     * @ORM\ManyToOne(targetEntity="Core\Entity\People", inversedBy="peopleCompany")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     * })
+     * @ORM\OrderBy({"alias" = "ASC"})
      */
     private $client;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleOrder", mappedBy="peopleClient")
-     */
-    private $peopleOrder;
-
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->peopleOrder = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Get id
@@ -59,24 +52,24 @@ class PeopleClient {
     }
 
     /**
-     * Set provider
+     * Set company
      *
-     * @param \Core\Entity\People $provider
+     * @param \Core\Entity\People $company
      * @return PeopleClient
      */
-    public function setProvider(\Core\Entity\People $provider = null) {
-        $this->provider = $provider;
+    public function setCompany(\Core\Entity\People $company = null) {
+        $this->company = $company;
 
         return $this;
     }
 
     /**
-     * Get provider
+     * Get company
      *
      * @return \Core\Entity\People 
      */
-    public function getProvider() {
-        return $this->provider;
+    public function getCompany() {
+        return $this->company;
     }
 
     /**
@@ -94,40 +87,10 @@ class PeopleClient {
     /**
      * Get client
      *
-     * @return \Core\Entity\People 
+     * @return \Core\Entity\People
      */
     public function getClient() {
         return $this->client;
-    }
-
-    /**
-     * Add peopleOrder
-     *
-     * @param \Core\Entity\PeopleOrder $peopleOrder
-     * @return PeopleClient
-     */
-    public function addPeopleOrder(\Core\Entity\PeopleOrder $peopleOrder) {
-        $this->peopleOrder[] = $peopleOrder;
-
-        return $this;
-    }
-
-    /**
-     * Remove peopleOrder
-     *
-     * @param \Core\Entity\PeopleOrder $peopleOrder
-     */
-    public function removePeopleOrder(\Core\Entity\PeopleOrder $peopleOrder) {
-        $this->peopleOrder->removeElement($peopleOrder);
-    }
-
-    /**
-     * Get peopleOrder
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getPeopleOrder() {
-        return $this->peopleOrder;
     }
 
 }

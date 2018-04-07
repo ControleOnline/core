@@ -1,0 +1,55 @@
+<div class="modal fade" id="modal-new" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;
+                </button>
+                <h4 class="modal-title"><?= ucfirst($this->translate('Add user')) ?></h4>
+            </div>
+            <div class="modal-body">                
+                <fieldset>
+                    <form class="api-form form-horizontal" data-clone-field="[data-clone=add-user]" data-clone-target="#form-user" action="/user/add-user.json" method="POST" name="form-add-user" role="form" >
+                        <!-- Form Name -->                        
+                        <input name="method" value="POST" type="hidden">         
+
+                        <div class="form-group">
+                            <div class="col-md-2"></div>                
+                            <label class="col-md-4 control-label" id="label-add-user" for="input-add-user"><?= $this->translate('Username') ?>: </label>
+                            <div class="col-md-4">
+                                <input class="form-control input-md" value="" id="input-add-user" name="username" type="text" placeholder="<?= $this->translate('Username') ?>">
+                            </div>                                      
+                            <div class="col-md-2"></div>                
+                        </div>                  
+                        <div class="form-group">
+                            <div class="col-md-2"></div>                
+                            <label class="col-md-4 control-label" id="label-password" for="password"><?= $this->translate('Password') ?>: </label>
+                            <div class="col-md-4">                        
+                                <input class="form-control input-md" value="" id="input-password" name="password" type="password" placeholder="<?= $this->translate('Password') ?>">
+                            </div>                                      
+                            <div class="col-md-2"></div>                
+                        </div>                  
+                        <div class="form-group">
+                            <div class="col-md-2"></div>                
+                            <label class="col-md-4 control-label" id="label-confirm-password" for="confirm-password"><?= $this->translate('Confirm your password') ?>: </label>
+                            <div class="col-md-4">                        
+                                <input class="form-control input-md" value="" id="input-confirm-password" name="confirm-password" type="password" placeholder="<?= $this->translate('Confirm your password') ?>">
+                            </div>                                      
+                            <div class="col-md-2"></div>                
+                        </div>                  
+                        <div class="form-group">
+                            <div class="col-md-2"></div>                
+                            <div class="col-md-8">
+                                <button data-clone-field="[data-clone=add-user]" data-clone-target="#form-user" data-add="/user/add-user.json" name="add-user" type="submit" class="btn btn-success pull-right">                                        
+                                    <?= ucfirst($this->translate('Add user')) ?>
+                                </button>                                                                                        
+                            </div>
+                            <div class="col-md-2"></div>                
+                        </div>
+                    </form>                    
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div class="row-box" style="clear:both;padding: 30px;">
+    <h5>
+        <label class="control-label label-title" style="color: #002c5d;font-weight: bold;font-size: 20px;">
+            <?= $this->translate('Invoice details') ?>
+        </label>
+    </h5>
+    <?php if (count($this->order->getInvoice()[0]->getInvoice()->getServiceInvoiceTax()) > 0 && $this->order->getInvoice()[0]->getInvoice()->getServiceInvoiceTax()[0]->getServiceInvoiceTax()->getInvoiceNumber()) { ?>
+        <h5>
+            <label class="control-label label-title" style="color: #002c5d;font-weight: bold;font-size: 20px;">
+                <?= $this->translate('Invoice tax') ?>:
+                <a target="_blank" href="http://<?= $this->domain ?>/finance/service-invoice-tax/id/<?= $this->order->getInvoice()[0]->getInvoice()->getServiceInvoiceTax()[0]->getServiceInvoiceTax()->getInvoiceNumber() ?>.pdf">#<?= $this->order->getInvoice()[0]->getInvoice()->getServiceInvoiceTax()[0]->getServiceInvoiceTax()->getInvoiceNumber() ?></a>
+            </label>
+        </h5>
+    <?php } ?>
+    <h5>
+        <label class="control-label label-title" style="color: #002c5d;font-weight: bold;font-size: 20px;">
+            <?= $this->translate('Invoice') ?>:             
+            <a target="_blank" href="http://<?= $this->domain ?>/finance/pay/id/<?= $this->order->getInvoice()[0]->getInvoice()->getId() ?>">#<?= $this->order->getInvoice()[0]->getInvoice()->getId() ?></a>
+        </label>
+    </h5>
+    <h5>
+        <label class="control-label label-title" style="color: #002c5d;font-weight: bold;font-size: 20px;">
+            <?= $this->translate('Due date') ?>:             
+            <?= $this->order->getInvoice()[0]->getInvoice()->getDueDate()->format('d/m/Y'); ?>
+        </label>
+    </h5>
+    <h5>
+        <label class="control-label label-title" style="color: #002c5d;font-weight: bold;font-size: 20px;">
+            <?= $this->translate('Payment value') ?>: 
+            <?= $this->translate('corrency_symbol') . number_format($this->order->getInvoice()[0]->getInvoice()->getPrice(), 2, ',', '.'); ?>                
+        </label>
+    </h5>        
+    <a target="_blank" style="padding: 10px;color: #fff;background-color: #337ab7;border-color: #095077;border-bottom-color: #043D5D;background-color: #095077;box-shadow: 0 2px 3px rgba(9, 80, 119, 0.3);" href="http://<?= $this->domain ?>/sales/mail-invoice/id/<?= $this->order->getId() ?>"><?= $this->translate('Open invoice') ?></a>
+    <div class="row" style="padding-top:50px">
+        <div class="panel-body">                                                
+            <legend>
+                <h5>
+                    <label class="control-label label-title" style="color: #002c5d;font-weight: bold;font-size: 20px;">
+                        <?= $this->translate('Orders') ?>
+                    </label>
+                </h5>
+            </legend>
+            <div id="order-list">
+                <table data-table="order-list" class="datatable table table-striped primary" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;"><?= $this->translate('ID') ?></th>                                
+                            <th style="text-align: left;"><?= $this->translate('Carrier') ?></th>
+                            <th style="text-align: left;"><?= $this->translate('Invoice tax') ?></th>                        
+                            <th style="text-align: left;"><?= $this->translate('Value') ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($this->saleOrders AS $orders) { ?>   
+                            <tr class="<?= $orders->getStatus() ? 'order-' . str_replace(' ', '-', strtolower($orders->getStatus()->getStatus())) : '' ?>" id="people-<?= $orders->getId() ?>">
+                                <td><a href="http://<?= $this->domain ?>/purchasing/order/id/<?= $orders->getId() ?>">#<?= $orders->getId() ?></a></td>                                   
+                                <td><?= $orders->getQuote() ? $orders->getQuote()->getCarrier()->getName() : '' ?></td>
+                                <td><?= count($orders->getInvoiceTax()) > 0 ? $orders->getInvoiceTax()[0]->getInvoiceTax()->getInvoiceNumber() : '' ?></td>                                    
+                                <td><?= $this->translate('corrency_symbol') . ' ' . number_format($orders->getPrice(), 2, ',', '.') ?></td>                                
+                            </tr>
+                        <?php } ?>                            
+                    </tbody>
+                </table>                   
+            </div>
+        </div>        
+    </div>    
+</div>
+

@@ -1,0 +1,39 @@
+<div class="modal fade" id="modal-new" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;
+                </button>
+                <h4 class="modal-title"><?= ucfirst($this->translate('Add email')) ?></h4>
+            </div>
+            <div class="modal-body">                
+                <fieldset>
+                    <form class="api-form form-horizontal" data-clone-field="[data-clone=add-user-email]" data-clone-target="#form-user-email" action="/user/add-email.json" method="POST" name="form-add-email" role="form" >
+                        <!-- Form Name -->                        
+                        <input name="method" value="POST" type="hidden">         
+
+                        <div class="form-group">
+                            <div class="col-md-2"></div>                
+                            <label class="col-md-4 control-label" id="label-add-user" for="input-add-email"><?= $this->translate('Email') ?>: </label>
+                            <div class="col-md-4">
+                                <input class="form-control input-md" value="" id="input-add-email" name="email" type="text" placeholder="<?= $this->translate('Email') ?>">
+                            </div>                                      
+                            <div class="col-md-2"></div>                
+                        </div>                                          
+                        <div class="form-group">
+                            <div class="col-md-2"></div>                
+                            <div class="col-md-8">
+                                <button data-clone-field="[data-clone=add-user-email]" data-clone-target="#form-user-email" data-add="/user/add-email.json" name="add-email" type="submit" class="btn btn-success pull-right">                                        
+                                    <?= ucfirst($this->translate('Add email')) ?>
+                                </button>                                                                                        
+                            </div>
+                            <div class="col-md-2"></div>                
+                        </div>
+                    </form>                    
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

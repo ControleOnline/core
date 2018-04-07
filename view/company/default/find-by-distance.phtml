@@ -1,0 +1,53 @@
+<div class="row find-main-container">
+    <div class="col-xs-12">
+        <div class="card">
+            <div class="panel-body">
+                <h5><?= $this->translate('Search ' . $this->module_name . ' info') ?></h5>
+                <div id="search-container">
+                    <input type="text" data-clear-clone-target="true" data-clone-target="#company-container" data-clone-field="[data-clone='add-<?= $this->module_name ?>']" id="gmaps-autocomplete" data-gmaps="gmaps-autocomplete"/>
+                    <button id="btn-search" class="btn-search"><i class="fa fa-search"></i></button>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 highlight hidden clone" data-clone="add-<?= $this->module_name ?>" id="<?= $this->module_name ?>-{id}">
+                    <div class="user-card hoveruser-card">
+                        <div class="card-background user-cardheader">
+                            <img class="user-cardheader profile-img card-bkimg lazy-load"  data-ll="{image}">
+                        </div>
+                        <a data-toggle="collapse" href="#show-contacts-{id}" aria-expanded="false" aria-controls="show-contacts-{id}">
+                            <div class="avatar">
+                                <img alt="{name}" data-ll="{image}">
+                            </div>
+                        </a>
+                        <div class="info">
+                            <a data-toggle="collapse" href="#show-contacts-{id}" aria-expanded="false" aria-controls="show-contacts-{id}">
+                                <div class="show-contact-container">
+                                    <!--
+                                    <span class="btn btn-primary btn-circle btn-lg show-contact">
+                                        <i class="glyphicon glyphicon-list" alt="<?= $this->translate('Show Contact') ?>"></i>
+                                    </span>
+                                    -->
+                                    <div class="title">
+                                        {name}
+                                    </div>  
+                                    <div class="desc">{distance} km</div>                                    
+                                </div>  
+                            </a>
+                            <div class="collapse" id="show-contacts-{id}">
+                                <div class="card card-block">
+                                    <div class="desc"><a href="tel:{ddd}{phone}">({ddd}) {phone}</a></div>
+                                    <div class="desc"><a href="mailto:{email}?Subject=<?= $this->translate('Contact on App') ?>%20<?= $this->translate('Application Name') ?>">{email}</a></div>
+                                    <span class="btn btn-info btn-squad request-contact">
+                                        <?= $this->translate('Request Contact') ?>                                        
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row" id="company-container">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

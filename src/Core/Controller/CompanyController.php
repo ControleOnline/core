@@ -5,6 +5,7 @@ namespace Core\Controller;
 use User\Model\UserModel;
 use Core\Helper\Format;
 use Core\Model\ErrorModel;
+use Core\Model\AddressModel;
 
 class CompanyController extends \Core\Controller\DefaultController {
 
@@ -12,11 +13,6 @@ class CompanyController extends \Core\Controller\DefaultController {
      * @var \Company\Model\CompanyModel
      */
     public $_companyModel;
-
-    /**
-     * @var \Company\Model\UserModel
-     */
-    protected $_userModel;
 
     /**
      * @var \Core\Entity\People
@@ -27,12 +23,24 @@ class CompanyController extends \Core\Controller\DefaultController {
         if (ErrorModel::getErrors()) {
             return $this->_view;
         }
-        $id = $this->params()->fromQuery($this->_module_name) ?: $this->params()->fromPost('company');
+        $id = $this->params()->fromQuery($this->module_name) ?: $this->params()->fromPost('company');
         if ($id) {
-            $this->_view->setTemplate('company/default/company.phtml');
-        } else {            
+            $this->_view->company_tax = $this->_companyModel->getCompanyTax($id);
+            /**
+             * @todo Ajustar pra puxar uma view pra perfil e não essa da empresa
+             */
+            //$this->_view->setTemplate('company/default/company.phtml');
+        } else {
             $this->_view->setTemplate('company/default/company-list.phtml');
         }
+        return $this->_view;
+    }
+
+    public function deleteCompanyTaxAction() {
+        if (ErrorModel::getErrors()) {
+            return $this->_view;
+        }
+        $this->_companyModel->deleteCompanyTax($this->params()->fromPost('id'));
         return $this->_view;
     }
 
@@ -44,19 +52,32 @@ class CompanyController extends \Core\Controller\DefaultController {
         if (!$this->_userModel->loggedIn()) {
             return \Core\Helper\View::redirectToLogin($this->_renderer, $this->getResponse(), $this->getRequest(), $this->redirect());
         } elseif ($params && $this->_userModel->loggedIn()) {
-            $company = $this->_companyModel->addCompany($params);                        
+            $company = $this->_companyModel->addCompany($params);
             $this->_view->setVariables(Format::returnData(array(
                         'id' => $company->getId(),
                         'name' => $company->getName(),
                         'alias' => $company->getAlias()
-            )));            
+            )));
         }
-        
+
         $this->_view->setTerminal(true);
         return $this->_view;
     }
 
+    public function findByDistanceAction() {
+        if (ErrorModel::getErrors()) {
+            return $this->_view;
+        }
+        $params = $this->params()->fromPost();
+        if ($params && isset($params['lat']) && $params['lat'] && isset($params['lng']) && $params['lng']) {
+            $this->_view->setTerminal(true);
+            return Format::returnData($this->_companyModel->findByDistance($params));
+        }
+        return $this->_view;
+    }
+
     public function initialize() {
+
         $this->_userModel = new UserModel();
         $this->_userModel->initialize($this->serviceLocator);
         parent::initialize();
@@ -65,24 +86,24 @@ class CompanyController extends \Core\Controller\DefaultController {
         $this->checkPermission();
     }
 
-    public function addAdressAction() {
+    public function addAddressAction() {
         if (ErrorModel::getErrors()) {
             return $this->_view;
         }
         $params = $this->params()->fromPost();
         if ($params && $this->_userModel->loggedIn()) {
-            $new_adress = $this->_companyModel->addCompanyAdress($params);
+            $new_address = $this->_companyModel->addCompanyAddress($params);
             $this->_view->setVariables(Format::returnData(array(
-                        'id' => $new_adress->getId(),
-                        'street' => $new_adress->getStreet()->getStreet(),
-                        'number' => $new_adress->getNumber(),
-                        'complement' => $new_adress->getComplement(),
-                        'nickname' => $new_adress->getNickname(),
-                        'neighborhood' => $new_adress->getStreet()->getNeighborhood()->getNeighborhood(),
-                        'cep' => $new_adress->getStreet()->getCep()->getCep(),
-                        'city' => $new_adress->getStreet()->getNeighborhood()->getCity()->getCity(),
-                        'state' => $new_adress->getStreet()->getNeighborhood()->getCity()->getState()->getState(),
-                        'country' => $new_adress->getStreet()->getNeighborhood()->getCity()->getState()->getCountry()->getCountryname()
+                        'id' => $new_address->getId(),
+                        'street' => $new_address->getStreet()->getStreet(),
+                        'number' => $new_address->getNumber(),
+                        'complement' => $new_address->getComplement(),
+                        'nickname' => $new_address->getNickname(),
+                        'district' => $new_address->getStreet()->getDistrict()->getDistrict(),
+                        'cep' => $new_address->getStreet()->getCep()->getCep(),
+                        'city' => $new_address->getStreet()->getDistrict()->getCity()->getCity(),
+                        'state' => $new_address->getStreet()->getDistrict()->getCity()->getState()->getState(),
+                        'country' => $new_address->getStreet()->getDistrict()->getCity()->getState()->getCountry()->getCountryname()
             )));
         }
 
@@ -90,11 +111,11 @@ class CompanyController extends \Core\Controller\DefaultController {
         return $this->_view;
     }
 
-    public function deleteAdressAction() {
+    public function deleteAddressAction() {
         if (ErrorModel::getErrors()) {
             return $this->_view;
         }
-        $this->_companyModel->deleteAdress($this->params()->fromPost('id'));
+        $this->_companyModel->deleteAddress($this->params()->fromPost('id'));
         return $this->_view;
     }
 
@@ -113,6 +134,31 @@ class CompanyController extends \Core\Controller\DefaultController {
         if ($this->params()->fromPost() && $this->_userModel->loggedIn()) {
             $entity = $this->_companyModel->addContact($this->params()->fromPost());
             $this->_view->setVariables(Format::returnData($entity));
+        }
+        $this->_view->setTerminal(true);
+        return $this->_view;
+    }
+
+    public function addTaxAction() {
+        if (ErrorModel::getErrors()) {
+            return $this->_view;
+        }
+        $params = $this->params()->fromPost();
+
+        $addressModel = new AddressModel();
+        $addressModel->initialize($this->serviceLocator);
+        $country = $addressModel->getDefaultCountry();
+        $this->_view->states = $addressModel->getStatesByCountry($country);
+
+        if ($params && $this->_userModel->loggedIn()) {
+            $new_tax = $this->_companyModel->addTax($params);
+            $this->_view->setVariables(Format::returnData(array(
+                        'id' => $new_tax->getId(),
+                        'tax' => $new_tax->getTaxName(),
+                        'state_origin' => $new_tax->getStateOrigin()->getState(),
+                        'state_destination' => $new_tax->getStateDestination()->getState(),
+                        'price' => number_format($new_tax->getPrice(), 2, ',', '.') . ' %'
+            )));
         }
         $this->_view->setTerminal(true);
         return $this->_view;

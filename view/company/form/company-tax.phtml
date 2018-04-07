@@ -1,0 +1,37 @@
+<div role="tabpanel" class="tab-pane" id="company-tax">
+    <button type="button" title="<?= $this->translate('Add new tax') ?>" class="btn btn-success pull-right" data-add-form="/<?= $this->module_name ?>/add-tax.form<?= ($this->companyModel->getCurrentPeopleCompany() ? '?company_id=' . $this->companyModel->getCurrentPeopleCompany()->getId() : '') ?>">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        <?= $this->translate('Add'); ?>
+    </button>
+    <h3><?= $this->translate('Company Tax') ?></h3>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table data-table="tax" class="datatable table table-striped primary" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th><?= $this->translate('Company Tax') ?></th>
+                        <th><?= $this->translate('State Origin') ?></th>
+                        <th><?= $this->translate('State Destination') ?></th>                        
+                        <th><?= $this->translate('Tax Price') ?></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody data-table-body="tax">
+                    <?php foreach ($this->company_tax as $companyTax) { ?>
+                        <tr id="tax-region-<?= $companyTax->getId() ?>">
+                            <td><?= $companyTax->getTaxName() ?></td>
+                            <td><?= $companyTax->getStateOrigin()->getState() ?></td>
+                            <td><?= $companyTax->getStateDestination()->getState() ?></td>
+                            <td><?= number_format($companyTax->getPrice(), 2, ',', '.') ?> %</td>                            
+                            <td>
+                                <button data-container-remove="tax-region" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this region?') ?>" data-body="<?= $companyTax->getTaxName() ?>" data-toggle="modal" data-target="#confirm-delete" data-id="<?= $companyTax->getId() ?>" data-delete-confirm="/<?= $this->module_name ?>/delete-company-tax.json<?= ($this->companyModel->getCurrentPeopleCompany() ? '?company_id=' . $this->companyModel->getCurrentPeopleCompany()->getId() : '') ?>" name="confirm-delete-<?= $companyTax->getId() ?>" id="confirm-delete-<?= $companyTax->getId() ?>" type="submit" class="confirm-delete btn btn-danger">
+                                    <?= $this->translate('Delete'); ?>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

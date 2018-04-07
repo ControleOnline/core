@@ -1,5 +1,8 @@
 <div class="panel-body">
-    <i title="<?= $this->translate('Add new contact to this company') ?>" class="fa fa-plus pull-right" data-add-form="/<?= $this->module_name ?>/add-contact.form<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id=' . $this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" aria-hidden="true"></i>
+    <button type="button" title="<?= $this->translate('Add new contact to this company') ?>" class="btn btn-success pull-right" data-add-form="/<?= $this->module_name ?>/add-contact.form<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id=' . $this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        <?= $this->translate('Add') ?>
+    </button>    
     <legend><?= $this->translate('Contacts') ?></legend>        
     <div class="col-lg-3 col-sm-6 highlight hidden clone" data-clone="add-company-contact"  id="company-contact-{id}">
         <div class="user-card hoveruser-card">                    

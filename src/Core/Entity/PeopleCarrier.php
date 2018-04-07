@@ -38,8 +38,11 @@ class PeopleCarrier {
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="carrier_id", referencedColumnName="id")
      * })
+     * @ORM\OrderBy({"alias" = "ASC"})
      */
     private $carrier;
+
+
 
     /**
      * Get id
@@ -74,10 +77,10 @@ class PeopleCarrier {
     /**
      * Set carrier
      *
-     * @param \Core\Entity\Carrier $carrier
+     * @param \Core\Entity\People $carrier
      * @return PeopleCarrier
      */
-    public function setCarrier(\Core\Entity\Carrier $carrier = null) {
+    public function setCarrier(\Core\Entity\People $carrier = null) {
         $this->carrier = $carrier;
 
         return $this;
@@ -86,10 +89,12 @@ class PeopleCarrier {
     /**
      * Get carrier
      *
-     * @return \Core\Entity\Carrier
+     * @return \Core\Entity\People
      */
     public function getCarrier() {
         return $this->carrier;
     }
+
+  
 
 }

@@ -1,0 +1,63 @@
+<div class="modal fade" id="modal-new" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;
+                </button>
+                <h4 class="modal-title"><?= ucfirst($this->translate('Add tax')) ?></h4>
+            </div>
+            <div class="modal-body">                
+                <fieldset>                    
+                    <form class="api-form form-horizontal" data-clone-field="[data-clone=add-tax]" data-clone-target="[data-table-body='tax']" action="/<?= $this->module_name ?>/add-tax.json" method="POST" name="form-add-tax" role="form" >
+                        <!-- Form Name -->
+                        <input type="hidden" name="company_id" value="<?= $this->companyModel->getCurrentPeopleCompany() ? $this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>">
+                        <input name="method" value="POST" type="hidden">
+                        <div class="form-group">
+                            <label class="control-label col-md-6" id="label-add-tax" for="input-add-tax"><?= $this->translate('Tax name') ?>: </label>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="input-add-tax" name="tax-name" value="<?=$this->translate('Default tax name')?>">                                    
+                            </div>                                            
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-6" id="label-add-state" for="input-add-company-tax"><?= $this->translate('Tax price') ?>: </label>
+                            <div class="col-md-6">
+                                <input data-mask="({prefix: '',suffix: '%',integerDigits: 3,digits: 2,clearIncomplete: true,alias: 'currency',rightAlign: false,radixPoint: ',',groupSeparator: '.'})" type="text" class="form-control" id="input-add-company-tax" name="price">                                    
+                            </div>                                            
+                        </div>                                                
+                        <div class="form-group">
+                            <label class="control-label col-md-6" id="label-add-state" for="input-add-state"><?= $this->translate('State of origin') ?>: </label>
+                            <div class="col-md-6">
+                                <select class="form-control" id="input-add-state-origin" name="state-origin">
+                                    <?php foreach ($this->states AS $state) { ?>
+                                        <option value="<?= $state->getId() ?>"><?= $state->getUf() ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>                                            
+                        </div>                        
+                        <div class="form-group">
+                            <label class="control-label col-md-6" id="label-add-city" for="input-add-city"><?= $this->translate('State of destination') ?>: </label>
+                            <div class="col-md-6">
+                                <select class="form-control" id="input-add-state-destination" name="state-destination">
+                                    <?php foreach ($this->states AS $state) { ?>
+                                        <option value="<?= $state->getId() ?>"><?= $state->getUf() ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>                                            
+                        </div>                        
+                        <div class="form-group">
+                            <div class="col-md-2"></div>                
+                            <div class="col-md-8">                                
+                                <button data-table-row-fields="tax,state_origin,state_destination,price," data-table-field="[data-table='tax']" data-add="/<?= $this->module_name ?>/add-tax.json" name="add-tax" type="submit" class="btn btn-success pull-right">
+                                    <?= ucfirst($this->translate('Add tax')) ?>
+                                </button>                                                                                        
+                            </div>
+                            <div class="col-md-2"></div>                
+                        </div>
+                    </form>                    
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

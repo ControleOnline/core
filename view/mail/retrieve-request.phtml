@@ -1,0 +1,302 @@
+<div class="row-box" style="padding:30px">
+    <h5><label class="control-label label-title" style="color: #000;font-weight: bold;font-size: 20px;"><?= $this->translate('Freight payer') ?></label></h5>
+    <?php
+    if ($this->order->getProvider() && $this->order->getProvider()->getDocument()) {
+        foreach ($this->order->getProvider()->getDocument() AS $document) {
+            if ($document->getDocumentType()->getDocumentType() == 'CNPJ') {
+                $doc = \Core\Helper\Format::maskNumber("##.###.###/####-##", $document->getDocument());
+            }
+        }
+    }
+    ?>
+    <div style="color: #000">
+        <?= $this->translate('Company Name') ?>: <?= $this->order->getProvider()->getName(); ?>
+    </div>
+    <div style="color: #000">
+        <?= $this->translate('CNPJ') ?>: <?= $doc; ?>
+    </div>
+</div>
+<div class="row-box" style="width:100%">
+    <div class="row-box" style="width:100%;float:left;padding: 30px;">
+        <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 no-margin no-padding" style="margin-bottom: 20px;">
+            <label class="control-label label-title" style="color: #002e62;font-weight: bold;font-size: x-large;text-align: center;border-bottom: 1px solid;"><?= $this->translate('Retrieve data') ?></label>
+        </div>
+        <table width="100%">
+            <?php if ($this->order->getRetrievePeople()->getPeopleType() == 'J') { ?>
+                <tr>
+                    <td><label class="control-label" for="company-alias"><?= $this->translate('Company Alias') ?>:</label></td>
+                    <td><span><?= $this->order->getRetrievePeople()->getAlias() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="name"><?= $this->translate('Company Name') ?>:</label></td>
+                    <td><span><?= $this->order->getRetrievePeople()->getName() ?></span>                    </td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="company-document"><?= $this->translate('Company Document') ?>:</label></td>
+                    <td>
+                        <?php
+                        $doc = '';
+                        if ($this->order->getRetrievePeople() && $this->order->getRetrievePeople()->getDocument()) {
+                            foreach ($this->order->getRetrievePeople()->getDocument() AS $document) {
+                                if ($document->getDocumentType()->getDocumentType() == 'CNPJ') {
+                                    $doc = \Core\Helper\Format::maskNumber("##.###.###/####-##", $document->getDocument());
+                                }
+                            }
+                        }
+                        ?>
+                        <span><?= $doc ?></span>
+                    </td>
+                </tr>
+            <?php } ?>
+            <?php if ($this->order->getRetrievePeople()->getPeopleType() == 'F') { ?>
+                <tr>
+                    <td><label class="control-label" for="client-document"><?= $this->translate('Client Document') ?>:</label></td>
+                    <td>
+                        <?php
+                        $doc = '';
+                        if ($this->order->getRetrievePeople() && $this->order->getRetrievePeople()->getDocument()) {
+                            foreach ($this->order->getRetrievePeople()->getDocument() AS $document) {
+                                if ($document->getDocumentType()->getDocumentType() == 'CPF') {
+                                    $doc = \Core\Helper\Format::maskNumber("###.###.###-##", str_pad($document->getDocument(), 10, '0', STR_PAD_LEFT));
+                                }
+                            }
+                        }
+                        ?>
+                        <span><?= $doc ?></span>
+                    </td>
+                </tr>
+            <?php } ?>
+            <tr>
+                <td><label class="control-label" for="client-name"><?= $this->translate('Quote client name') ?>:</label></td>
+                <td><span><?= ($this->order->getRetrieveContact() ? $this->order->getRetrieveContact()->getName() : '' ) ?></span></td>
+            </tr>
+            <?php if ($this->order->getRetrieveContact() && count($this->order->getRetrieveContact()->getEmail()) > 0) { ?>
+                <?php foreach ($this->order->getRetrieveContact()->getEmail() AS $email) { ?>
+                    <tr>
+                        <td><label class="control-label" id="label-add-email" for="input-add-email"><?= $this->translate('Email') ?>:</label></td>
+                        <td><span><?= $email->getEmail() ?></span></td>
+                    </tr>
+                <?php } ?>
+            <?php }
+            ?>
+            <?php if ($this->order->getRetrieveContact() && count($this->order->getRetrieveContact()->getPhone()) > 0) { ?>
+                <?php foreach ($this->order->getRetrieveContact()->getPhone() AS $phone) { ?>
+                    <tr>
+                        <td><label class="control-label" id="label-add-phone" for="input-add-phone"><?= $this->translate('Phone') ?>:</label></td>
+                        <td>
+                            <span data-contact-ddd="contact-ddd" >(<?= $phone->getDdd() ?>)</span>
+                            <span data-contact-phone="contact-phone"><?= \Core\Helper\Format::maskNumber((strlen($phone->getPhone()) > 8 ? "#####-####" : "####-####"), $phone->getPhone()) ?></span>
+                        </td>
+                    </tr>
+                <?php } ?>
+            <?php } ?>
+            <?php if ($this->order->getAddressOrigin()) { ?>
+                <tr>
+                    <td><label class="control-label" for="address-cep"><?= $this->translate('Postal code') ?>:</label></td>
+                    <td><span><?= preg_replace("/^(\d{5})(\d{3})$/", "\\1-\\2", str_pad($this->order->getAddressOrigin()->getStreet()->getCep()->getCep(), 8, '0', STR_PAD_LEFT)) ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-street"><?= $this->translate('Address Origin') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressOrigin()->getStreet()->getStreet() ?></span>                    </td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-number"><?= $this->translate('Address number') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressOrigin()->getNumber() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-complement"><?= $this->translate('Address complement') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressOrigin()->getComplement() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-district"><?= $this->translate('Address district') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressOrigin()->getStreet()->getDistrict()->getDistrict() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-city"><?= $this->translate('Address city') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressOrigin()->getStreet()->getDistrict()->getCity()->getCity() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-state"><?= $this->translate('Address state') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressOrigin()->getStreet()->getDistrict()->getCity()->getState()->getState() ?></span></td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+    <div class="row-box" style="width:100%;float:left;padding: 30px;">
+        <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 no-margin no-padding" style="margin-bottom: 20px;">
+            <label class="control-label label-title" style="color: #002e62;font-weight: bold;font-size: x-large;text-align: center;border-bottom: 1px solid;"><?= $this->translate('Delivery data') ?></label>
+        </div>
+        <table width="100%">
+            <?php if ($this->order->getDeliveryPeople()->getPeopleType() == 'J') { ?>
+                <tr>
+                    <td><label class="control-label" for="company-alias"><?= $this->translate('Company Alias') ?>:</label></td>
+                    <td><span><?= $this->order->getDeliveryPeople()->getAlias() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="name"><?= $this->translate('Company Name') ?>:</label></td>
+                    <td><span><?= $this->order->getDeliveryPeople()->getName() ?></span>                    </td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="company-document"><?= $this->translate('Company Document') ?>:</label></td>
+                    <td>
+                        <?php
+                        $doc = '';
+                        if ($this->order->getDeliveryPeople() && $this->order->getDeliveryPeople()->getDocument()) {
+                            foreach ($this->order->getDeliveryPeople()->getDocument() AS $document) {
+                                if ($document->getDocumentType()->getDocumentType() == 'CNPJ') {
+                                    $doc = \Core\Helper\Format::maskNumber("##.###.###/####-##", $document->getDocument());
+                                }
+                            }
+                        }
+                        ?>
+                        <span><?= $doc ?></span>
+                    </td>
+                </tr>
+            <?php } ?>
+            <?php if ($this->order->getDeliveryPeople()->getPeopleType() == 'F') { ?>
+                <tr>
+                    <td><label class="control-label" for="client-document"><?= $this->translate('Client Document') ?>:</label></td>
+                    <td>
+                        <?php
+                        $doc = '';
+                        if ($this->order->getDeliveryPeople() && $this->order->getDeliveryPeople()->getDocument()) {
+                            foreach ($this->order->getDeliveryPeople()->getDocument() AS $document) {
+                                if ($document->getDocumentType()->getDocumentType() == 'CPF') {
+                                    $doc = \Core\Helper\Format::maskNumber("###.###.###-##", str_pad($document->getDocument(), 10, '0', STR_PAD_LEFT));
+                                }
+                            }
+                        }
+                        ?>
+                        <span><?= $doc ?></span>
+                    </td>
+                </tr>
+            <?php } ?>
+            <tr>
+                <td><label class="control-label" for="client-name"><?= $this->translate('Quote client name') ?>:</label></td>
+                <td><span><?= ($this->order->getDeliveryContact() ? $this->order->getDeliveryContact()->getName() : '') ?></span>                    </td>
+            </tr>
+            <?php if ($this->order->getDeliveryContact() && count($this->order->getDeliveryContact()->getEmail()) > 0) { ?>
+                <?php foreach ($this->order->getDeliveryContact()->getEmail() AS $email) { ?>
+                    <tr>
+                        <td><label class="control-label" id="label-add-email" for="input-add-email"><?= $this->translate('Email') ?>:</label></td>
+                        <td><span><?= $email->getEmail() ?></span>                                            </td>
+                    </tr>
+                <?php } ?>
+            <?php } ?>
+            <?php if ($this->order->getDeliveryContact() && count($this->order->getDeliveryContact()->getPhone()) > 0) { ?>
+                <?php foreach ($this->order->getDeliveryContact()->getPhone() AS $phone) { ?>
+                    <tr>
+                        <td><label class="control-label" id="label-add-phone" for="input-add-phone"><?= $this->translate('Phone') ?>:</label></td>
+                        <td>
+                            <span data-contact-ddd="contact-ddd" >(<?= $phone->getDdd() ?>)</span>
+                            <span data-contact-phone="contact-phone"><?= \Core\Helper\Format::maskNumber(strlen($phone->getPhone()) > 8 ? "#####-####" : "####-####", $phone->getPhone()) ?></span>
+                        </td>
+                    </tr>
+                <?php } ?>
+            <?php } ?>
+            <?php if ($this->order->getAddressDestination()) { ?>
+                <tr>
+                    <td><label class="control-label" for="address-cep"><?= $this->translate('Postal code') ?>:</label></td>
+                    <td><span><?= preg_replace("/^(\d{5})(\d{3})$/", "\\1-\\2", str_pad($this->order->getAddressDestination()->getStreet()->getCep()->getCep(), 8, '0', STR_PAD_LEFT)) ?></span>                    </td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-street"><?= $this->translate('Address Destination') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressDestination()->getStreet()->getStreet() ?></span>                    </td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-number"><?= $this->translate('Address number') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressDestination()->getNumber() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-complement"><?= $this->translate('Address complement') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressDestination()->getComplement() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-district"><?= $this->translate('Address district') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressDestination()->getStreet()->getDistrict()->getDistrict() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-city"><?= $this->translate('Address city') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressDestination()->getStreet()->getDistrict()->getCity()->getCity() ?></span></td>
+                </tr>
+                <tr>
+                    <td><label class="control-label" for="address-state"><?= $this->translate('Address state') ?>:</label></td>
+                    <td><span><?= $this->order->getAddressDestination()->getStreet()->getDistrict()->getCity()->getState()->getState() ?></span></td>
+                </tr>
+            <?php } ?>
+        </table>
+    </div>
+
+    <div class="row-box" style="clear:both;padding: 30px;">
+        <h5><label class="control-label label-title" style="color: #002c5d;font-weight: bold;font-size: 20px;"><?= $this->translate('Product details') ?></label></h5>
+
+        <table width="100%">
+            <tr>
+                <td>
+                    <?= $this->translate('Cubage'); ?>
+                </td>
+                <td>
+                    <?= $this->translate('Product Type'); ?>
+                </td>
+                <td>
+                    <?= $this->translate('Quote Invoice Total'); ?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <?= number_format($this->order->getCubage(), 3, ',', '.') ?> kg
+                </td>
+                <td>
+                    <?= $this->order->getProductType(); ?>
+                </td>
+                <td>
+                    <?= $this->translate('corrency_symbol') . number_format($this->order->getInvoiceTotal(), 2, ',', '.'); ?>
+                </td>
+            </tr>
+        </table>
+        <div class="box-product-size box-size" style="margin-top:30px;border-top: 1px solid #bbbaba;padding-top:20px;">
+            <table width="100%">
+                <tr>
+                    <td>
+                        <?= $this->translate('Qtd'); ?>
+                    </td>
+                    <td>
+                        <?= $this->translate('Weight'); ?>
+                    </td>
+                    <td>
+                        <?= $this->translate('Height'); ?>
+                    </td>
+                    <td>
+                        <?= $this->translate('Width'); ?>
+                    </td>
+                    <td>
+                        <?= $this->translate('Depth'); ?>
+                    </td>
+                </tr>
+                <?php foreach ($this->order->getOrderPackage() AS $key => $product) { ?>
+                    <tr>
+                        <td>
+                            <?= $product->getQtd(); ?>
+                        </td>
+                        <td>
+                            <?= str_replace('.', ',', $product->getWeight()) ?> <?= $this->translate('KG'); ?>
+                        </td>
+                        <td >
+                            <?= str_replace('.', ',', $product->getHeight() * 100)
+                            ?> <?= $this->translate('Centimeters'); ?>
+                        </td>
+                        <td >
+                            <?= str_replace('.', ',', $product->getWidth() * 100)
+                            ?> <?= $this->translate('Centimeters'); ?>
+                        </td>
+                        <td >
+                            <?= str_replace('.', ',', $product->getDepth() * 100)
+                            ?> <?= $this->translate('Centimeters'); ?>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </table>
+        </div>
+    </div>
+</div>
+</div>        

@@ -22,6 +22,13 @@ class People {
     private $id;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="enable", type="boolean",  nullable=false)
+     */
+    private $enable;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=50, nullable=false)
@@ -43,6 +50,13 @@ class People {
     private $peopleType;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="billing", type="float", nullable=false)
+     */
+    private $billing;
+
+    /**
      * @var \Core\Entity\Image
      *
      * @ORM\ManyToOne(targetEntity="Core\Entity\Image")
@@ -55,9 +69,10 @@ class People {
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Core\Entity\Adress", mappedBy="people")
+     * @ORM\OneToMany(targetEntity="Core\Entity\Address", mappedBy="people")
+     * @ORM\OrderBy({"nickname" = "ASC"})
      */
-    private $adress;
+    private $address;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -65,6 +80,16 @@ class People {
      * @ORM\OneToMany(targetEntity="Core\Entity\Document", mappedBy="people")
      */
     private $document;
+
+    /**
+     * @var \Core\Entity\Language
+     *
+     * @ORM\ManyToOne(targetEntity="Core\Entity\Language")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="language_id", referencedColumnName="id")
+     * })
+     */
+    private $language;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -83,7 +108,31 @@ class People {
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleClient", mappedBy="client")
+     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleDomain", mappedBy="people")     
+     */
+    private $peopleDomain;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleProvider", mappedBy="company")
+     * @ORM\OrderBy({"provider" = "ASC"})
+     */
+    private $peopleProvider;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleSalesman", mappedBy="company")
+     * @ORM\OrderBy({"salesman" = "ASC"})
+     */
+    private $peopleSalesman;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleClient", mappedBy="company")
+     * @ORM\OrderBy({"client" = "ASC"})
      */
     private $peopleClient;
 
@@ -91,6 +140,7 @@ class People {
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Core\Entity\PeopleEmployee", mappedBy="employee")
+     * @ORM\OrderBy({"employee" = "ASC"})
      */
     private $peopleEmployee;
 
@@ -98,13 +148,15 @@ class People {
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Core\Entity\PeopleCarrier", mappedBy="company")
+     * @ORM\OrderBy({"carrier" = "ASC"})
      */
     private $peopleCarrier;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleEmployee", mappedBy="company")
+     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleEmployee", mappedBy="employee")
+     * @ORM\OrderBy({"company" = "ASC"})
      */
     private $peopleCompany;
 
@@ -112,22 +164,54 @@ class People {
      * @var \Doctrine\Common\Collections\Collection
      *
      * @ORM\OneToMany(targetEntity="Core\Entity\User", mappedBy="people")
+     * @ORM\OrderBy({"username" = "ASC"})
      */
     private $user;
+
+    /**
+     * @var \Doctrine\Common\Collections\DeliveryRestrictionMaterial
+     *
+     * @ORM\OneToMany(targetEntity="Core\Entity\DeliveryRestrictionMaterial", mappedBy="carrier")
+     */
+    private $delivery_restriction_material;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Core\Entity\Order", mappedBy="client")
+     * @ORM\OrderBy({"alter_date" = "DESC"})
+     */
+    private $purchasing_order;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Core\Entity\Order", mappedBy="provider")
+     * @ORM\OrderBy({"alter_date" = "DESC"})     
+     */
+    private $sale_order;
 
     /**
      * Constructor
      */
     public function __construct() {
-        $this->adress = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->enable = 0;
+        $this->billing = 0;
+        $this->address = new \Doctrine\Common\Collections\ArrayCollection();
         $this->document = new \Doctrine\Common\Collections\ArrayCollection();
         $this->email = new \Doctrine\Common\Collections\ArrayCollection();
         $this->peopleClient = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->peopleProvider = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->peopleSalesman = new \Doctrine\Common\Collections\ArrayCollection();
         $this->peopleEmployee = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->peopleDomain = new \Doctrine\Common\Collections\ArrayCollection();
         $this->peopleCarrier = new \Doctrine\Common\Collections\ArrayCollection();
         $this->peopleCompany = new \Doctrine\Common\Collections\ArrayCollection();
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
         $this->phone = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->delivery_restriction_material = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->purchasing_order = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->sale_order = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -137,6 +221,27 @@ class People {
      */
     public function getId() {
         return $this->id;
+    }
+
+    /**
+     * Get enable
+     *
+     * @return boolean
+     */
+    public function getEnabled() {
+        return $this->enable;
+    }
+
+    /**
+     * Set enable
+     *
+     * @param boolean $enable
+     * @return People
+     */
+    public function setEnabled($enable) {
+        $this->enable = $enable ? : 0;
+
+        return $this;
     }
 
     /**
@@ -224,33 +329,54 @@ class People {
     }
 
     /**
-     * Add adress
+     * Set language
      *
-     * @param \Core\Entity\Adress $adress
+     * @param \Core\Entity\Language $language
      * @return People
      */
-    public function addAdress(\Core\Entity\Adress $adress) {
-        $this->adress[] = $adress;
+    public function setLanguage(\Core\Entity\Language $language = null) {
+        $this->language = $language;
 
         return $this;
     }
 
     /**
-     * Remove adress
+     * Get language
      *
-     * @param \Core\Entity\Adress $adress
+     * @return \Core\Entity\Language
      */
-    public function removeAdress(\Core\Entity\Adress $adress) {
-        $this->adress->removeElement($adress);
+    public function getLanguage() {
+        return $this->language;
     }
 
     /**
-     * Get adress
+     * Add address
+     *
+     * @param \Core\Entity\Address $address
+     * @return People
+     */
+    public function addAddress(\Core\Entity\Address $address) {
+        $this->address[] = $address;
+
+        return $this;
+    }
+
+    /**
+     * Remove address
+     *
+     * @param \Core\Entity\Address $address
+     */
+    public function removeAddress(\Core\Entity\Address $address) {
+        $this->address->removeElement($address);
+    }
+
+    /**
+     * Get address
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getAdress() {
-        return $this->adress;
+    public function getAddress() {
+        return $this->address;
     }
 
     /**
@@ -374,6 +500,36 @@ class People {
     }
 
     /**
+     * Add peopleProvider
+     *
+     * @param \Core\Entity\PeopleProvider $peopleProvider
+     * @return People
+     */
+    public function addPeopleProvider(\Core\Entity\PeopleProvider $peopleProvider) {
+        $this->peopleProvider[] = $peopleProvider;
+
+        return $this;
+    }
+
+    /**
+     * Remove peopleProvider
+     *
+     * @param \Core\Entity\PeopleProvider $peopleProvider
+     */
+    public function removePeopleProvider(\Core\Entity\PeopleProvider $peopleProvider) {
+        $this->peopleProvider->removeElement($peopleProvider);
+    }
+
+    /**
+     * Get peopleProvider
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeopleProvider() {
+        return $this->peopleProvider;
+    }
+
+    /**
      * Add peopleEmployee
      *
      * @param \Core\Entity\PeopleEmployee $peopleEmployee
@@ -491,6 +647,177 @@ class People {
      */
     public function getUser() {
         return $this->user;
+    }
+
+    /**
+     * Add PeopleDomain
+     *
+     * @param \Core\Entity\PeopleDomain $peopleDomain
+     * @return People
+     */
+    public function addPeopleDomain(\Core\Entity\PeopleDomain $peopleDomain) {
+        $this->peopleDomain[] = $peopleDomain;
+
+        return $this;
+    }
+
+    /**
+     * Remove PeopleDomain
+     *
+     * @param \Core\Entity\PeopleDomain $peopleDomain
+     */
+    public function removePeopleDomain(\Core\Entity\PeopleDomain $peopleDomain) {
+        $this->peopleDomain->removeElement($peopleDomain);
+    }
+
+    /**
+     * Get PeopleDomain
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeopleDomain() {
+        return $this->peopleDomain;
+    }
+
+    /**
+     * Add peopleSalesman
+     *
+     * @param \Core\Entity\PeopleSalesman $peopleSalesman
+     * @return People
+     */
+    public function addPeopleSalesman(\Core\Entity\PeopleSalesman $peopleSalesman) {
+        $this->peopleSalesman[] = $peopleSalesman;
+
+        return $this;
+    }
+
+    /**
+     * Remove peopleSalesman
+     *
+     * @param \Core\Entity\PeopleSalesman $peopleSalesman
+     */
+    public function removePeopleSalesman(\Core\Entity\PeopleSalesman $peopleSalesman) {
+        $this->peopleSalesman->removeElement($peopleSalesman);
+    }
+
+    /**
+     * Get peopleSalesman
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeopleSalesman() {
+        return $this->peopleSalesman;
+    }
+
+    /**
+     * Add delivery_restriction_material
+     *
+     * @param \Core\Entity\RestrictionMaterial $delivery_restriction_material
+     * @return Cep
+     */
+    public function addRestrictionMaterial(\Core\Entity\DeliveryRestrictionMaterial $delivery_restriction_material) {
+        $this->delivery_restriction_material[] = $delivery_restriction_material;
+
+        return $this;
+    }
+
+    /**
+     * Remove delivery_restriction_material
+     *
+     * @param \Core\Entity\RestrictionMaterial $delivery_restriction_material
+     */
+    public function removeRestrictionMaterial(\Core\Entity\DeliveryRestrictionMaterial $delivery_restriction_material) {
+        $this->delivery_restriction_material->removeElement($delivery_restriction_material);
+    }
+
+    /**
+     * Get delivery_restriction_material
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRestrictionMaterial() {
+        return $this->delivery_restriction_material;
+    }
+
+    /**
+     * Set billing
+     *
+     * @param string $billing
+     * @return People
+     */
+    public function setBilling($billing) {
+        $this->billing = $billing;
+
+        return $this;
+    }
+
+    /**
+     * Get billing
+     *
+     * @return float 
+     */
+    public function getBilling() {
+        return $this->billing;
+    }
+
+    /**
+     * Add sale_order
+     *
+     * @param \Core\Entity\Order $sale_order
+     * @return People
+     */
+    public function addSaleOrder(\Core\Entity\Order $sale_order) {
+        $this->sale_order[] = $sale_order;
+
+        return $this;
+    }
+
+    /**
+     * Remove sale_order
+     *
+     * @param \Core\Entity\Order $sale_order
+     */
+    public function removeSaleOrder(\Core\Entity\Order $sale_order) {
+        $this->sale_order->removeElement($sale_order);
+    }
+
+    /**
+     * Get sale_order
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSaleOrder() {
+        return $this->sale_order;
+    }
+
+    /**
+     * Add purchasing_order
+     *
+     * @param \Core\Entity\Order $purchasing_order
+     * @return People
+     */
+    public function addPurchasingOrder(\Core\Entity\Order $purchasing_order) {
+        $this->purchasing_order[] = $purchasing_order;
+
+        return $this;
+    }
+
+    /**
+     * Remove purchasing_order
+     *
+     * @param \Core\Entity\Order $purchasing_order
+     */
+    public function removePurchasingOrder(\Core\Entity\Order $purchasing_order) {
+        $this->purchasing_order->removeElement($purchasing_order);
+    }
+
+    /**
+     * Get purchasing_order
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPurchasingOrder() {
+        return $this->purchasing_order;
     }
 
 }

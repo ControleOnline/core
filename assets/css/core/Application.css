@@ -1,0 +1,606 @@
+@import 'flat-admin-bootstrap-templates.css';
+@import 'colors.css';
+form {
+    width: 100%;
+}
+img{
+    max-width: 100%;
+}
+.card.card-banner .card-body .content .value{
+    font-size: 2em !important;
+}
+.payment-logo{
+    background: url(../../img/payment/invoice-bar.png);
+    background-position: right 20px;
+    background-size: 70px;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: -85px;
+    height: 70px;
+    padding-right: 110px;
+}
+.itau-logo{
+    background: url(../../img/payment/itau.png);
+    background-position: center;
+    background-size: 50px;
+    background-repeat: no-repeat;
+    padding: 20px;
+    position: relative;
+    top: 15px;
+    left: 50%;
+}
+.call-center-payment a{
+    color: #fff;
+}
+.call-center-payment{
+    position: absolute;
+    bottom: -200px;
+    color: #fff;
+    padding: 20px;
+    right: 0;
+    text-align: center;
+    width: 100%;
+}
+.carrier-logo-payment{
+    max-height: 60px;
+}
+.footer-payment{
+    position: absolute;
+    bottom: -75px;
+    color: #fff;
+    background: url(../../img/payment/ssl-icon.png);
+    background-position: 0;
+    background-repeat: no-repeat;
+    background-size: 50px;
+    padding: 20px;
+    padding-left: 50px;
+    left: 15px;
+}
+.app-default>.app-container{
+    padding-bottom: 60px;
+}
+footer.app-footer{
+    bottom: 0;
+    position: absolute;
+}
+.loading-spin{
+    color: rgb(76, 175, 80); 
+    font-size: 200px !important;   
+    margin-left: 50%;
+    left: -100px;
+    position: absolute;
+}
+.loading-dialog{    
+    right: 50%;
+    top:25%;
+    position: relative;
+}
+.loading-content{    
+    right: -50%;
+    top: -50%;
+    position: relative;
+}
+.loading-header{
+    color: #fff;
+}
+.loading-header{
+    text-align: center;
+}
+.profile-image,.profile-image-container{
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin-right: 25px;
+}
+.username-container{
+    text-align: center;
+    margin-top: -25px;
+}
+.company-profile{
+    width: 150px;
+}
+.app-logged-in input,.app-logged-in button{
+    padding: 5px;
+}
+.company-profile .dropdown-toggle>img{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.logo-login, .logo-create-account{
+    height: 66px;
+}
+.ajax-spin-input{
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    z-index: 30000000;
+}
+.show-messages div:first-child{
+    margin-top: 15px;
+}
+.show-messages{
+    position: absolute;
+    z-index: 999999999;
+    position: fixed;
+    margin-left: 5%;
+    width: 90%;
+    left: 0;
+    background: #fff;
+    bottom: 0;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px #c8d1d3;    
+}
+.company-img{
+    max-height: 100% !important;    
+    max-width: 110px !important;    
+}
+.company-img-icon{   
+    min-height: 40px;
+    max-height: 40px;
+    max-width: 100%;
+}
+.company-profile{
+    height: 100%;
+}
+.company-profile a{
+    height: 100%;
+}
+.navbar .company-profile ul > li{
+    text-align: center;
+}
+#profile-container{
+    padding: 30px;
+}
+.fa-plus,.click{
+    cursor: pointer;
+}
+.app-login {
+    background: #173c68 !important;
+}
+.app-login .app-body .app-block .app-right-section{
+    background: #095077 !important;
+}
+.app-not-logged-in .flex-center{
+    margin-top: 0;
+    min-height: 100vh !important;
+}
+.app-not-logged-in .card.flex-center{
+    background-color: transparent !important;
+    border-radius: 3px !important;
+    box-shadow: none !important;
+}
+.app-not-logged-in{
+    padding: 0 !important;
+    padding-left: 0 !important;
+}
+.sidebar-brand img{
+    max-height: 100%;
+    max-width: 100%;
+}
+.app-not-logged-in .app-container{
+    margin-top: 0 !important;
+}
+
+.card.hovercard {
+    position: relative;
+    padding-top: 0;
+    overflow: hidden;
+    text-align: center;
+    background-color: #fff;
+    background-color: rgba(255, 255, 255, 1);
+}
+.user-card .card-background,.card.hovercard .card-background {
+    height: 130px;
+}
+.hovercard .card-background img {    
+    margin-left: -100px;
+    margin-top: -200px;    
+    min-width: 130%;
+}
+.card-background img {        
+    -webkit-filter: blur(25px);
+    -moz-filter: blur(25px);
+    -o-filter: blur(25px);
+    -ms-filter: blur(25px);
+    filter: blur(25px);
+    min-width: 100%;
+}
+.card.hovercard .useravatar {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+}
+.card.hovercard .useravatar img {
+    width: 100px;
+    height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.5);
+}
+.card.hovercard .card-info {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+}
+.card.hovercard .card-info .card-title {
+    padding:0 5px;
+    font-size: 20px;
+    line-height: 1;
+    color: #262626;
+    background-color: rgba(255, 255, 255, 0.1);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.card.hovercard .card-info {
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 20px;
+    color: #737373;
+    text-overflow: ellipsis;
+}
+.card.hovercard .bottom {
+    padding: 0 20px;
+    margin-bottom: 17px;
+}
+.btn-pref .btn {
+    -webkit-border-radius:0 !important;
+}
+
+.img-profile-mini{
+    margin-left: 50px;
+}
+.form-horizontal .form-group{
+    padding-top: 15px;
+}
+.box-address{
+    border-radius: 3px;
+    box-shadow: 0 1px 2px #c8d1d3;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+.box-address .form-suggestion{
+    margin-left: 10px;
+}
+.box-address button{
+    margin-right: 15px;
+}
+
+
+.user-card {
+    padding-top: 20px;
+    margin: 10px 0 20px 0;
+    background-color: rgba(214, 224, 226, 0.2);
+    border-top-width: 0;
+    border-bottom-width: 2px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.user-card .user-card-heading {
+    padding: 0 20px;
+    margin: 0;
+}
+
+.user-card .user-card-heading.simple {
+    font-size: 20px;
+    font-weight: 300;
+    color: #777;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.user-card .user-card-heading.image img {
+    display: inline-block;
+    width: 46px;
+    height: 46px;
+    margin-right: 15px;
+    vertical-align: top;
+    border: 0;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.user-card .user-card-heading.image .user-card-heading-header {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.user-card .user-card-heading.image .user-card-heading-header h3 {
+    margin: 0;
+    font-size: 14px;
+    line-height: 16px;
+    color: #262626;
+}
+
+.user-card .user-card-heading.image .user-card-heading-header span {
+    font-size: 12px;
+    color: #999999;
+}
+
+.user-card .user-card-body {
+    padding: 0 20px;
+    margin-top: 20px;
+}
+
+.user-card .user-card-media {
+    padding: 0 20px;
+    margin: 0 -14px;
+}
+
+.user-card .user-card-media img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.user-card .user-card-actions {
+    min-height: 30px;
+    padding: 0 20px 20px 20px;
+    margin: 20px 0 0 0;
+}
+
+.user-card .user-card-comments {
+    padding: 20px;
+    margin: 0;
+    background-color: #f8f8f8;
+}
+
+.user-card .user-card-comments .comments-collapse-toggle {
+    padding: 0;
+    margin: 0 20px 12px 20px;
+}
+
+.user-card .user-card-comments .comments-collapse-toggle a,
+.user-card .user-card-comments .comments-collapse-toggle span {
+    padding-right: 5px;
+    overflow: hidden;
+    font-size: 12px;
+    color: #999;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-card-comments .media-heading {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.user-card.people {
+    position: relative;
+    display: inline-block;
+    width: 170px;
+    height: 300px;
+    padding-top: 0;
+    margin-left: 20px;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.user-card.people:first-child {
+    margin-left: 0;
+}
+
+.user-card.people .user-card-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    width: 170px;
+    height: 150px;
+    background-color: #ffffff;
+}
+
+.user-card.people .user-card-top.green {
+    background-color: #53a93f;
+}
+
+.user-card.people .user-card-top.blue {
+    background-color: #427fed;
+}
+
+.user-card.people .user-card-info {
+    position: absolute;
+    top: 150px;
+    display: inline-block;
+    width: 100%;
+    height: 101px;
+    overflow: hidden;
+    background: #ffffff;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.user-card.people .user-card-info .title {
+    display: block;
+    margin: 8px 14px 0 14px;
+    overflow: hidden;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 18px;
+    color: #404040;
+}
+
+.user-card.people .user-card-info .desc {
+    display: block;
+    margin: 8px 14px 0 14px;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 16px;
+    color: #737373;
+    text-overflow: ellipsis;
+}
+
+.user-card.people .user-card-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: inline-block;
+    width: 100%;
+    padding: 10px 20px;
+    line-height: 29px;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.user-card.hoveruser-card {
+    position: relative;
+    padding-top: 0;
+    overflow: hidden;
+    text-align: center;
+    background-color: rgba(214, 224, 226, 0.2);
+}
+
+.user-card.hoveruser-card .user-cardheader {    
+    /*background-size: cover;*/
+    height: 135px;
+}
+
+.user-card.hoveruser-card .avatar {
+    position: relative;
+    top: -50px;
+    margin-bottom: -50px;
+}
+
+.user-card.hoveruser-card .avatar img {
+    width: 100px;
+    height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    border: 5px solid rgba(255,255,255,0.5);
+}
+
+.user-card.hoveruser-card .info {
+    padding: 4px 8px 10px;
+}
+
+.user-card.hoveruser-card .info .title {
+    margin-bottom: 4px;
+    font-size: 24px;
+    line-height: 1;
+    color: #262626;
+    vertical-align: middle;
+}
+
+.user-card.hoveruser-card .info .desc {
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 20px;
+    color: #737373;
+    text-overflow: ellipsis;
+}
+
+.user-card.hoveruser-card .bottom {
+    padding: 0 20px;
+    margin-bottom: 17px;
+}
+
+.btn-card{ border-radius: 50%; width:32px; height:32px; line-height:18px;  }
+/*http://stackoverflow.com/questions/19695784/how-can-i-make-bootstrap-columns-all-the-same-height*/
+#company-container > [class*="col-"], #company-contacts .row > [class*="col-"]{
+    display: flex;
+    flex-direction: column;
+}
+#company-container.row,#company-contacts .row{
+    display: flex;
+    flex-wrap: wrap;
+}
+#input-add-ddd,#company-ddd {
+    display: inline-block !important;
+    width: 33% !important;
+}
+#input-add-phone,#company-phone{
+    display: inline-block !important;
+    width: 65% !important;
+}
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+.btn-circle.btn-lg {
+    width: 50px;
+    height: 50px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+}
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 35px;
+}
+.app-logged-simple{
+    padding: 0px !important;
+}
+.navbar .navbar-collapse{
+    overflow: hidden;
+}
+.dataTables_wrapper{
+    clear: both;
+}
+.dataTables_wrapper .row {
+    overflow: auto;
+}
+.login-box-container{
+    background:rgba(0, 0, 0, 0.5) !important;
+    position:fixed !important;
+    top:0 !important;
+    left:0 !important;
+    width:100% !important;
+    height:100% !important;
+    z-index:999999999 !important;
+}
+.close-login{
+    position: absolute;
+    right: 5px;
+    top: 0px;
+    z-index: 999999999;
+    opacity: 1;
+}
+.no-border{
+    border: none !important;
+}
+.no-margin{
+    margin: 0 !important;
+}
+.fix-box-height{
+    flex-wrap: wrap;
+    display: inline-flex;
+}
+.loading-body{
+    text-align: center;
+}
+.pdf-container{
+    width: 100%;    
+}

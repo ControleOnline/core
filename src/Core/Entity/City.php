@@ -41,16 +41,16 @@ class City
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Core\Entity\Neighborhood", mappedBy="city")
+     * @ORM\OneToMany(targetEntity="Core\Entity\District", mappedBy="city")
      */
-    private $neighborhood;
+    private $district;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->neighborhood = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->district = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -110,35 +110,35 @@ class City
     }
 
     /**
-     * Add neighborhood
+     * Add district
      *
-     * @param \Core\Entity\Neighborhood $neighborhood
+     * @param \Core\Entity\District $district
      * @return City
      */
-    public function addNeighborhood(\Core\Entity\Neighborhood $neighborhood)
+    public function addDistrict(\Core\Entity\District $district)
     {
-        $this->neighborhood[] = $neighborhood;
+        $this->district[] = $district;
 
         return $this;
     }
 
     /**
-     * Remove neighborhood
+     * Remove district
      *
-     * @param \Core\Entity\Neighborhood $neighborhood
+     * @param \Core\Entity\District $district
      */
-    public function removeNeighborhood(\Core\Entity\Neighborhood $neighborhood)
+    public function removeDistrict(\Core\Entity\District $district)
     {
-        $this->neighborhood->removeElement($neighborhood);
+        $this->district->removeElement($district);
     }
 
     /**
-     * Get neighborhood
+     * Get district
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getNeighborhood()
+    public function getDistrict()
     {
-        return $this->neighborhood;
+        return $this->district;
     }
 }

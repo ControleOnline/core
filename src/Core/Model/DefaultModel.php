@@ -13,7 +13,7 @@ class DefaultModel {
     protected $_em;
 
     /**
-     * @var \Doctrine\ORM\EntityRepository          
+     * @var \Doctrine\ORM\EntityRepository $entity   
      */
     protected $entity;
 
@@ -28,7 +28,7 @@ class DefaultModel {
     protected $join = [];
     protected $current_deep = 0;
     protected $max_deep = 0;
-    protected $config;
+    protected $config;    
 
     public function initialize(\Zend\ServiceManager\ServiceManager $serviceLocator) {
         
@@ -38,9 +38,9 @@ class DefaultModel {
         $namespace = str_replace('Model', 'Entity', explode('\\', get_called_class()));                
         $namespace[0] = 'Core';
         $namespace[] = str_replace('Entity', '', array_pop($namespace));        
-        $entity = implode('\\', $namespace);                
-        
+        $entity = implode('\\', $namespace);                        
         $this->setEntity($entity);
+        
     }
 
     /**
@@ -108,9 +108,7 @@ class DefaultModel {
     public function delete($id) {
         $entity = $this->entity->find($id);
         if ($entity) {
-            $this->_em->remove($entity);
-            $this->_em->flush();
-            $this->_em->clear();
+            $this->_em->remove($entity);                        
             return true;
         } else {
             return false;
@@ -130,8 +128,9 @@ class DefaultModel {
         try {
             $insert = $this->setData($entity, $params);
             $this->_em->persist($insert);
-            $this->_em->flush();
-            $this->_em->clear();
+            $this->_em->flush($insert);
+            
+            
             return $this->get($insert->getId());
         } catch (Exception $e) {
             ErrorModel::addError(array('code' => $e->getCode(), 'message' => 'Error on edit this data'));
@@ -152,8 +151,9 @@ class DefaultModel {
             $class = new $this->entity_name;
             $entity = $this->setData($class, $params);
             $this->_em->persist($entity);
-            $this->_em->flush();
-            $this->_em->clear();
+            $this->_em->flush($entity);
+            
+            
             return $this->get($entity->getId());
         } catch (Exception $e) {
             ErrorModel::addError(array('code' => 'no_insert_this_data', 'message' => 'Not insert this data'));

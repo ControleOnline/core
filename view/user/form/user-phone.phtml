@@ -1,0 +1,45 @@
+<div class="panel-body">
+    <!-- Text input-->
+    <fieldset>
+        <form class="api-form form-horizontal" action="/user-phone.form" method="POST" name="form-user-phone" id="form-user-phone" role="form" data-childs="[&quot;people&quot;,&quot;log&quot;]">
+            <!-- Form Name -->
+            <button title="<?= $this->translate('Add new phone for this user') ?>" type="button" class="btn btn-success pull-right" data-add-form="/user/add-phone.form">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                <?= $this->translate('Add') ?>
+            </button>            
+            <legend><?= $this->translate('Phones') ?></legend>                                        
+            <div id="container-delete-phone-{id}" class="form-group hidden clone highlight" data-clone="add-user-phone">
+                <label class="col-md-2 control-label" id="label-ddd-{id}" for="input-ddd"><?= $this->translate('DDD') ?>: </label>
+                <div class="col-md-3">                        
+                    <input readonly class="form-control input-md" value="" id="input-d-{id}" name="ddd" type="text" >
+                </div>
+                <label class="col-md-2 control-label" id="label-phone-{id}" for="input-phone"><?= $this->translate('Phone') ?>: </label>
+                <div class="col-md-3">                        
+                    <input readonly class="form-control input-md" value="" id="input-phone-{id}" name="phone" type="text" >
+                </div>
+                <div class="col-md-2">
+                    <button data-container-remove="container-delete-phone" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this phone?') ?>" data-body="({ddd}) {phone}" data-toggle="modal" data-target="#confirm-delete" data-id="{id}" data-delete-confirm="/user/delete-phone.json" name="confirm-delete-{id}" id="confirm-delete-{id}" type="submit" class="confirm-delete btn btn-danger">
+                        <?= $this->translate('Delete') ?>
+                    </button>
+                </div>
+            </div>                                        
+            <?php foreach ($this->user->getPeople()->getPhone() AS $user_phone) { ?>
+                <div id="container-delete-phone-<?= $user_phone->getId() ?>" class="form-group highlight">
+                    <label class="col-md-2 control-label" id="label-ddd-<?= $user_phone->getId() ?>" for="input-ddd"><?= $this->translate('DDD') ?>: </label>
+                    <div class="col-md-3">                        
+                        <input readonly class="form-control input-md" value="<?= $user_phone->getDdd() ?>" id="input-phone-<?= $user_phone->getId() ?>" name="ddd" type="text" >
+                    </div>
+                    <label class="col-md-2 control-label" id="label-phone-<?= $user_phone->getId() ?>" for="input-phone"><?= $this->translate('Phone') ?>: </label>
+                    <div class="col-md-3">                        
+                        <input readonly class="form-control input-md" value="<?= $user_phone->getPhone() ?>" id="input-phone-<?= $user_phone->getId() ?>" name="phone" type="text" >
+                    </div>
+                    <div class="col-md-2">
+                        <button  data-container-remove="container-delete-phone" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this phone?') ?>" data-body="<?= '(' . $user_phone->getDdd() . ') ' . $user_phone->getPhone() ?>" data-toggle="modal" data-target="#confirm-delete" data-id="<?= $user_phone->getId() ?>" data-delete-confirm="/user/delete-phone.json" name="confirm-delete-<?= $user_phone->getId() ?>" id="confirm-delete-<?= $user_phone->getId() ?>" type="button" class="confirm-delete btn btn-danger">
+                            <?= $this->translate('Delete') ?>
+                        </button>
+                    </div>
+                </div>                                        
+            <?php } ?>
+        </form>
+    </fieldset>
+</div>                             

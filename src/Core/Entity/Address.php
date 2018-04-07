@@ -5,13 +5,13 @@ namespace Core\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Adress
+ * Address
  *
- * @ORM\Table(name="adress", uniqueConstraints={@ORM\UniqueConstraint(name="user_id_3", columns={"people_id", "number", "street_id", "complement"})}, indexes={@ORM\Index(name="user_id_2", columns={"people_id","nickname"}), @ORM\Index(name="user_id", columns={"people_id"}), @ORM\Index(name="cep_id", columns={"street_id"})})
+ * @ORM\Table(name="address", uniqueConstraints={@ORM\UniqueConstraint(name="user_id_3", columns={"people_id", "number", "street_id", "complement"})}, indexes={@ORM\Index(name="user_id_2", columns={"people_id","nickname"}), @ORM\Index(name="user_id", columns={"people_id"}), @ORM\Index(name="cep_id", columns={"street_id"})})
  * @ORM\Entity
  */
-class Adress
-{
+class Address {
+
     /**
      * @var integer
      *
@@ -24,7 +24,7 @@ class Adress
     /**
      * @var integer
      *
-     * @ORM\Column(name="number", type="integer", nullable=false)
+     * @ORM\Column(name="number", type="integer")
      */
     private $number;
 
@@ -62,14 +62,34 @@ class Adress
      */
     private $street;
 
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="latitude", type="float",  nullable=false)
+     */
+    private $latitude;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="longitude", type="float",  nullable=false)
+     */
+    private $longitude;
+
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $this->latitude = 0;
+        $this->longitude = 0;
+    }
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -77,10 +97,9 @@ class Adress
      * Set number
      *
      * @param integer $number
-     * @return Adress
+     * @return Address
      */
-    public function setNumber($number)
-    {
+    public function setNumber($number) {
         $this->number = $number;
 
         return $this;
@@ -91,8 +110,7 @@ class Adress
      *
      * @return integer 
      */
-    public function getNumber()
-    {
+    public function getNumber() {
         return $this->number;
     }
 
@@ -100,10 +118,9 @@ class Adress
      * Set nickname
      *
      * @param string $nickname
-     * @return Adress
+     * @return Address
      */
-    public function setNickname($nickname)
-    {
+    public function setNickname($nickname) {
         $this->nickname = $nickname;
 
         return $this;
@@ -114,8 +131,7 @@ class Adress
      *
      * @return string 
      */
-    public function getNickname()
-    {
+    public function getNickname() {
         return $this->nickname;
     }
 
@@ -123,10 +139,9 @@ class Adress
      * Set complement
      *
      * @param string $complement
-     * @return Adress
+     * @return Address
      */
-    public function setComplement($complement)
-    {
+    public function setComplement($complement) {
         $this->complement = $complement;
 
         return $this;
@@ -137,8 +152,7 @@ class Adress
      *
      * @return string 
      */
-    public function getComplement()
-    {
+    public function getComplement() {
         return $this->complement;
     }
 
@@ -146,10 +160,9 @@ class Adress
      * Set people
      *
      * @param \Core\Entity\People $people
-     * @return Adress
+     * @return Address
      */
-    public function setPeople(\Core\Entity\People $people = null)
-    {
+    public function setPeople(\Core\Entity\People $people = null) {
         $this->people = $people;
 
         return $this;
@@ -160,8 +173,7 @@ class Adress
      *
      * @return \Core\Entity\People 
      */
-    public function getPeople()
-    {
+    public function getPeople() {
         return $this->people;
     }
 
@@ -169,10 +181,9 @@ class Adress
      * Set street
      *
      * @param \Core\Entity\Street $street
-     * @return Adress
+     * @return Address
      */
-    public function setStreet(\Core\Entity\Street $street = null)
-    {
+    public function setStreet(\Core\Entity\Street $street = null) {
         $this->street = $street;
 
         return $this;
@@ -183,8 +194,50 @@ class Adress
      *
      * @return \Core\Entity\Street 
      */
-    public function getStreet()
-    {
+    public function getStreet() {
         return $this->street;
     }
+
+    /**
+     * Set latitude
+     *
+     * @param string $latitude
+     * @return Address
+     */
+    public function setLatitude($latitude) {
+        $this->latitude = $latitude? : 0;
+
+        return $this;
+    }
+
+    /**
+     * Get latitude
+     *
+     * @return string 
+     */
+    public function getLatitude() {
+        return $this->latitude;
+    }
+
+    /**
+     * Set longitude
+     *
+     * @param string $longitude
+     * @return Address
+     */
+    public function setLongitude($longitude) {
+        $this->longitude = $longitude? : 0;
+
+        return $this;
+    }
+
+    /**
+     * Get longitude
+     *
+     * @return string 
+     */
+    public function getLongitude() {
+        return $this->longitude;
+    }
+
 }

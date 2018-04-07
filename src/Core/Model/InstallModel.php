@@ -83,7 +83,6 @@ class InstallModel {
     }
 
     public function updateEntity(array $entity) {
-
         $metadata = $this->getMetadata($entity);
         $tool = new SchemaTool($this->_em);
         $queries = $tool->getCreateSchemaSql($metadata);

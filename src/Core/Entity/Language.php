@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="language", uniqueConstraints={@ORM\UniqueConstraint(name="language", columns={"language"})})
  * @ORM\Entity
  */
-class Language
-{
+class Language {
+
     /**
      * @var integer
      *
@@ -45,6 +45,13 @@ class Language
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
+     * @ORM\OneToMany(targetEntity="Core\Entity\People", mappedBy="language")
+     */
+    private $people;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
      * @ORM\OneToMany(targetEntity="Core\Entity\TranslateMenu", mappedBy="lang")
      */
     private $translateMenu;
@@ -59,11 +66,11 @@ class Language
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->languageCountry = new \Doctrine\Common\Collections\ArrayCollection();
         $this->translateMenu = new \Doctrine\Common\Collections\ArrayCollection();
         $this->translateMenuPage = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->people = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -71,9 +78,38 @@ class Language
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
+    }
+
+    /**
+     * Add people
+     *
+     * @param \Core\Entity\People $people
+     * @return Image
+     */
+    public function addPeople(\Core\Entity\People $people) {
+        $this->people[] = $people;
+
+        return $this;
+    }
+
+    /**
+     * Remove people
+     *
+     * @param \Core\Entity\People $people
+     */
+    public function removePeople(\Core\Entity\People $people) {
+        $this->people->removeElement($people);
+    }
+
+    /**
+     * Get people
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPeople() {
+        return $this->people;
     }
 
     /**
@@ -82,8 +118,7 @@ class Language
      * @param string $language
      * @return Language
      */
-    public function setLanguage($language)
-    {
+    public function setLanguage($language) {
         $this->language = $language;
 
         return $this;
@@ -94,8 +129,7 @@ class Language
      *
      * @return string 
      */
-    public function getLanguage()
-    {
+    public function getLanguage() {
         return $this->language;
     }
 
@@ -105,8 +139,7 @@ class Language
      * @param boolean $locked
      * @return Language
      */
-    public function setLocked($locked)
-    {
+    public function setLocked($locked) {
         $this->locked = $locked;
 
         return $this;
@@ -117,8 +150,7 @@ class Language
      *
      * @return boolean 
      */
-    public function getLocked()
-    {
+    public function getLocked() {
         return $this->locked;
     }
 
@@ -128,8 +160,7 @@ class Language
      * @param \Core\Entity\LanguageCountry $languageCountry
      * @return Language
      */
-    public function addLanguageCountry(\Core\Entity\LanguageCountry $languageCountry)
-    {
+    public function addLanguageCountry(\Core\Entity\LanguageCountry $languageCountry) {
         $this->languageCountry[] = $languageCountry;
 
         return $this;
@@ -140,8 +171,7 @@ class Language
      *
      * @param \Core\Entity\LanguageCountry $languageCountry
      */
-    public function removeLanguageCountry(\Core\Entity\LanguageCountry $languageCountry)
-    {
+    public function removeLanguageCountry(\Core\Entity\LanguageCountry $languageCountry) {
         $this->languageCountry->removeElement($languageCountry);
     }
 
@@ -150,8 +180,7 @@ class Language
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getLanguageCountry()
-    {
+    public function getLanguageCountry() {
         return $this->languageCountry;
     }
 
@@ -161,8 +190,7 @@ class Language
      * @param \Core\Entity\TranslateMenu $translateMenu
      * @return Language
      */
-    public function addTranslateMenu(\Core\Entity\TranslateMenu $translateMenu)
-    {
+    public function addTranslateMenu(\Core\Entity\TranslateMenu $translateMenu) {
         $this->translateMenu[] = $translateMenu;
 
         return $this;
@@ -173,8 +201,7 @@ class Language
      *
      * @param \Core\Entity\TranslateMenu $translateMenu
      */
-    public function removeTranslateMenu(\Core\Entity\TranslateMenu $translateMenu)
-    {
+    public function removeTranslateMenu(\Core\Entity\TranslateMenu $translateMenu) {
         $this->translateMenu->removeElement($translateMenu);
     }
 
@@ -183,8 +210,7 @@ class Language
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getTranslateMenu()
-    {
+    public function getTranslateMenu() {
         return $this->translateMenu;
     }
 
@@ -194,8 +220,7 @@ class Language
      * @param \Core\Entity\TranslateMenuPage $translateMenuPage
      * @return Language
      */
-    public function addTranslateMenuPage(\Core\Entity\TranslateMenuPage $translateMenuPage)
-    {
+    public function addTranslateMenuPage(\Core\Entity\TranslateMenuPage $translateMenuPage) {
         $this->translateMenuPage[] = $translateMenuPage;
 
         return $this;
@@ -206,8 +231,7 @@ class Language
      *
      * @param \Core\Entity\TranslateMenuPage $translateMenuPage
      */
-    public function removeTranslateMenuPage(\Core\Entity\TranslateMenuPage $translateMenuPage)
-    {
+    public function removeTranslateMenuPage(\Core\Entity\TranslateMenuPage $translateMenuPage) {
         $this->translateMenuPage->removeElement($translateMenuPage);
     }
 
@@ -216,8 +240,8 @@ class Language
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getTranslateMenuPage()
-    {
+    public function getTranslateMenuPage() {
         return $this->translateMenuPage;
     }
+
 }

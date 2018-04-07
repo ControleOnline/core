@@ -1,0 +1,175 @@
+<div class="panel-body" id="form-user-address">
+    <button title="<?= $this->translate('Add new address to this user') ?>" type="button" class="btn btn-success pull-right" data-add-form="/user/add-address.form">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+        <?= $this->translate('Add') ?>
+    </button>
+    <legend><?= $this->translate('Address') ?></legend>
+    <fieldset class="box-address hidden clone highlight" id="container-delete-user-address-{id}" data-clone="add-user-address">
+        <div class="row">
+            <div class="form-suggestion">
+                <h4>{nickname}</h4>
+            </div>                                
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">     
+                    <label for="street"><?= $this->translate('street') ?>:</label>
+                    <div class="input-group">                        
+                        <input id="street-{id}" name="street" value="{street}" type="text" placeholder="<?= $this->translate('Enter address of your Company') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>                        
+            </div>
+
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">     
+                    <label for="address-number"><?= $this->translate('Number') ?>:</label>
+                    <div class="input-group">
+                        <input id="address-number-{id}" name="address-number" value="{number}" type="text" placeholder="<?= $this->translate('Enter address number') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>                        
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="form-group">     
+                    <label for="complement"><?= $this->translate('Complement') ?>:</label>
+                    <div class="input-group">
+                        <input id="complement-{id}" name="complement" value="{complement}" type="text" placeholder="<?= $this->translate('Enter complement of your address') ?>" class="form-control input-md" readonly>
+                    </div>  
+                </div>                        
+            </div>                                
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="form-group">     
+                    <label for="cep"><?= $this->translate('Cep') ?>:</label>
+                    <div class="input-group">
+                        <input id="cep-{id}" name="cep" value="{cep}" type="text" placeholder="<?= $this->translate('Enter CEP of your address') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>       
+            </div>                        
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">     
+                    <label for="district"><?= $this->translate('District') ?>:</label>
+                    <div class="input-group">
+                        <input id="district-{id}" name="district" value="{district}" type="text" placeholder="<?= $this->translate('Enter district of your address') ?>" class="form-control input-md" required readonly>
+                    </div> 
+                </div>                        
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="form-group">     
+                    <label for="city"><?= $this->translate('City') ?>:</label>
+                    <div class="input-group">
+                        <input id="city-{id}" name="city" value="{city}" type="text" placeholder="<?= $this->translate('Enter city of your address') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>                        
+            </div>
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">     
+                    <label for="state"><?= $this->translate('State') ?>:</label>
+                    <div class="input-group">
+                        <input id="state-name" name="state-name" type="hidden">
+                        <input id="state-{id}" name="state" value="{state}" type="text" placeholder="<?= $this->translate('Enter state of your address') ?>" class="form-control input-md" required readonly>
+                    </div>
+                </div>                        
+            </div>
+            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                <div class="form-group">     
+                    <label for="country"><?= $this->translate('Country') ?>:</label>
+                    <div class="input-group">
+                        <input id="country-code" name="country-code" type="hidden">
+                        <input id="country-{id}" name="country" value="{country}" type="text" placeholder="<?= $this->translate('Enter country of your address') ?>" class="form-control input-md" required readonly>
+                    </div>         
+                </div>                        
+            </div>
+        </div>
+        <div class="row pull-right">
+            <button data-container-remove="container-delete-user-address" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this address?') ?>" data-body="{nickname}" data-toggle="modal" data-target="#confirm-delete" data-id="{id}" data-delete-confirm="/user/delete-address" name="confirm-delete-{id}" id="confirm-delete-{id}" type="submit" class="confirm-delete btn btn-danger">
+                <?= $this->translate('Delete') ?>
+            </button>
+        </div>            
+    </fieldset>            
+    <?php foreach ($this->userPeople->getAddress() AS $address) { ?>    
+        <fieldset class="box-address highlight" id="container-delete-user-address-<?= $address->getId() ?>">
+            <div class="row">
+                <div class="form-suggestion">
+                    <h4><?= $address->getNickname() ?></h4>
+                </div>                                
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">     
+                        <label for="street"><?= $this->translate('Street') ?>:</label>
+                        <div class="input-group">                        
+                            <input id="street-<?= $address->getId() ?>" name="street" value="<?= $address->getStreet()->getStreet() ?>" type="text" placeholder="<?= $this->translate('Enter address of your Company') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>                        
+                </div>
+
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group">     
+                        <label for="address-number"><?= $this->translate('Number') ?>:</label>
+                        <div class="input-group">                            
+                            <input id="address-number-<?= $address->getId() ?>" name="address-number" value="<?= $address->getNumber() ?>" type="text" placeholder="<?= $this->translate('Enter address number') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div class="form-group">     
+                        <label for="complement"><?= $this->translate('Complement') ?>:</label>
+                        <div class="input-group">
+                            <input id="complement-<?= $address->getId() ?>" name="complement" value="<?= $address->getComplement() ?>" type="text" placeholder="<?= $this->translate('Enter complement of your address') ?>" class="form-control input-md" readonly>
+                        </div>  
+                    </div>                        
+                </div>                                
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div class="form-group">     
+                        <label for="cep"><?= $this->translate('Cep') ?>:</label>
+                        <div class="input-group">
+                            <input id="cep-<?= $address->getId() ?>" name="cep" value="<?= $address->getStreet()->getCep()->getCep() ?>" type="text" placeholder="<?= $this->translate('Enter CEP of your address') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>       
+                </div>                        
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">     
+                        <label for="district"><?= $this->translate('District') ?>:</label>
+                        <div class="input-group">
+                            <input id="district-<?= $address->getId() ?>" name="district" value="<?= $address->getStreet()->getDistrict()->getDistrict() ?>" type="text" placeholder="<?= $this->translate('Enter district of your address') ?>" class="form-control input-md" required readonly>
+                        </div> 
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div class="form-group">     
+                        <label for="city"><?= $this->translate('City') ?>:</label>
+                        <div class="input-group">
+                            <input id="city-<?= $address->getId() ?>" name="city" value="<?= $address->getStreet()->getDistrict()->getCity()->getCity() ?>" type="text" placeholder="<?= $this->translate('Enter city of your address') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                    <div class="form-group">     
+                        <label for="state"><?= $this->translate('State') ?>:</label>
+                        <div class="input-group">
+                            <input id="state-name" name="state-name" type="hidden">
+                            <input id="state-<?= $address->getId() ?>" name="state" value="<?= $address->getStreet()->getDistrict()->getCity()->getState()->getUf() ?>" type="text" placeholder="<?= $this->translate('Enter state of your address') ?>" class="form-control input-md" required readonly>
+                        </div>
+                    </div>                        
+                </div>
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div class="form-group">     
+                        <label for="country"><?= $this->translate('Country') ?>:</label>
+                        <div class="input-group">
+                            <input id="country-code" name="country-code" type="hidden">
+                            <input id="country-<?= $address->getId() ?>" name="country" value="<?= $this->translate($address->getStreet()->getDistrict()->getCity()->getState()->getCountry()->getCountryName()) ?>" type="text" placeholder="<?= $this->translate('Enter country of your address') ?>" class="form-control input-md" required readonly>
+                        </div>         
+                    </div>                        
+                </div>
+            </div>
+            <div class="row pull-right">
+                <button data-container-remove="container-delete-user-address" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this address?') ?>" data-body="<?= $address->getNickname() ?>" data-toggle="modal" data-target="#confirm-delete" data-id="<?= $address->getId() ?>" data-delete-confirm="/user/delete-address" name="confirm-delete-<?= $address->getId() ?>" id="confirm-delete-<?= $address->getId() ?>" type="submit" class="confirm-delete btn btn-danger">
+                    <?= $this->translate('Delete') ?>
+                </button>
+            </div>            
+        </fieldset>
+    <?php } ?>    
+</div>

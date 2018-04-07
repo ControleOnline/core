@@ -31,8 +31,7 @@ Add these lines to your composer.json:
         "pre-install-cmd": [
             "echo '{\"directory\" : \"public/vendor/\"}' > .bowerrc"
         ],
-        "post-install-cmd": [               
-            "bower install controleonline-core-js"
+        "post-install-cmd": [                           
         ]
     },
 
@@ -203,7 +202,7 @@ We also add the libraries that are in bower.json and its dependencies automatica
 If you need to add a library manually (this happens when the library's bower.json is not well configured or if there is more than one js file in each dependency), just add it manually:
 
 ```
-Assets\Helper\Header::addJsLibs('lazyLoad', 'controleonline-core-js/dist/js/LazyLoad.js');
+Assets\Helper\Header::addJsLibs('lazyLoad', '/assets/js/core/LazyLoad.js');
 ```
 
 Do not forget to keep in the layout file the call to the headers:

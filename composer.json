@@ -2,7 +2,7 @@
     "name": "controleonline/core",
     "description": "Core of Controle Online Systems",
     "license": "BSD-3-Clause",
-    "homepage": "https://github.com/ControleOnline/core",    
+    "homepage": "https://github.com/ControleOnline/core",
     "keywords": [
         "ControleOnline"
     ],
@@ -23,17 +23,21 @@
         "zendframework/zendframework": "~2.4",
         "doctrine/doctrine-orm-module": "~0.7.0",
         "doctrine/migrations": "*",
-        "controleonline/assets-essentials": "*"
-    },    
-    "scripts": {        
+        "controleonline/assets-essentials": "*",
+        "mautic/api-library": "~2.10",
+        "nfephp-org/sped-nfe": "~5.0",
+        "nfephp-org/sped-da": "~0.1",
+        "pagseguro/pagseguro-php-sdk": "~3.0",
+        "beberlei/DoctrineExtensions": "~1.0",
+        "sugarcrm/rest-php-client" : "~1.0"
+    },
+    "scripts": {
         "pre-install-cmd": [
             "echo '{\"directory\" : \"public/vendor/\"}' > .bowerrc"
         ],
-        "post-install-cmd": [
-            "bower install controleonline-core-js"            
+        "post-install-cmd": [            
         ],
         "post-update-cmd": [            
-            "bower install controleonline-core-js",
             "git describe --abbrev=0 --tags > .version"
         ]
     },

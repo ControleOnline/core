@@ -13,26 +13,31 @@
             </div>
             <ul class="nav nav-tabs tab-stats">                
                 <li role="company-details" class="active">
-                    <a href="#company-details" aria-controls="company-details" role="tab" data-toggle="tab" aria-expanded="false">
+                    <a href="#company-details" aria-controls="company-details" role="tab" data-toggle="tab" aria-expanded="true">
                         <span class="glyphicon glyphicon-earphone"></span> <?= $this->translate('Copany details') ?>
                     </a>
                 </li>
                 <li role="company-contacts" class="">
-                    <a href="#company-contacts" aria-controls="company-contacts" role="tab" data-toggle="tab" aria-expanded="false">
+                    <a href="#company-contacts" aria-controls="company-contacts" role="tab" data-toggle="tab" aria-expanded="true">
                         <span class="glyphicon glyphicon-earphone"></span> <?= $this->translate('Copany contacts') ?>
                     </a>
                 </li>
-                <li role="company-adress" class="">
-                    <a href="#company-adress" aria-controls="company-adress" role="tab" data-toggle="tab" aria-expanded="true">                        
-                        <span class="glyphicon glyphicon-home"></span> <?= $this->translate('Copany adress') ?>
+                <li role="company-address" class="">
+                    <a href="#company-address" aria-controls="company-address" role="tab" data-toggle="tab" aria-expanded="true">                        
+                        <span class="glyphicon glyphicon-home"></span> <?= $this->translate('Copany address') ?>
                     </a>
                 </li>
                 <li role="company-documents" class="">
                     <a href="#company-documents" aria-controls="company-documents" role="tab" data-toggle="tab" aria-expanded="true">                        
-                        <span class="glyphicon glyphicon-home"></span> <?= $this->translate('Copany documents') ?>     
+                        <span class="glyphicon glyphicon-file"></span> <?= $this->translate('Copany documents') ?>     
                     </a>
-                </li>
-
+                </li>                
+                <li role="company-tax" class="">
+                    <a href="#company-tax" aria-controls="company-tax" role="tab" data-toggle="tab" aria-expanded="true">                        
+                        <span class="glyphicon glyphicon-file"></span> <?= $this->translate('Copany tax') ?>     
+                    </a>
+                </li>                
+                <?= $this->tabs ?>                
             </ul>                        
             <div class="card-body tab-content">                
                 <div role="tabpanel" class="tab-pane active" id="company-details">
@@ -41,13 +46,16 @@
                 <div role="tabpanel" class="tab-pane" id="company-contacts">
                     <?= $this->render("company/form/company-contacts.phtml"); ?>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="company-adress">
-                    <?= $this->render("company/form/company-adress.phtml"); ?>
+                <div role="tabpanel" class="tab-pane" id="company-address">
+                    <?= $this->render("company/form/company-address.phtml"); ?>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="company-documents">
                     <?= $this->render("company/form/company-documents.phtml"); ?>
                 </div>
-
+                <div role="tabpanel" class="tab-pane" id="company-tax">
+                    <?= $this->render("company/form/company-tax.phtml"); ?>
+                </div>
+                <?= $this->panels ?>
             </div>
         </div>         
     </div>

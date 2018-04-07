@@ -67,7 +67,7 @@ class DiscoveryEntity {
         $this->em = \Doctrine\ORM\EntityManager::create($connectionParams, $config);
     }
 
-    public function checkEntities($force = false) {
+    public function checkEntities($force = false) {        
         if (!is_dir($this->entityFolder . 'Entity') || $force) {
             $this->prepareFolder($force);
             $this->configure();

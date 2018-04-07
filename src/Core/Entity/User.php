@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="user_name", columns={"username"})}, indexes={@ORM\Index(name="people_id", columns={"people_id"})})
  * @ORM\Entity
  */
-class User
-{
+class User {
+
     /**
      * @var integer
      *
@@ -36,6 +36,13 @@ class User
     private $hash;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="api_key", type="string", length=60, nullable=false)
+     */
+    private $api_key;
+
+    /**
      * @var \Core\Entity\People
      *
      * @ORM\ManyToOne(targetEntity="Core\Entity\People")
@@ -55,9 +62,9 @@ class User
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->log = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->api_key = md5(microtime());
     }
 
     /**
@@ -65,8 +72,7 @@ class User
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -76,8 +82,7 @@ class User
      * @param string $username
      * @return User
      */
-    public function setUsername($username)
-    {
+    public function setUsername($username) {
         $this->username = $username;
 
         return $this;
@@ -88,9 +93,29 @@ class User
      *
      * @return string 
      */
-    public function getUsername()
-    {
+    public function getUsername() {
         return $this->username;
+    }
+
+    /**
+     * Set username
+     *
+     * @param string $api_key
+     * @return User
+     */
+    public function generateApiKey() {
+        $this->api_key = md5(microtime());
+
+        return $this;
+    }
+
+    /**
+     * Get api_key
+     *
+     * @return string 
+     */
+    public function getApiKey() {
+        return $this->api_key;
     }
 
     /**
@@ -99,8 +124,7 @@ class User
      * @param string $hash
      * @return User
      */
-    public function setHash($hash)
-    {
+    public function setHash($hash) {
         $this->hash = $hash;
 
         return $this;
@@ -111,8 +135,7 @@ class User
      *
      * @return string 
      */
-    public function getHash()
-    {
+    public function getHash() {
         return $this->hash;
     }
 
@@ -122,8 +145,7 @@ class User
      * @param \Core\Entity\People $people
      * @return User
      */
-    public function setPeople(\Core\Entity\People $people = null)
-    {
+    public function setPeople(\Core\Entity\People $people = null) {
         $this->people = $people;
 
         return $this;
@@ -134,8 +156,7 @@ class User
      *
      * @return \Core\Entity\People 
      */
-    public function getPeople()
-    {
+    public function getPeople() {
         return $this->people;
     }
 
@@ -145,8 +166,7 @@ class User
      * @param \Core\Entity\Log $log
      * @return User
      */
-    public function addLog(\Core\Entity\Log $log)
-    {
+    public function addLog(\Core\Entity\Log $log) {
         $this->log[] = $log;
 
         return $this;
@@ -157,8 +177,7 @@ class User
      *
      * @param \Core\Entity\Log $log
      */
-    public function removeLog(\Core\Entity\Log $log)
-    {
+    public function removeLog(\Core\Entity\Log $log) {
         $this->log->removeElement($log);
     }
 
@@ -167,8 +186,8 @@ class User
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getLog()
-    {
+    public function getLog() {
         return $this->log;
     }
+
 }

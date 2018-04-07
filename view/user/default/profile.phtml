@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="card">
+            <div class="card hovercard">
+                <div class="card-background">                    
+                    <img class="profile-img lazy-loaded card-bkimg" src="<?= $this->userModel->getLoggedUser()->getPeople()->getImage() ? $this->userModel->getLoggedUser()->getPeople()->getImage()->getUrl() : $this->default_user_image_profile ?>">                    
+                </div>
+                <div class="useravatar">
+                    <img src="<?= $this->userModel->getLoggedUser()->getPeople()->getImage() ? $this->userModel->getLoggedUser()->getPeople()->getImage()->getUrl() : $this->default_user_image_profile ?>">
+                </div>
+                <div class="card-info"> <span class="card-title">
+                        <?= $this->user->getPeople()->getName() ?>
+                    </span>
+                </div>
+            </div>
+            <ul class="nav nav-tabs tab-stats">                
+                <li role="user-phone" class="active">
+                    <a href="#user-phone" aria-controls="user-phone" role="tab" data-toggle="tab" aria-expanded="false">
+                        <span class="glyphicon glyphicon-earphone"></span> <?= $this->translate('Phones') ?>
+                    </a>
+                </li>
+                <li role="user-address" class="">
+                    <a href="#user-address" aria-controls="user-address" role="tab" data-toggle="tab" aria-expanded="true">                        
+                        <span class="glyphicon glyphicon-home"></span> <?= $this->translate('Address') ?>
+                    </a>
+                </li>
+                <li role="user-email" class="">
+                    <a href="#user-email" aria-controls="user-email" role="tab" data-toggle="tab" aria-expanded="false">
+                        <span class="glyphicon glyphicon-envelope"></span> <?= $this->translate('Emails') ?>
+                    </a>
+                </li>                
+                <li role="user" class="">
+                    <a href="#user" aria-controls="user" role="tab" data-toggle="tab" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user"></span> <?= $this->translate('Users') ?>
+                    </a>
+                </li>
+                <li role="user-documents" class="">
+                    <a href="#user-documents" aria-controls="user-documents" role="tab" data-toggle="tab" aria-expanded="false">
+                        <span class="glyphicon glyphicon-file"></span> <?= $this->translate('Documents') ?>
+                    </a>
+                </li>                                
+            </ul>                        
+            <div class="card-body tab-content">                
+                <div role="tabpanel" class="tab-pane active" id="user-phone"> 
+                    <?= $this->render("user/form/user-phone.phtml"); ?>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="user-address">                        
+                    <?= $this->render("user/form/user-address.phtml"); ?>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="user-email"> 
+                    <?= $this->render("user/form/user-email.phtml"); ?>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="user">
+                    <?= $this->render("user/form/user.phtml"); ?>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="user-documents">
+                    <?= $this->render("user/form/user-documents.phtml"); ?>
+                </div>
+            </div>
+        </div>         
+    </div>
+</div>
+

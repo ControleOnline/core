@@ -1,0 +1,44 @@
+<div class="modal fade" id="modal-new" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;
+                </button>
+                <h4 class="modal-title"><?= ucfirst($this->translate('Add document')) ?></h4>
+            </div>
+            <div class="modal-body">                
+                <fieldset>
+                    <form class="api-form form-horizontal" data-clone-field="[data-clone=add-user-document]" data-clone-target="#form-user-document" action="/user/add-document.json" method="POST" name="form-add-document" role="form" >
+                        <!-- Form Name -->                        
+                        <input name="method" value="POST" type="hidden">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" id="label-add-document-type" for="input-add-document-type"><?= $this->translate('Document type') ?>: </label>
+                            <div class="col-md-3">
+                                <select class="form-control" id="input-add-document-type" name="document-type" >
+                                    <?php foreach ($this->document_types AS $document_type) { ?>
+                                        <option><?= $document_type->getDocumentType() ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>                
+                            <label class="col-md-2 control-label" id="label-add-document" for="input-add-document"><?= $this->translate('Document') ?>: </label>
+                            <div class="col-md-4">
+                                <input class="form-control input-md" value="" id="input-add-document" name="document" type="text" placeholder="<?= $this->translate('Document') ?>">
+                            </div>                                                                                  
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-2"></div>                
+                            <div class="col-md-8">
+                                <button data-clone-field="[data-clone=add-user-document]" data-clone-target="#form-user-document" data-add="/user/add-document.json" name="add-document" type="submit" class="btn btn-success pull-right">                                        
+                                    <?= ucfirst($this->translate('Add document')) ?>
+                                </button>                                                                                        
+                            </div>
+                            <div class="col-md-2"></div>                
+                        </div>
+                    </form>                    
+                </fieldset>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

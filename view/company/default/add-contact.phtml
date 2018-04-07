@@ -8,42 +8,42 @@
             </div>
             <div class="modal-body">                
                 <fieldset>
-                    <form class="api-form form-horizontal" data-clone-field="[data-clone=add-company-contact]" data-clone-target="#contacts-container" action="/<?= $this->module_name ?>/add-contact.json<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" method="POST" name="form-add-contact" role="form" >
+                    <form class="api-form form-horizontal" data-clone-field="[data-clone=add-company-contact]" data-clone-target="#contacts-container" action="/<?= $this->module_name ?>/add-contact.json<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id=' . $this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" method="POST" name="form-add-contact" role="form" >
                         <!-- Form Name -->                        
                         <input name="method" value="POST" type="hidden">         
 
-                        <div class="form-group">
-                            <div class="col-md-5"></div>
-                            <label class="col-md-3 control-label" id="label-add-contact" for="input-add-contact"><?= $this->translate('Contact') ?>: </label>
+                        <div class="form-group">              
+                            <div class="col-md-2"></div>
+                            <label class="col-md-4 control-label" id="label-add-contact" for="input-add-contact"><?= $this->translate('Contact') ?>: </label>
                             <div class="col-md-4">
                                 <input class="form-control input-md" value="" id="input-add-contact" name="name" type="text" placeholder="<?= $this->translate('Contact name') ?>">
-                            </div>                                      
+                            </div>
+                            <div class="col-md-2"></div>
                         </div>                                          
-                        <div class="form-group">
-                            <div class="col-md-5"></div>                
-                            <label class="col-md-3 control-label" id="label-add-email" for="input-add-email"><?= $this->translate('Email') ?>: </label>
+                        <div class="form-group">        
+                            <div class="col-md-2"></div>
+                            <label class="col-md-4 control-label" id="label-add-email" for="input-add-email"><?= $this->translate('Email') ?>: </label>
                             <div class="col-md-4">
-                                <input class="form-control input-md" value="" id="input-add-email" name="email[]" type="text" placeholder="<?= $this->translate('Email') ?>">
-                            </div>                                      
+                                <input data-mask="({mask: '*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]',greedy: false,onBeforePaste: function (pastedValue, opts) {pastedValue = pastedValue.toLowerCase();return pastedValue.replace('mailto:', '');},definitions: {'*': {validator: '[0-9A-Za-z!#$%&\'*+/=?^_`{|}~\-]',cardinality: 1,casing: 'lower'}}})" class="form-control input-md" value="" id="input-add-email" name="email[]" type="text" placeholder="<?= $this->translate('Email') ?>">
+                            </div>                      
+                            <div class="col-md-2"></div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label" id="label-add-ddd" for="input-add-ddd"><?= $this->translate('DDD') ?>: </label>
-                            <div class="col-md-3">
-                                <input class="form-control input-md" value="" id="input-add-ddd" name="phone[0][ddd]" type="text" placeholder="<?= $this->translate('DDD') ?>">
-                            </div>                
-                            <label class="col-md-3 control-label" id="label-add-phone" for="input-add-phone"><?= $this->translate('Phone') ?>: </label>
+                        <div class="form-group">        
+                            <div class="col-md-2"></div>
+                            <label class="col-md-4 control-label" id="label-add-phone" for="input-add-phone"><?= $this->translate('Phone') ?>: </label>
                             <div class="col-md-4">
-                                <input class="form-control input-md" value="" id="input-add-phone" name="phone[0][phone]" type="text" placeholder="<?= $this->translate('Phone') ?>">
-                            </div>                                      
+                                <input data-mask="({mask: '(99)',keepStatic: true})" class="form-control input-md" value="" id="input-add-ddd" name="phone[0][ddd]" type="text" placeholder="<?= $this->translate('DDD') ?>">
+                                <input data-mask="({mask: ['9999-9999', '99999-9999'],keepStatic: true})" class="form-control input-md" value="" id="input-add-phone" name="phone[0][phone]" type="text" placeholder="<?= $this->translate('Phone') ?>">
+                            </div>                      
+                            <div class="col-md-2"></div>
                         </div>                                          
-                        <div class="form-group">
-                            <div class="col-md-5"></div>                
-                            <div class="col-md-3">
-                                <button data-clone-field="[data-clone=add-company-contact]" data-clone-target="#contacts-container" data-add="/<?= $this->module_name ?>/add-contact.json<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id='.$this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" name="add-contact" type="submit" class="btn btn-success pull-right">                                        
+                        <div class="form-group">                            
+                            <div class="col-md-6"></div>
+                            <div class="col-md-4">
+                                <button data-clone-field="[data-clone=add-company-contact]" data-clone-target="#contacts-container" data-add="/<?= $this->module_name ?>/add-contact.json<?= $this->companyModel->getCurrentPeopleCompany() ? '?company_id=' . $this->companyModel->getCurrentPeopleCompany()->getId() : '' ?>" name="add-contact" type="submit" class="btn btn-success pull-right">                                        
                                     <?= ucfirst($this->translate('Add contact')) ?>
                                 </button>                                                                                        
-                            </div>
-
+                            </div>                            
                         </div>
                     </form>                    
                 </fieldset>

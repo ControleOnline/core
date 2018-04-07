@@ -1,0 +1,35 @@
+<h5><label class="control-label label-title" style="color: #002c5d;font-weight: bold;font-size: 20px;"><?= $this->translate('Order') ?>: #<?= $this->order->getId() ?></label></h5>
+<div id="invoice-tax">
+    <h4>Dados para emissão da sua nota fiscal :</h4>
+    <h4>Preencha corretamente sua DANFE, com os seguintes dados:</h4>
+    <ul>
+        <li>
+            No campo “Transportador/Volumes Transportados”, colocar os dados da transportadora :
+            <ul>
+                <li><?= $this->order->getQuote()->getCarrier()->getName() ?></li>
+                <?php                
+                foreach ($this->order->getQuote()->getCarrier()->getDocument() AS $document) {
+                    echo $document->getDocumentType()->getDocumentType() == 'CNPJ' ? '<li>' . \Core\Helper\Format::maskNumber("##.###.###/####-##", $document->getDocument()) . '</li>' : '';
+                    echo $document->getDocumentType()->getDocumentType() == 'Inscrição Estadual' ? ('<li>' . \Core\Helper\Format::maskNumber("###.###.###.###", $document->getDocument()) . '</li>') : '';
+                }                 
+                ?>
+                <li><?= $this->order->getQuote()->getCarrier()->getAddress()[0]->getStreet()->getStreet() ?>, <?= $this->order->getQuote()->getCarrier()->getAddress()[0]->getNumber() . ($this->order->getQuote()->getCarrier()->getAddress()[0]->getComplement() ? ' - ' . $this->order->getQuote()->getCarrier()->getAddress()[0]->getComplement() : '') ?></li>
+                <li>
+                    <?= $this->order->getQuote()->getCarrier()->getAddress()[0]->getStreet()->getCep()->getCep() ?> - <?= $this->order->getQuote()->getCarrier()->getAddress()[0]->getStreet()->getDistrict()->getDistrict() ?> - <?= $this->order->getQuote()->getCarrier()->getAddress()[0]->getStreet()->getDistrict()->getCity()->getCity() ?> / <?= $this->order->getQuote()->getCarrier()->getAddress()[0]->getStreet()->getDistrict()->getCity()->getState()->getUf(); ?>
+                </li>
+            </ul>
+        </li>
+        <li>No campo “Frete por conta “, colocar a opção por “Terceiros “</li>
+        <li>Não esqueça de colocar os volumes a serem transportados e peso total</li>
+        <li>
+            No campo “Dados adicionais”, Coloque a seguinte instrução : Frete por conta e ordem da <?= $this->order->getQuote()->getProvider()->getName() ?>  CNPJ: 
+            <?php
+            foreach ($this->order->getQuote()->getProvider()->getDocument() AS $document) {
+                echo $document->getDocumentType()->getDocumentType() == 'CNPJ' ? \Core\Helper\Format::maskNumber("##.###.###/####-##", $document->getDocument()) : '';
+            }
+            ?>
+        </li>
+        <li>Atenção ao endereço de entrega</li>
+        <li>Em anexo está nossa carta de consignatário do frete, que deve ser impressa e anexada na frente da sua Nota Fiscal.</li>
+    </ul>
+</div>

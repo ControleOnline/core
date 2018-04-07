@@ -1,0 +1,80 @@
+<div class="panel-body">
+    <!-- Text input-->
+    <fieldset>
+        <form class="api-form form-horizontal" action="/user.form" method="POST" name="form-user" id="form-user" role="form" data-childs="[&quot;people&quot;,&quot;log&quot;]">
+            <!-- Form Name -->
+            <button title="<?= $this->translate('Add new user for this people') ?>" type="button" class="btn btn-success pull-right" data-add-form="/user/add-user.form">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                <?= $this->translate('Add') ?>
+            </button>            
+            <legend><?= $this->translate('Users') ?></legend>                                        
+            <div id="container-delete-user-{id}" class="form-group hidden clone highlight" data-clone="add-user">
+                <label class="col-md-4 control-label" id="label-username-{id}" for="input-username"><?= $this->translate('Username') ?>: </label>
+                <div class="col-md-4">                        
+                    <input readonly class="form-control input-md" value="" id="input-username-{id}" name="username" type="text" >
+                </div>
+                <div class="col-md-4">
+                    <button data-container-remove="container-delete-user" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this user?') ?>" data-body="{username}" data-toggle="modal" data-target="#confirm-delete" data-id="{id}" data-delete-confirm="/user/delete" name="confirm-delete-{id}" id="confirm-delete-{id}" type="submit" class="confirm-delete btn btn-danger">
+                        <?= $this->translate('Delete') ?>
+                    </button>
+                </div>                
+            </div>
+            <?php foreach ($this->userPeople->getUser() AS $user) { ?>
+                <div id="container-delete-user-<?= $user->getId() ?>" class="form-group highlight">
+                    <label class="col-md-4 control-label" id="label-username-<?= $user->getId() ?>" for="input-username"><?= $this->translate('Username') ?>: </label>
+                    <div class="col-md-4">                        
+                        <input readonly class="form-control input-md" value="<?= $user->getUsername() ?>" id="input-username-<?= $user->getId() ?>" name="username" type="text" >
+                    </div>
+                    <div class="col-md-4">
+                        <button data-container-remove="container-delete-user" <?= $user->getId() == $this->user->getId() ? 'disabled' : '' ?> data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this user?') ?>" data-body="<?= $user->getUsername() ?>" data-toggle="modal" data-target="#confirm-delete" data-id="<?= $user->getId() ?>" data-delete-confirm="/user/delete" name="confirm-delete-<?= $user->getId() ?>" id="confirm-delete-<?= $user->getId() ?>" type="button" class="confirm-delete btn btn-danger">
+                            <?= $this->translate('Delete') ?>
+                        </button>
+                    </div>
+                    <div class="col-md-12 no-padding">
+                        <label class="col-md-4 control-label" id="label-api-key-<?= $user->getId() ?>" for="input-api-key"><?= $this->translate('Api key') ?>: </label>
+                        <div class="col-md-8">                        
+                            <input readonly class="form-control input-md" value="<?= $user->getApiKey() ?>" id="input-api-key-<?= $user->getId() ?>" name="api-key" type="text" >
+                        </div>                    
+                    </div>                
+                </div>
+            <?php } ?>
+        </form>
+    </fieldset>
+</div>
+
+<div class="container collapse" id="change-password-container">
+    <form class="form-horizontal" method="POST" action="/user/change-password">
+        <fieldset>
+            <!-- Form Name -->
+            <legend><?= $this->translate('Change Password'); ?></legend>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="password"><?= $this->translate('Current Password') ?></label>  
+                <div class="col-md-4">
+                    <input value="" id="password" name="password" type="text" placeholder="<?= $this->translate('Enter your current password') ?>" class="form-control input-md" required>
+                </div>
+            </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="new-password"><?= $this->translate('New Password') ?></label>  
+                <div class="col-md-4">
+                    <input id="new-password" name="new-password" type="text" placeholder="<?= $this->translate('Enter a new password') ?>" class="form-control input-md" required>
+                </div>
+            </div>
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="repeat-password"><?= $this->translate('Repeat Password') ?></label>  
+                <div class="col-md-4">
+                    <input id="repeat-password" name="repeat-password" type="text" placeholder="<?= $this->translate('Repeat a new password') ?>" class="form-control input-md" required>
+                </div>
+            </div>
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="change-password"></label>
+                <div class="col-md-4">
+                    <button id="change" name="change-password" class="btn btn-danger"><?= $this->translate('Change Password') ?></button>
+                </div>                                                                                        
+            </div>
+        </fieldset>
+    </form>
+</div>

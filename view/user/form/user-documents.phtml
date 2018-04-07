@@ -1,0 +1,37 @@
+<div class="panel-body">
+    <!-- Text input-->
+    <fieldset>
+        <form class="api-form form-horizontal" action="/user-document.form" method="POST" name="form-user-document" id="form-user-document" role="form" data-childs="[&quot;people&quot;,&quot;log&quot;]">
+            <!-- Form Name -->
+            <button title="<?= $this->translate('Add new document for this user') ?>" type="button" class="btn btn-success pull-right" data-add-form="/user/add-document.form">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                <?= $this->translate('Add') ?>
+            </button>
+            <legend><?= $this->translate('Documents') ?></legend>            
+            <div id="container-delete-document-{id}" class="form-group hidden clone highlight" data-clone="add-user-document">                
+                <label class="col-md-3 control-label" id="label-document-{id}" for="input-document">{document_type}: </label>
+                <div class="col-md-6">                        
+                    <input readonly class="form-control input-md" value="" id="input-document-{id}" name="document" type="text" >
+                </div>
+                <div class="col-md-3">
+                    <button data-container-remove="container-delete-document" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this document?') ?>" data-body="{document}" data-toggle="modal" data-target="#confirm-delete" data-id="{id}" data-delete-confirm="/user/delete-document.json" name="confirm-delete-{id}" id="confirm-delete-{id}" type="submit" class="confirm-delete btn btn-danger">
+                        <?= $this->translate('Delete') ?>
+                    </button>
+                </div>
+            </div>                                        
+            <?php foreach ($this->user->getPeople()->getDocument() AS $user_document) { ?>
+                <div id="container-delete-document-<?= $user_document->getId() ?>" class="form-group highlight">                    
+                    <label class="col-md-3 control-label" id="label-document-<?= $user_document->getId() ?>" for="input-document"><?= $user_document->getDocumentType()->getDocumentType() ?>: </label>
+                    <div class="col-md-6">                        
+                        <input readonly class="form-control input-md" value="<?= $user_document->getDocument() ?>" id="input-document-<?= $user_document->getId() ?>" name="document" type="text" >
+                    </div>                                                
+                    <div class="col-md-3">
+                        <button  data-container-remove="container-delete-document" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this document?') ?>" data-body="<?= $user_document->getDocument() ?>" data-toggle="modal" data-target="#confirm-delete" data-id="<?= $user_document->getId() ?>" data-delete-confirm="/user/delete-document.json" name="confirm-delete-<?= $user_document->getId() ?>" id="confirm-delete-<?= $user_document->getId() ?>" type="button" class="confirm-delete btn btn-danger">
+                            <?= $this->translate('Delete') ?>
+                        </button>
+                    </div>
+                </div>                                        
+            <?php } ?>
+        </form>
+    </fieldset>
+</div>                              

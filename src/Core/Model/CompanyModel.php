@@ -5,8 +5,11 @@ namespace Core\Model;
 use Core\Model\DefaultModel;
 use Zend\Session\Container;
 use User\Model\UserModel;
-use Core\Model\AdressModel;
+use Core\Model\AddressModel;
 use Core\Interfaces\CompanyModelInterface;
+use Core\Helper\Format;
+use Core\Helper\Url;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 abstract class CompanyModel extends DefaultModel implements CompanyModelInterface {
 
@@ -16,9 +19,9 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
     protected $_session;
 
     /**
-     * @var \Core\Model\AdressModel
+     * @var \Core\Model\AddressModel
      */
-    protected $_adressModel;
+    protected $_addressModel;
 
     /**
      * @var \Core\Entity\People
@@ -36,8 +39,8 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
     }
 
     public function initialize(\Zend\ServiceManager\ServiceManager $serviceLocator) {
-        $this->_adressModel = new AdressModel();
-        $this->_adressModel->initialize($serviceLocator);
+        $this->_addressModel = new AddressModel();
+        $this->_addressModel->initialize($serviceLocator);
         $this->_userModel = new UserModel();
         $this->_userModel->initialize($serviceLocator);
         parent::initialize($serviceLocator);
@@ -49,24 +52,143 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
     }
 
     /**
-     * @return \Core\Entity\Adress
+     * @return \Core\Entity\Address
      */
-    public function addCompanyAdress(array $params) {
+    public function addCompanyAddress(array $params) {
         if ($this->getErrors()) {
             return;
         }
-        if ($this->_adressModel->checkAdressData($params)) {
+        if ($this->_addressModel->checkAddressData($params)) {
             try {
-                $entity_adress = $this->_adressModel->addPeopleAdress($this->getCurrentPeopleCompany(), $params);
-                $this->_em->flush();
-                $this->_em->clear();
+                $entity_address = $this->_addressModel->addPeopleAddress($this->getCurrentPeopleCompany(), $params);
             } catch (Exception $e) {
-                $this->addError(array('code' => $e->getCode(), 'message' => 'Error on create a new adress'));
+                $this->addError(array('code' => $e->getCode(), 'message' => 'Error on create a new address'));
                 $this->addError(array('code' => $e->getCode(), 'message' => $e->getMessage()));
                 $this->_em->rollback();
             }
-            return $entity_adress;
+            return $entity_address;
         }
+    }
+
+    public function getCompanyTax($company_id) {
+        $company = $this->_em->getRepository('\Core\Entity\People')->find($company_id);
+        if (!$company) {
+            ErrorModel::addError('Company not found');
+            return;
+        }
+        return $this->_em->getRepository('\Core\Entity\CompanyTax')->findBy(array('people' => $company));
+    }
+
+    public function deleteCompanyTax($id) {
+        if ($this->getErrors()) {
+            return;
+        }
+        if (!$id) {
+            $this->addError('Address id not informed!');
+        } else {
+            $entity = $this->_em->getRepository('\Core\Entity\CompanyTax')->find($id);
+            if ($entity) {
+                $this->_em->remove($entity);
+                $this->_em->flush($entity);
+                return true;
+            } else {
+                $this->addError('Error removing this Tax!');
+                return false;
+            }
+        }
+    }
+
+    public function addTax($params) {
+
+        $stateOrigin = $this->_em->getRepository('\Core\Entity\State')->find($params['state-origin']);
+        $stateDestination = $this->_em->getRepository('\Core\Entity\State')->find($params['state-destination']);
+        $company = $this->_em->getRepository('\Core\Entity\People')->find($params['company_id']);
+
+        if (!$stateOrigin) {
+            ErrorModel::addError('State origin not found');
+            return;
+        }
+
+        if (!$stateDestination) {
+            ErrorModel::addError('State destination not found');
+            return;
+        }
+
+        if (!$company) {
+            ErrorModel::addError('Company not found');
+            return;
+        }
+
+        $companyTax = $this->_em->getRepository('\Core\Entity\CompanyTax')->findOneBy(array(
+            'tax_type' => 'percentage',
+            'tax_subtype' => 'order',
+            'tax_name' => $params['tax-name'],
+            'people' => $company,
+            'state_destination' => $stateDestination,
+            'state_origin' => $stateOrigin
+        ));
+        if (!$companyTax) {
+            $companyTax = new \Core\Entity\CompanyTax();
+            $companyTax->setTaxType('percentage');
+            $companyTax->setTaxSubtype('order');
+            $companyTax->setTaxName($params['tax-name']);
+            $companyTax->setPeople($company);
+            $companyTax->setStateDestination($stateDestination);
+            $companyTax->setStateOrigin($stateOrigin);
+        }
+
+        $companyTax->setPrice($params['price']);
+        $companyTax->setMinimumPrice(0);
+        $companyTax->setTaxOrder(0);
+        $companyTax->setOptional(0);
+        $this->_em->persist($companyTax);
+        $this->_em->flush($companyTax);
+        return $companyTax;
+    }
+
+    public function findByDistance($params, $distance = 600, $limit = 50) {
+
+        $module = 'salesman';
+
+        $sql = "SELECT distance,            
+            ddd.ddd AS ddd,
+            phone.phone AS phone,
+            email.email AS email,
+            COALESCE(image.url, '/assets/img/default/profile.png') AS image,
+            people.* FROM (
+                SELECT people_id, ROUND((SQRT( POW(69.1 * (latitude - (?)), 2) + POW(69.1 * ((?) - longitude) * COS(latitude / 57.3), 2) ) * 1.609),2) AS distance FROM address
+            ) AS address_distance                                    
+            INNER JOIN people_" . $module . " ON (address_distance.people_id = people_" . $module . "." . $module . "_id)
+            INNER JOIN people ON (people_" . $module . "." . $module . "_id = people.id)
+            LEFT JOIN phone ON (phone.id = 
+                    ( SELECT p.id
+                        FROM phone p
+                        WHERE p.people_id = people.id                       
+                        LIMIT 1
+               ) AND people.id = phone.people_id
+            )
+            LEFT JOIN phone  AS ddd ON (phone.id = ddd.id)
+            LEFT JOIN email ON (email.id = 
+                    ( SELECT e.id
+                        FROM email e
+                        WHERE e.people_id = people.id                       
+                        LIMIT 1
+               ) AND people.id = email.people_id
+            )
+            LEFT JOIN image ON (people.image_id = image.id)
+            HAVING address_distance.distance < ? ORDER BY address_distance.distance LIMIT ?
+         ";
+
+        $conn = $this->_em->getConnection();
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bindValue(1, $params['lat'], \PDO::PARAM_INT);
+        $stmt->bindValue(2, $params['lng'], \PDO::PARAM_INT);
+        $stmt->bindValue(3, $distance, \PDO::PARAM_INT);
+        $stmt->bindValue(4, $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 
     /**
@@ -76,27 +198,30 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
         if ($this->getErrors()) {
             return;
         }
-        if ($this->checkData($params) && $this->_adressModel->checkAdressData($params)) {
+        if ($this->checkData($params) && $this->_addressModel->checkAddressData($params)) {
             try {
-                $entity_people = new \Core\Entity\People();
-                $entity_people->setName($params['name']);
-                $entity_people->setAlias($params['alias']);
-                $entity_people->setPeopleType('J');
-                $this->_em->persist($entity_people);                                                
-                
-                $this->addCompanyLink($entity_people, $this->getLoggedPeopleCompany());
+                $documentType = $this->discoveryDocumentType('CNPJ', 'J');
+                $this->documentExists($params['document-number'], $documentType);
+                if (!$this->getErrors()) {
+                    $entity_people = new \Core\Entity\People();
+                    $entity_people->setName($params['name']);
+                    $entity_people->setAlias($params['alias']);
+                    $entity_people->setPeopleType('J');
+                    $entity_people->setLanguage($this->getDefaultCompany()->getLanguage());
 
-                $people_document = new \Core\Entity\Document();
-                $people_document->setDocument($params['document-number']);
-                $people_document->setDocumentType($this->discoveryDocumentType('CNPJ', 'J'));
-                $people_document->setPeople($entity_people);
-                $this->_em->persist($people_document);
+                    $people_document = new \Core\Entity\Document();
+                    $people_document->setDocument(Format::onlyNumbers($params['document-number']));
+                    $people_document->setDocumentType($this->discoveryDocumentType('CNPJ', 'J'));
+                    $people_document->setPeople($entity_people);
 
-                $this->_adressModel->addPeopleAdress($entity_people, $params);
 
-                $this->_em->flush();
-                $this->_em->clear();
-                
+                    $this->_em->persist($entity_people);
+                    $this->_em->flush($entity_people);
+                    $this->addCompanyLink($entity_people, $this->getLoggedPeopleCompany());
+                    $this->_em->persist($people_document);
+                    $this->_em->flush($people_document);
+                    $this->_addressModel->addPeopleAddress($entity_people, $params);
+                }
             } catch (Exception $e) {
                 $this->addError(array('code' => $e->getCode(), 'message' => 'Error on create a new company'));
                 $this->addError(array('code' => $e->getCode(), 'message' => $e->getMessage()));
@@ -106,29 +231,28 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
         }
     }
 
-    public function deleteAdress($id) {
+    public function deleteAddress($id) {
         if ($this->getErrors()) {
             return;
         }
         if (!$this->_userModel->loggedIn()) {
             $this->addError('You do not have permission to delete this!');
         } elseif (!$id) {
-            $this->addError('Adress id not informed!');
-        } elseif (count($this->getCurrentPeopleCompany()->getAdress()) < 2) {
-            $this->addError('You need at least one adress. Please add another adress before removing this one.');
+            $this->addError('Address id not informed!');
+        } elseif (count($this->getCurrentPeopleCompany()->getAddress()) < 2) {
+            $this->addError('You need at least one address. Please add another address before removing this one.');
         } else {
-            $entity = $this->_em->getRepository('\Core\Entity\Adress')->findOneBy(array(
+            $entity = $this->_em->getRepository('\Core\Entity\Address')->findOneBy(array(
                 'id' => $id,
                 'people' => $this->getCurrentPeopleCompany()
             ));
             if ($entity) {
                 $entity->setPeople(null);
                 $this->_em->persist($entity);
-                $this->_em->flush();
-                $this->_em->clear();
+                $this->_em->flush($entity);
                 return true;
             } else {
-                $this->addError('Error removing this Adress!');
+                $this->addError('Error removing this Address!');
                 return false;
             }
         }
@@ -141,7 +265,7 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
         if ($this->getErrors()) {
             return;
         }
-        return $this->_company ?: $this->getDefaultLoggedCompany();
+        return $this->_company ? : $this->getDefaultLoggedCompany();
     }
 
     /**
@@ -152,7 +276,8 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
             return;
         }
         if ($this->_userModel->loggedIn() && $this->setDefaultLoggedCompany()) {
-            $this->_company = $this->_company ?: $this->_em->getRepository('\Core\Entity\People')->find($this->setDefaultLoggedCompany()->id);
+            $company = $this->setDefaultLoggedCompany();
+            $this->_company = $this->_company ? : $company ? $this->_em->getRepository('\Core\Entity\People')->find($company->id) : null;
         } else {
             unset($this->_session->company);
             $this->_company = null;
@@ -165,7 +290,7 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
             return;
         }
         if (!$this->_session->company) {
-            $company = $this->_userModel->getLoggedUser()->getPeople()->getPeopleEmployee();
+            $company = $this->_userModel->getLoggedUser() && $this->_userModel->getLoggedUser()->getPeople() ? $this->_userModel->getLoggedUser()->getPeople()->getPeopleEmployee() : null;
             if ($company && $company[0]) {
                 $this->_session->company = new \stdClass();
                 $this->_session->company->id = $company[0]->getCompany()->getId();
@@ -174,6 +299,20 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
             }
         }
         return $this->_session->company;
+    }
+
+    public function getPeopleByDocument($document_number) {        
+        $people = $this->_em->getRepository('\Core\Entity\People')
+                        ->createQueryBuilder('P')
+                        ->select()
+                        ->innerJoin('\Core\Entity\Document', 'D', 'WITH', 'D.people = P.id')
+                        ->where('D.document =:document')
+                        ->andWhere('D.documentType=:documentType')
+                        ->setParameters(array(
+                            'document' => Format::onlyNumbers($document_number),
+                            'documentType' => $this->discoveryDocumentType('CNPJ', 'J')
+                        ))->getQuery()->getResult();
+        return $people ? $people[0] : NULL;
     }
 
     public function discoveryDocumentType($document_type, $people_type) {
@@ -188,6 +327,7 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
             $people_document_type->setPeopleType($people_type);
             $people_document_type->setDocumentType($document_type);
             $this->_em->persist($people_document_type);
+            $this->_em->flush($people_document_type);
         }
         return $people_document_type;
     }
@@ -255,12 +395,10 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
         if (!$this->getErrors()) {
             $entity = new \Core\Entity\Document();
             $entity->setPeople($current_company);
-            $entity->setDocument($document);
+            $entity->setDocument(Format::onlyNumbers($document));
             $entity->setDocumentType($documentType);
             $this->_em->persist($entity);
-
-            $this->_em->flush();
-            $this->_em->clear();
+            $this->_em->flush($entity);
             return array(
                 'id' => $entity->getId(),
                 'document' => $entity->getDocument(),
@@ -325,12 +463,15 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
                 $entity->setName($params['name']);
                 $entity->setImage(null);
                 $entity->setAlias('');
+                $entity->setLanguage($current_company->getLanguage());
                 $this->_em->persist($entity);
+                $this->_em->flush($entity);
 
                 $people_company = new \Core\Entity\PeopleEmployee();
                 $people_company->setEmployee($entity);
                 $people_company->setCompany($current_company);
                 $this->_em->persist($people_company);
+                $this->_em->flush($people_company);
 
                 foreach ($params['email'] AS $email) {
                     $entity_email = new \Core\Entity\Email();
@@ -338,19 +479,17 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
                     $entity_email->setEmail($email);
                     $entity_email->setPeople($entity);
                     $this->_em->persist($entity_email);
+                    $this->_em->flush($entity_email);
                 }
                 foreach ($params['phone'] AS $phone) {
                     $entity_phone = new \Core\Entity\Phone();
                     $entity_phone->setConfirmed(false);
-                    $entity_phone->setDdd($phone['ddd']);
-                    $entity_phone->setPhone($phone['phone']);
+                    $entity_phone->setDdd(Format::onlyNumbers($phone['ddd']));
+                    $entity_phone->setPhone(Format::onlyNumbers($phone['phone']));
                     $entity_phone->setPeople($entity);
                     $this->_em->persist($entity_phone);
+                    $this->_em->flush($entity_phone);
                 }
-
-                $this->_em->flush();
-                $this->_em->clear();
-
                 return array(
                     'id' => $entity->getId(),
                     'name' => $entity->getName(),
@@ -382,8 +521,6 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
             ));
             if ($entity) {
                 $this->_em->remove($entity);
-                $this->_em->flush();
-                $this->_em->clear();
                 return true;
             } else {
                 $this->addError('Error removing this Document!');
@@ -393,36 +530,51 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
     }
 
     public function documentExists($document, $document_type) {
-        if ($this->getErrors()) {
-            return;
-        }
+
         $entity = $this->_em->getRepository('\Core\Entity\Document');
-        $doc = $entity->findOneBy(array('document' => $document));
+        $doc = $entity->findOneBy(array(
+            'document' => Format::onlyNumbers($document),
+            'documentType' => $document_type)
+        );
 
-        $documentType = $entity->findOneBy(array(
-            'documentType' => $document_type,
-            'people' => $this->getCurrentPeopleCompany()
-        ));
-
-        if ($documentType) {
-            $this->addError(array('message' => 'Document type (%1$s) already added!', 'values' => array('docType' => $document_type->getDocumentType())));
-        }
         if ($doc) {
             $this->addError(array('message' => 'Document %1$s in use!', 'values' => array('doc' => $document)));
         }
+
         return $doc;
     }
 
     abstract function getCurrentPeopleCompany();
 
     /**
+     * @return \Core\Entity\PeopleDomain
+     */
+    public function getCompanyDomain() {
+
+        $company = $this->getPeopleByDomain() ? : $this->getDefaultCompany();
+        foreach ($company->getPeopleDomain() AS $domain) {
+            return $domain;
+        }
+    }
+
+    /**
      * @return \Core\Entity\People
      */
     public function getDefaultCompany() {
-        if ($this->getErrors()) {
-            return;
-        }
-        return $this->_em->getRepository('\Core\Entity\People')->find(1);
+
+        return $this->getPeopleByDomain() ? : $this->_em->getRepository('\Core\Entity\People')->find(1);
+    }
+
+    /**
+     * @return \Core\Entity\People
+     */
+    public function getPeopleByDomain() {
+
+        $peopleDomain = $this->_em->getRepository('\Core\Entity\PeopleDomain')->findOneBy(array(
+            'domain' => Url::getDomain()
+        ));
+
+        return $peopleDomain ? $peopleDomain->getPeople() : false;
     }
 
 }

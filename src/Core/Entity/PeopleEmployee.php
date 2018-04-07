@@ -38,6 +38,7 @@ class PeopleEmployee {
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="employee_id", referencedColumnName="id")
      * })
+     * @ORM\OrderBy({"alias" = "ASC"})
      */
     private $employee;
 

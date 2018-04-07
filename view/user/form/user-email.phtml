@@ -1,0 +1,37 @@
+<div class="panel-body">
+    <!-- Text input-->
+    <fieldset>
+        <form class="api-form form-horizontal" action="/user-email.form" method="POST" name="form-user-email" id="form-user-email" role="form" data-childs="[&quot;people&quot;,&quot;log&quot;]">
+            <!-- Form Name -->
+            <button title="<?= $this->translate('Add new e-mail for this user') ?>" type="button" class="btn btn-success pull-right" data-add-form="/user/add-email.form">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                <?= $this->translate('Add') ?>
+            </button>            
+            <legend><?= $this->translate('Emails') ?></legend>            
+            <div id="container-delete-email-{id}" class="form-group hidden clone highlight" data-clone="add-user-email">
+                <label class="col-md-4 control-label" id="label-mail-{id}" for="input-mail"><?= $this->translate('Email') ?>: </label>
+                <div class="col-md-4">                        
+                    <input readonly class="form-control input-md" value="" id="input-mail-{id}" name="email" type="text" >
+                </div>
+                <div class="col-md-4">
+                    <button data-container-remove="container-delete-email" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this email?') ?>" data-body="{email}" data-toggle="modal" data-target="#confirm-delete" data-id="{id}" data-delete-confirm="/user/delete-email.json" name="confirm-delete-{id}" id="confirm-delete-{id}" type="submit" class="confirm-delete btn btn-danger">
+                        <?= $this->translate('Delete') ?>
+                    </button>
+                </div>
+            </div>
+            <?php foreach ($this->user->getPeople()->getEmail() AS $user_email) { ?>
+                <div id="container-delete-email-<?= $user_email->getId() ?>" class="form-group highlight">
+                    <label class="col-md-4 control-label" id="label-mail-<?= $user_email->getId() ?>" for="input-mail"><?= $this->translate('Email') ?>: </label>
+                    <div class="col-md-4">                        
+                        <input readonly class="form-control input-md" value="<?= $user_email->getEmail() ?>" id="input-mail-<?= $user_email->getId() ?>" name="mail" type="text" >
+                    </div>                                                
+                    <div class="col-md-4">
+                        <button  data-container-remove="container-delete-email" data-delete-name="<?= $this->translate('Delete') ?>" data-calcel-name="<?= $this->translate('Cancel') ?>" data-header="<?= $this->translate('Confirm delete this email?') ?>" data-body="<?= $user_email->getEmail() ?>" data-toggle="modal" data-target="#confirm-delete" data-id="<?= $user_email->getId() ?>" data-delete-confirm="/user/delete-email.json" name="confirm-delete-<?= $user_email->getId() ?>" id="confirm-delete-<?= $user_email->getId() ?>" type="button" class="confirm-delete btn btn-danger">
+                            <?= $this->translate('Delete') ?>
+                        </button>
+                    </div>
+                </div>                                        
+            <?php } ?>
+        </form>
+    </fieldset>
+</div>                              

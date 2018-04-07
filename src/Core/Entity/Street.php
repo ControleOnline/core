@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Street
  *
- * @ORM\Table(name="street", uniqueConstraints={@ORM\UniqueConstraint(name="street", columns={"street", "cep_id"}), @ORM\UniqueConstraint(name="street_2", columns={"street", "neighborhood_id"})}, indexes={@ORM\Index(name="country_id", columns={"neighborhood_id"}),@ORM\Index(name="cep", columns={"cep_id"})})
+ * @ORM\Table(name="street", uniqueConstraints={@ORM\UniqueConstraint(name="street_2", columns={"street", "district_id"})}, indexes={@ORM\Index(name="country_id", columns={"district_id"}),@ORM\Index(name="street", columns={"street"}),@ORM\Index(name="cep", columns={"cep_id"})})
  * @ORM\Entity
  */
 class Street
@@ -29,14 +29,14 @@ class Street
     private $street;
 
     /**
-     * @var \Core\Entity\Neighborhood
+     * @var \Core\Entity\District
      *
-     * @ORM\ManyToOne(targetEntity="Core\Entity\Neighborhood")
+     * @ORM\ManyToOne(targetEntity="Core\Entity\District")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="neighborhood_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="district_id", referencedColumnName="id")
      * })
      */
-    private $neighborhood;
+    private $district;
 
     /**
      * @var \Core\Entity\Cep
@@ -51,16 +51,16 @@ class Street
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Core\Entity\Adress", mappedBy="street")
+     * @ORM\OneToMany(targetEntity="Core\Entity\Address", mappedBy="street")
      */
-    private $adress;
+    private $address;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->adress = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->address = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -97,26 +97,26 @@ class Street
     }
 
     /**
-     * Set neighborhood
+     * Set district
      *
-     * @param \Core\Entity\Neighborhood $neighborhood
+     * @param \Core\Entity\District $district
      * @return Street
      */
-    public function setNeighborhood(\Core\Entity\Neighborhood $neighborhood = null)
+    public function setDistrict(\Core\Entity\District $district = null)
     {
-        $this->neighborhood = $neighborhood;
+        $this->district = $district;
 
         return $this;
     }
 
     /**
-     * Get neighborhood
+     * Get district
      *
-     * @return \Core\Entity\Neighborhood 
+     * @return \Core\Entity\District 
      */
-    public function getNeighborhood()
+    public function getDistrict()
     {
-        return $this->neighborhood;
+        return $this->district;
     }
 
     /**
@@ -143,35 +143,35 @@ class Street
     }
 
     /**
-     * Add adress
+     * Add address
      *
-     * @param \Core\Entity\Adress $adress
+     * @param \Core\Entity\Address $address
      * @return Street
      */
-    public function addAdress(\Core\Entity\Adress $adress)
+    public function addAddress(\Core\Entity\Address $address)
     {
-        $this->adress[] = $adress;
+        $this->address[] = $address;
 
         return $this;
     }
 
     /**
-     * Remove adress
+     * Remove address
      *
-     * @param \Core\Entity\Adress $adress
+     * @param \Core\Entity\Address $address
      */
-    public function removeAdress(\Core\Entity\Adress $adress)
+    public function removeAddress(\Core\Entity\Address $address)
     {
-        $this->adress->removeElement($adress);
+        $this->address->removeElement($address);
     }
 
     /**
-     * Get adress
+     * Get address
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getAdress()
+    public function getAddress()
     {
-        return $this->adress;
+        return $this->address;
     }
 }
