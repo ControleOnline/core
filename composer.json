@@ -29,7 +29,8 @@
         "nfephp-org/sped-da": "~0.1",
         "pagseguro/pagseguro-php-sdk": "~3.0",
         "beberlei/DoctrineExtensions": "~1.0",
-        "sugarcrm/rest-php-client" : "~1.0"
+        "sugarcrm/rest-php-client" : "~1.0",
+        "aws/aws-sdk-php": "*"
     },
     "scripts": {
         "pre-install-cmd": [
