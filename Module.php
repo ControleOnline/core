@@ -40,6 +40,7 @@ class Module {
     }
 
     public function getRequestFromBody(\Zend\Mvc\MvcEvent $e) {
+        $body = $e->getRequest()->getContent();
         if (!empty($body)) {
             $json = json_decode($body, true);
             if (!empty($json)) {
