@@ -155,7 +155,7 @@ class People {
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleEmployee", mappedBy="employee")
+     * @ORM\OneToMany(targetEntity="Core\Entity\PeopleEmployee", mappedBy="company")
      * @ORM\OrderBy({"company" = "ASC"})
      */
     private $peopleCompany;
