@@ -39,23 +39,7 @@ class Module {
         ErrorModel::addError($e->getParam('exception'));
     }
 
-    public function getRequestFromBody(\Zend\Mvc\MvcEvent $e) {
-        $body = $e->getRequest()->getContent();
-        if (!empty($body)) {
-            $json = json_decode($body, true);
-            if (!empty($json)) {
-                echo '<pre>';
-                print_r($e->getRequest());
-                $e->setRequest(array_merge($json, $e->getRequest()));
-                return $json;
-            }
-        }
-
-        return false;
-    }
-
     public function onBootstrap(\Zend\Mvc\MvcEvent $e) {
-        $this->getRequestFromBody($e) ;
         $this->sm = $e->getApplication()->getServiceManager();
         ErrorModel::initialize($this->sm);
         $cfg = new Config();
