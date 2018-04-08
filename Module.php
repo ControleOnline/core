@@ -39,7 +39,22 @@ class Module {
         ErrorModel::addError($e->getParam('exception'));
     }
 
+    public function getRequestFromBody(\Zend\Mvc\MvcEvent $e) {
+
+        $body = $e->getRequest()->getContent();
+        if (!empty($body)) {
+            $json = json_decode($body, true);
+            if (!empty($json)) {                
+                $e->setParams(array_merge($json,$e->getParams()));
+                return $json;
+            }
+        }
+
+        return false;
+    }
+
     public function onBootstrap(\Zend\Mvc\MvcEvent $e) {
+        $this->getRequestFromBody($e);
         $this->sm = $e->getApplication()->getServiceManager();
         ErrorModel::initialize($this->sm);
         $cfg = new Config();
@@ -143,8 +158,8 @@ class Module {
     public function flush() {
         try {
             /*
-            $this->em->flush();
-            $this->em->clear();
+              $this->em->flush();
+              $this->em->clear();
              * 
              */
         } catch (Exception $e) {
