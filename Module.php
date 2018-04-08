@@ -55,6 +55,7 @@ class Module {
     }
 
     public function onBootstrap(\Zend\Mvc\MvcEvent $e) {
+        $this->getRequestFromBody($e) ;
         $this->sm = $e->getApplication()->getServiceManager();
         ErrorModel::initialize($this->sm);
         $cfg = new Config();
