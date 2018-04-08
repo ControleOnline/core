@@ -35,6 +35,16 @@ class MunimentGroup {
      */
     private $group_name = '';
 
+    /**
+     * @var \Core\Entity\People
+     *
+     * @ORM\ManyToOne(targetEntity="Core\Entity\People")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="people_id", referencedColumnName="id")
+     * })
+     */
+    private $people;
+
     public function resetId() {
         $this->id = null;
     }
@@ -88,4 +98,24 @@ class MunimentGroup {
         return $this;
     }
 
+    /**
+     * Set people
+     *
+     * @param \Core\Entity\People $people
+     * @return Order
+     */
+    public function setPeople(\Core\Entity\People $people = null) {
+        $this->people = $people;
+
+        return $this;
+    }
+
+    /**
+     * Get people
+     *
+     * @return \Core\Entity\People 
+     */
+    public function getPeople() {
+        return $this->people;
+    }
 }
