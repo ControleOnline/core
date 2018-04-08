@@ -143,8 +143,8 @@ class Module {
     public function flush() {
         try {
             /*
-              $this->em->flush();
-              $this->em->clear();
+            $this->em->flush();
+            $this->em->clear();
              * 
              */
         } catch (Exception $e) {
