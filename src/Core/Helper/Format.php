@@ -74,7 +74,7 @@ class Format {
             } elseif (is_array($data) && array_key_exists('response', $data) && array_key_exists('data', $data['response'])) {
                 $return = array('data' => $data['response']['data']);
             } elseif ($data) {
-                $return['data'] = $data;
+                $return['data'] = self::formatEntity($data);
             } else {
                 $return = false;
             }
@@ -86,6 +86,41 @@ class Format {
             $return['success'] = true;
         }
         return array('response' => $return);
+    }
+
+    public static function formatEntity($entities) {
+        if (is_array($entities)) {
+            foreach ($entities AS $entity) {
+                $return[] = self::formatEntity($entity);
+            }
+        } else {
+            if (is_object($entities)) {
+                $class = new \ReflectionClass(get_class($entities));
+                $className = $class->getNamespaceName();
+                if ($className == 'Core\Entity') {
+                    foreach (get_class_methods($entities) AS $method) {
+                        if (substr($method, 0, 3) == 'get') {
+                            $content = $entities->$method();
+                            if (is_object($content)) {
+                                if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
+                                    foreach ($content AS $c) {
+                                        $r[] = $c->getId();
+                                    }
+                                    $content = $r;
+                                } else {
+                                    $content = $content->getId();
+                                }
+                            }
+                            $return[substr($method, 3, strlen($method))] = $content;
+                        }
+                    }
+                }
+            } else {
+                $return = $entities;
+            }
+        }
+
+        return (object) $return;
     }
 
 }
