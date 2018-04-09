@@ -2522,7 +2522,9 @@ aside.app-sidebar .sidebar-header {
     height: 90px;
     width: 180px;
     padding: 0 10px;
-    position: relative; }
+    position: relative;
+    padding: 20px;
+}
 aside.app-sidebar .sidebar-header .sidebar-brand {
     display: -ms-flexbox;
     display: flex;
