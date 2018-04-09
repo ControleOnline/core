@@ -137,7 +137,6 @@ class Format {
                 $return = $entities;
             }
         }
-
         return (object) $return;
     }
 
