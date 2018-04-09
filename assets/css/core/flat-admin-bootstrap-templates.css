@@ -2519,11 +2519,10 @@ aside.app-sidebar {
     box-shadow: 0 2px 2px rgba(68, 68, 68, 0.2);
     transition: all 0.3s ease; }
 aside.app-sidebar .sidebar-header {
-    height: 90px;
+    height: 190px;
     width: 180px;
-    padding: 0 10px;
+    padding: 50px 10px;
     position: relative;
-    padding: 20px;
 }
 aside.app-sidebar .sidebar-header .sidebar-brand {
     display: -ms-flexbox;
