@@ -109,6 +109,7 @@ class Format {
                         if (substr($method, 0, 3) == 'get') {
                             $content = $entities->$method();
                             if (!self::$__keys[strtolower(substr($method, 3, strlen($method)))]) {
+                                self::$__keys[strtolower(substr($method, 3, strlen($method)))] = true;
                                 if (is_object($content)) {
                                     if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
                                         foreach ($content AS $key => $c) {
