@@ -118,7 +118,7 @@ class Format {
                                     }
                                     $content = $r;
                                 } else {
-                                    $content = $content->getId();
+                                    $content = self::formatEntity($content);
                                 }
                             }
                             $return[strtolower(substr($method, 3, strlen($method)))] = $content;
