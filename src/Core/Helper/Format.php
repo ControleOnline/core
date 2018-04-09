@@ -108,7 +108,9 @@ class Format {
                             if (is_object($content)) {
                                 if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
                                     foreach ($content AS $key => $c) {
-                                        if (count($c) > 50 || self::$__objectCount > 50) {
+                                        $class = new \ReflectionClass(get_class($c));
+                                        $className = $class->getNamespaceName();
+                                        if ((count($c) > 50 || self::$__objectCount > 50) && $className == 'Core\Entity') {
                                             $r[strtolower($key)] = $c->getId();
                                         } else {
                                             $r[strtolower($key)] = self::formatEntity($c);
