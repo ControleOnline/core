@@ -7,6 +7,8 @@ use Zend\View\Variables;
 
 class Format {
 
+    private static $__objectCount;
+
     public static function maskNumber($mask, $str) {
 
         $str = str_replace(" ", "", $str);
@@ -104,14 +106,21 @@ class Format {
                             $content = $entities->$method();
                             if (is_object($content)) {
                                 if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
-                                    foreach ($content AS $key => $c) {
-                                        $r[$key] = $c->getId();
+                                    if (count($content) > 50 || self::$__objectCount > 50) {
+                                        foreach ($content AS $key => $c) {
+                                            $r[$key] = $c->getId();
+                                        }
+                                    } else {                                        
+                                        foreach ($content AS $key => $c) {
+                                            $r[$key] = self::formatEntity($content);
+                                        }
                                     }
                                     $content = $r;
                                 } else {
                                     $content = $content->getId();
                                 }
                             }
+                            self::$__objectCount ++;
                             $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                         }
                     }
