@@ -101,8 +101,6 @@ class Format {
                 self::$__objectCount ++;
                 $class = new \ReflectionClass(get_class($entities));
                 $className = $class->getNamespaceName();
-                echo get_class($entities) . $className;
-                echo '<br>';
                 if ($className == 'Core\Entity') {
                     foreach (get_class_methods($entities) AS $method) {
                         if (substr($method, 0, 3) == 'get') {
