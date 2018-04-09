@@ -116,7 +116,7 @@ class Format {
                                             $class = new \ReflectionClass(get_class($c));
                                             $className = $class->getNamespaceName();
                                             if ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity') {
-                                                $r[strtolower($key)] = $c->getId();
+                                                $r[strtolower($key)]['id'] = $c->getId();
                                             } else {
                                                 $r[strtolower($key)] = self::formatEntity($c);
                                             }
@@ -130,7 +130,9 @@ class Format {
                                         }
                                         $content = $r;
                                     } else {
-                                        $content = self::formatEntity($content);
+                                        //$content = self::formatEntity($content);
+                                        $content = null;
+                                        $content['id'] = $c->getId();
                                     }
                                 }
                                 $return[strtolower(substr($method, 3, strlen($method)))] = $content;
