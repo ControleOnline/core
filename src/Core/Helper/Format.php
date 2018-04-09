@@ -91,8 +91,8 @@ class Format {
 
     public static function formatEntity($entities) {
         if (is_array($entities)) {
-            foreach ($entities AS $entity) {
-                $return[] = self::formatEntity($entity);
+            foreach ($entities AS $key => $entity) {
+                $return[$key] = self::formatEntity($entity);
             }
         } else {
             if (is_object($entities)) {
@@ -104,8 +104,8 @@ class Format {
                             $content = $entities->$method();
                             if (is_object($content)) {
                                 if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
-                                    foreach ($content AS $c) {
-                                        $r[] = $c->getId();
+                                    foreach ($content AS $key => $c) {
+                                        $r[$key] = $c->getId();
                                     }
                                     $content = $r;
                                 } else {
