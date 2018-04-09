@@ -24,7 +24,7 @@ class Muniment {
     /**
      * @var \Core\Entity\MunimentGroup
      *
-     * @ORM\ManyToOne(targetEntity="Core\Entity\MunimentGroup")
+     * @ORM\ManyToOne(targetEntity="Core\Entity\MunimentGroup", inversedBy="muniment")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="muniment_group_id", referencedColumnName="id")
      * })
