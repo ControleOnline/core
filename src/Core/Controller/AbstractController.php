@@ -8,7 +8,6 @@ use Zend\View\Model\ViewModel;
 use Zend\View\Model\JsonModel;
 use Zend\Mvc\MvcEvent;
 use Core\Helper\View;
-use Menu\Model\MenuModel;
 
 class AbstractController extends AbstractActionController {
 
@@ -78,8 +77,6 @@ class AbstractController extends AbstractActionController {
         $this->_entity_children = $this->params('entity_children');
         $this->_entity = $this->params('entity');
         $this->_renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');            
-        $this->_menu = new MenuModel();
-        $this->_menu->initialize($this->serviceLocator);
         View::setDefaultVariables($this, $this->serviceLocator);
     }
 
