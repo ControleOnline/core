@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Menu
  *
- * @ORM\Table(name="menu", uniqueConstraints={@ORM\UniqueConstraint(name="menu_people", columns={"people_id","is_admin"})},indexes={@ORM\Index(name="IDX_client_id", columns={"client_id"}),@ORM\Index(name="menu", columns={"menu"})})
+ * @ORM\Table(name="menu", uniqueConstraints={@ORM\UniqueConstraint(name="menu_people", columns={"people_id","admin"})},indexes={@ORM\Index(name="IDX_client_id", columns={"client_id"}),@ORM\Index(name="menu", columns={"menu"})})
  * @ORM\Entity
  */
 class Menu {
@@ -62,9 +62,9 @@ class Menu {
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_admin", type="boolean", nullable=false)
+     * @ORM\Column(name="admin", type="boolean", nullable=false)
      */
-    private $is_admin;
+    private $admin;
 
     /**
      * Constructor
@@ -207,24 +207,24 @@ class Menu {
     }
 
     /**
-     * Set is_admin
+     * Set admin
      *
-     * @param boolean $is_admin
+     * @param boolean $admin
      * @return Menu
      */
-    public function setIsAdmin($is_admin) {
-        $this->is_admin = $is_admin;
+    public function setAdmin($admin) {
+        $this->admin = $admin;
 
         return $this;
     }
 
     /**
-     * Get is_admin
+     * Get admin
      *
      * @return boolean 
      */
-    public function getIsAdmin() {
-        return $this->is_admin;
+    public function getAdmin() {
+        return $this->admin;
     }
 
 }
