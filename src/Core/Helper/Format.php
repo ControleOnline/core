@@ -103,6 +103,8 @@ class Format {
             if (is_object($entities)) {
                 self::$__objectCount ++;
                 $class = new \ReflectionClass(get_class($entities));
+                echo get_class($entities);
+                echo '<br>';
                 $className = $class->getNamespaceName();
                 if ($className == 'Core\Entity') {
                     foreach (get_class_methods($entities) AS $method) {
@@ -126,8 +128,8 @@ class Format {
                                         $content = self::formatEntity($content);
                                     }
                                 }
+                                $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                             }
-                            $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                         }
                     }
                 } else {
