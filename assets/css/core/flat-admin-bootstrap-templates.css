@@ -1762,7 +1762,7 @@ html, body {
 
 body {
     min-height: 100vh;
-    background-color: #e7edee;
+    background-color: #fff;
     overflow-x: hidden; }
 body .app {
     min-height: 100vh; }
@@ -2004,7 +2004,7 @@ a:hover {
     border-radius: 2px;
     margin-right: 5px; }
 .navbar .navbar-collapse {
-    background-color: #FFF;
+    background-color: #f2f1f2;
     border-radius: 2px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -2515,7 +2515,7 @@ aside.app-sidebar {
     justify-content: flex-start;
     z-index: 100108;
     min-height: 100vh;
-    background-color: #FFF;
+    background-color: #185e90;
     box-shadow: 0 2px 2px rgba(68, 68, 68, 0.2);
     transition: all 0.3s ease; }
 aside.app-sidebar .sidebar-header {
@@ -2927,17 +2927,17 @@ aside.app-sidebar.active {
 
 
 aside.app-sidebar {
-    background-color: #FFF; }
+    background-color: #185e90; }
 aside.app-sidebar .sidebar-header .sidebar-brand .highlight {
     background-color: #29c75f; }
 aside.app-sidebar .sidebar-menu ul.sidebar-nav > li > a .icon {
     background-color: rgba(141, 146, 147, 0.15);
     color: rgba(141, 146, 147, 0.45); }
 aside.app-sidebar .sidebar-menu ul.sidebar-nav > li > a .title {
-    color: #8d9293; }
+    color: #fff; }
 aside.app-sidebar .sidebar-menu ul.sidebar-nav > li.active > a .icon {
     background-color: rgba(41, 199, 95, 0.25);
-    color: rgba(41, 199, 95, 0.75); }
+    color: #fff; }
 aside.app-sidebar .sidebar-menu ul.sidebar-nav > li.active > a .title {
     color: #29c75f; }
 aside.app-sidebar .sidebar-menu ul.sidebar-nav > li.dropdown > .dropdown-menu > ul > li.section {
@@ -3797,7 +3797,8 @@ ui-view > .app-messaging-container {
     width: 100%;
     background-color: #FFF;
     border-radius: 3px;
-    box-shadow: 0 1px 2px #c8d1d3; }
+    box-shadow: 1px 1px 1px 2px #c8d1d3;
+}
 .card .card-header {
     padding: 30px;
     font-size: 1.1em;
