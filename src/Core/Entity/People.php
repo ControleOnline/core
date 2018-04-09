@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * People
  *
- * @ORM\Table(name="people", uniqueConstraints={@ORM\UniqueConstraint(name="image_id", columns={"image_id"})})
+ * @ORM\Table(name="people", uniqueConstraints={@ORM\UniqueConstraint(name="image_id", columns={"image_id"}),@ORM\UniqueConstraint(name="alternative_image", columns={"alternative_image"})})
  * @ORM\Entity
  */
 class People {
@@ -65,6 +65,26 @@ class People {
      * })
      */
     private $image;
+
+    /**
+     * @var \Core\Entity\Image
+     *
+     * @ORM\ManyToOne(targetEntity="Core\Entity\Image")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="image_id", referencedColumnName="id")
+     * })
+     */
+    private $image;
+
+    /**
+     * @var \Core\Entity\Image
+     *
+     * @ORM\ManyToOne(targetEntity="Core\Entity\Image")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="alternative_image", referencedColumnName="id")
+     * })
+     */
+    private $alternative_image;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -326,6 +346,27 @@ class People {
      */
     public function getImage() {
         return $this->image;
+    }
+
+    /**
+     * Set alternative_image
+     *
+     * @param \Core\Entity\Image $alternative_image
+     * @return People
+     */
+    public function setAlternativeImage(\Core\Entity\Image $alternative_image = null) {
+        $this->alternative_image = $alternative_image;
+
+        return $this;
+    }
+
+    /**
+     * Get alternative_image
+     *
+     * @return \Core\Entity\Image 
+     */
+    public function getAlternativeImage() {
+        return $this->alternative_image;
     }
 
     /**
