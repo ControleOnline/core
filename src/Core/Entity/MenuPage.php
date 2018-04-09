@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="menu_page", indexes={@ORM\Index(name="menuPage_id", columns={"page_id"}), @ORM\Index(name="menu_id", columns={"menu_id"})})
  * @ORM\Entity
  */
-class MenuPage
-{
+class MenuPage {
+
     /**
      * @var integer
      *
@@ -27,6 +27,13 @@ class MenuPage
      * @ORM\Column(name="uri", type="string", length=50, nullable=false)
      */
     private $uri;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="icon-class", type="string", length=50, nullable=false)
+     */
+    private $icon_class;
 
     /**
      * @var \Core\Entity\MenuPage
@@ -65,8 +72,7 @@ class MenuPage
     /**
      * Constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->menuPage = new \Doctrine\Common\Collections\ArrayCollection();
         $this->translateMenuPage = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -76,8 +82,7 @@ class MenuPage
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -87,8 +92,7 @@ class MenuPage
      * @param string $uri
      * @return MenuPage
      */
-    public function setUri($uri)
-    {
+    public function setUri($uri) {
         $this->uri = $uri;
 
         return $this;
@@ -99,8 +103,7 @@ class MenuPage
      *
      * @return string 
      */
-    public function getUri()
-    {
+    public function getUri() {
         return $this->uri;
     }
 
@@ -110,8 +113,7 @@ class MenuPage
      * @param \Core\Entity\MenuPage $page
      * @return MenuPage
      */
-    public function setPage(\Core\Entity\MenuPage $page = null)
-    {
+    public function setPage(\Core\Entity\MenuPage $page = null) {
         $this->page = $page;
 
         return $this;
@@ -122,8 +124,7 @@ class MenuPage
      *
      * @return \Core\Entity\MenuPage 
      */
-    public function getPage()
-    {
+    public function getPage() {
         return $this->page;
     }
 
@@ -133,8 +134,7 @@ class MenuPage
      * @param \Core\Entity\Menu $menu
      * @return MenuPage
      */
-    public function setMenu(\Core\Entity\Menu $menu = null)
-    {
+    public function setMenu(\Core\Entity\Menu $menu = null) {
         $this->menu = $menu;
 
         return $this;
@@ -145,8 +145,7 @@ class MenuPage
      *
      * @return \Core\Entity\Menu 
      */
-    public function getMenu()
-    {
+    public function getMenu() {
         return $this->menu;
     }
 
@@ -156,8 +155,7 @@ class MenuPage
      * @param \Core\Entity\MenuPage $menuPage
      * @return MenuPage
      */
-    public function addMenuPage(\Core\Entity\MenuPage $menuPage)
-    {
+    public function addMenuPage(\Core\Entity\MenuPage $menuPage) {
         $this->menuPage[] = $menuPage;
 
         return $this;
@@ -168,8 +166,7 @@ class MenuPage
      *
      * @param \Core\Entity\MenuPage $menuPage
      */
-    public function removeMenuPage(\Core\Entity\MenuPage $menuPage)
-    {
+    public function removeMenuPage(\Core\Entity\MenuPage $menuPage) {
         $this->menuPage->removeElement($menuPage);
     }
 
@@ -178,8 +175,7 @@ class MenuPage
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getMenuPage()
-    {
+    public function getMenuPage() {
         return $this->menuPage;
     }
 
@@ -189,8 +185,7 @@ class MenuPage
      * @param \Core\Entity\TranslateMenuPage $translateMenuPage
      * @return MenuPage
      */
-    public function addTranslateMenuPage(\Core\Entity\TranslateMenuPage $translateMenuPage)
-    {
+    public function addTranslateMenuPage(\Core\Entity\TranslateMenuPage $translateMenuPage) {
         $this->translateMenuPage[] = $translateMenuPage;
 
         return $this;
@@ -201,8 +196,7 @@ class MenuPage
      *
      * @param \Core\Entity\TranslateMenuPage $translateMenuPage
      */
-    public function removeTranslateMenuPage(\Core\Entity\TranslateMenuPage $translateMenuPage)
-    {
+    public function removeTranslateMenuPage(\Core\Entity\TranslateMenuPage $translateMenuPage) {
         $this->translateMenuPage->removeElement($translateMenuPage);
     }
 
@@ -211,8 +205,28 @@ class MenuPage
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getTranslateMenuPage()
-    {
+    public function getTranslateMenuPage() {
         return $this->translateMenuPage;
     }
+
+    /**
+     * Set icon_class
+     *
+     * @param string $icon_class
+     * @return MenuPage
+     */
+    public function setIconClass($icon_class) {
+        $this->icon_class = $icon_class;
+        return $this;
+    }
+
+    /**
+     * Get icon_class
+     *
+     * @return string 
+     */
+    public function getIconClass() {
+        return $this->icon_class;
+    }
+
 }
