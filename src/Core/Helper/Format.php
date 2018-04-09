@@ -67,7 +67,8 @@ class Format {
             $return['success'] = false;
         } else {
             if ($data instanceof Variables) {
-                $array = $data->getArrayCopy();
+                //$array = $data->getArrayCopy();                
+                $array = (array) self::formatEntity($data);
                 $return['data'] = array_key_exists('data', $array) ? $array['data'] : (array_key_exists('response', $array) && array_key_exists('data', $array['response']) ? $array['response']['data'] : false);
             } elseif (is_array($data) && array_key_exists('data', $data)) {
                 $return = $data;
