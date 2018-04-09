@@ -103,8 +103,6 @@ class Format {
             if (is_object($entities)) {
                 self::$__objectCount ++;
                 $class = new \ReflectionClass(get_class($entities));
-                echo get_class($entities);
-                echo '<br>';
                 $className = $class->getNamespaceName();
                 if ($className == 'Core\Entity') {
                     foreach (get_class_methods($entities) AS $method) {
@@ -120,6 +118,9 @@ class Format {
                                             if ((count($c) > 50 || self::$__objectCount > 50) && $className == 'Core\Entity') {
                                                 $r[strtolower($key)] = $c->getId();
                                             } else {
+                                                print_r(get_class_methods($c));
+                                                echo get_class($c);
+                                                echo '<br>';
                                                 $r[strtolower($key)] = self::formatEntity($c);
                                             }
                                         }
