@@ -7,9 +7,6 @@ use Zend\View\Variables;
 
 class Format {
 
-    private static $__objectCount;
-    private static $__keys;
-
     public static function maskNumber($mask, $str) {
 
         $str = str_replace(" ", "", $str);
@@ -70,8 +67,7 @@ class Format {
             $return['success'] = false;
         } else {
             if ($data instanceof Variables) {
-                //$array = $data->getArrayCopy();     
-                self::$__keys = array();
+                //$array = $data->getArrayCopy();                     
                 $array = (array) self::formatEntity($data);
                 $return['data'] = array_key_exists('data', $array) ? $array['data'] : (array_key_exists('response', $array) && array_key_exists('data', $array['response']) ? $array['response']['data'] : false);
             } elseif (is_array($data) && array_key_exists('data', $data)) {
@@ -79,7 +75,6 @@ class Format {
             } elseif (is_array($data) && array_key_exists('response', $data) && array_key_exists('data', $data['response'])) {
                 $return = array('data' => $data['response']['data']);
             } elseif ($data) {
-                self::$__keys = array();
                 $return['data'] = self::formatEntity($data);
             } else {
                 $return = false;
@@ -101,42 +96,38 @@ class Format {
             }
         } else {
             if (is_object($entities)) {
-                self::$__objectCount ++;
                 $class = new \ReflectionClass(get_class($entities));
                 $className = $class->getNamespaceName();
                 if ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity') {
                     foreach (get_class_methods($entities) AS $method) {
                         if (substr($method, 0, 3) == 'get') {
                             $content = $entities->$method();
-                            if (!self::$__keys[strtolower(substr($method, 3, strlen($method)))]) {
-                                self::$__keys[strtolower(substr($method, 3, strlen($method)))] = true;
-                                if (is_object($content)) {
-                                    if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
-                                        foreach ($content AS $key => $c) {
-                                            $class = new \ReflectionClass(get_class($c));
-                                            $className = $class->getNamespaceName();
-                                            if ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity') {
-                                                $r[strtolower($key)]['id'] = $c->getId();
-                                            } else {
-                                                $r[strtolower($key)] = self::formatEntity($c);
-                                            }
-                                            /*
-                                              if ((count($c) > 50 || self::$__objectCount > 50) && ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity')) {
-                                              $r[strtolower($key)] = $c->getId();
-                                              } else {
-                                              $r[strtolower($key)] = self::formatEntity($c);
-                                              }
-                                             */
+                            if (is_object($content)) {
+                                if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
+                                    foreach ($content AS $key => $c) {
+                                        $class = new \ReflectionClass(get_class($c));
+                                        $className = $class->getNamespaceName();
+                                        if ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity') {
+                                            $r[strtolower($key)]['id'] = $c->getId();
+                                        } else {
+                                            $r[strtolower($key)] = self::formatEntity($c);
                                         }
-                                        $content = $r;
-                                    } else {
-                                        //$content = self::formatEntity($content);
-                                        $content = null;
-                                        $content['id'] = $c->getId();
+                                        /*
+                                          if ((count($c) > 50 || self::$__objectCount > 50) && ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity')) {
+                                          $r[strtolower($key)] = $c->getId();
+                                          } else {
+                                          $r[strtolower($key)] = self::formatEntity($c);
+                                          }
+                                         */
                                     }
+                                    $content = $r;
+                                } else {
+                                    //$content = self::formatEntity($content);
+                                    $content = null;
+                                    $content['id'] = $c->getId();
                                 }
-                                $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                             }
+                            $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                         }
                     }
                 } else {
