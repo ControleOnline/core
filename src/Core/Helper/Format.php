@@ -112,7 +112,7 @@ class Format {
                                     $content = $content->getId();
                                 }
                             }
-                            $return[substr($method, 3, strlen($method))] = $content;
+                            $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                         }
                     }
                 }
