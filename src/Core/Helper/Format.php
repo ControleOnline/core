@@ -107,16 +107,13 @@ class Format {
                             $content = $entities->$method();
                             if (is_object($content)) {
                                 if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
-//                                    if (count($content) > 50 || self::$__objectCount > 50) {
                                     foreach ($content AS $key => $c) {
-                                        $r[strtolower($key)] = $c->getId();
+                                        if (count($c) > 50 || self::$__objectCount > 50) {
+                                            $r[strtolower($key)] = $c->getId();
+                                        } else {
+                                            $r[strtolower($key)] = self::formatEntity($c);
+                                        }
                                     }
-//                                    } else {                                        
-//                                        foreach ($content AS $key => $c) {
-//                                            $r[strtolower($key)] = self::formatEntity($c);
-//                                        }
-//                                    }
-                                    
                                     $content = $r;
                                 } else {
                                     $content = $content->getId();
