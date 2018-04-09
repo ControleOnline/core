@@ -96,7 +96,7 @@ class Format {
             foreach ($entities AS $key => $entity) {
                 $return[strtolower($key)] = self::formatEntity($entity);
             }
-        } else {            
+        } else {
             if (is_object($entities)) {
                 self::$__objectCount ++;
                 $class = new \ReflectionClass(get_class($entities));
@@ -116,11 +116,12 @@ class Format {
 //                                            $r[strtolower($key)] = self::formatEntity($c);
 //                                        }
 //                                    }
+                                    
                                     $content = $r;
                                 } else {
                                     $content = $content->getId();
                                 }
-                            }                            
+                            }
                             $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                         }
                     }
