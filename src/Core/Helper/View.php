@@ -14,8 +14,8 @@ class View {
         $controller->_view->module_name = $controller->_module_name;
         $controller->_view->action_name = $controller->_action_name;
         $controller->_view->config = new Config();
-        $controller->_view->_menu = new MenuModel();
-        $controller->_view->_menu->initialize($serviceLocator);
+        $controller->_view->_menuModel = new MenuModel();
+        $controller->_view->_menuModel->initialize($serviceLocator);
 
         if (class_exists('\User\Model\UserModel')) {
             $userModel = new \User\Model\UserModel();
