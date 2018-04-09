@@ -94,10 +94,11 @@ class Format {
     public static function formatEntity($entities) {
         if (is_array($entities)) {
             foreach ($entities AS $key => $entity) {
-                $return[$key] = self::formatEntity($entity);
+                $return[strtolower($key)] = self::formatEntity($entity);
             }
-        } else {
+        } else {            
             if (is_object($entities)) {
+                self::$__objectCount ++;
                 $class = new \ReflectionClass(get_class($entities));
                 $className = $class->getNamespaceName();
                 if ($className == 'Core\Entity') {
@@ -106,21 +107,20 @@ class Format {
                             $content = $entities->$method();
                             if (is_object($content)) {
                                 if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
-                                    if (count($content) > 50 || self::$__objectCount > 50) {
-                                        foreach ($content AS $key => $c) {
-                                            $r[$key] = $c->getId();
-                                        }
-                                    } else {                                        
-                                        foreach ($content AS $key => $c) {
-                                            $r[$key] = self::formatEntity($c);
-                                        }
+//                                    if (count($content) > 50 || self::$__objectCount > 50) {
+                                    foreach ($content AS $key => $c) {
+                                        $r[strtolower($key)] = $c->getId();
                                     }
+//                                    } else {                                        
+//                                        foreach ($content AS $key => $c) {
+//                                            $r[strtolower($key)] = self::formatEntity($c);
+//                                        }
+//                                    }
                                     $content = $r;
                                 } else {
                                     $content = $content->getId();
                                 }
-                            }
-                            self::$__objectCount ++;
+                            }                            
                             $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                         }
                     }
