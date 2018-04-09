@@ -71,16 +71,6 @@ class People {
      *
      * @ORM\ManyToOne(targetEntity="Core\Entity\Image")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="image_id", referencedColumnName="id")
-     * })
-     */
-    private $image;
-
-    /**
-     * @var \Core\Entity\Image
-     *
-     * @ORM\ManyToOne(targetEntity="Core\Entity\Image")
-     * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="alternative_image", referencedColumnName="id")
      * })
      */
