@@ -112,7 +112,7 @@ class Format {
                                         }
                                     } else {                                        
                                         foreach ($content AS $key => $c) {
-                                            $r[$key] = self::formatEntity($content);
+                                            $r[$key] = self::formatEntity($c);
                                         }
                                     }
                                     $content = $r;
