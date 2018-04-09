@@ -115,8 +115,8 @@ class Format {
                                         foreach ($content AS $key => $c) {
                                             $class = new \ReflectionClass(get_class($c));
                                             $className = $class->getNamespaceName();
-                                            if ((count($c) > 50 || self::$__objectCount > 50) && $className == 'Core\Entity') {
-                                                $r[strtolower($key)] = $c->getId();
+                                            if (($key == 'languagecountry' || count($c) > 50 || self::$__objectCount > 50) && ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity')) {
+                                                //$r[strtolower($key)] = $c->getId();
                                             } else {
                                                 $r[strtolower($key)] = self::formatEntity($c);
                                             }
