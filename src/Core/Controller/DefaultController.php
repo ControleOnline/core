@@ -141,10 +141,10 @@ class DefaultController extends AbstractController {
         if ($userId) {
             $this->_peopleModel = new UserModel();
             $this->_peopleModel->initialize($this->serviceLocator);
-            $this->_peopleModel->setEntity('Core\\Entity\\People');
-            $people = $this->_peopleModel->getEntity()->find($userId);
+            $this->_peopleModel->setEntity('Core\\Entity\\Image');
+            $image = $this->_peopleModel->getEntity()->find($userId);
         }
-        $file = $people && $people->getImage() && is_file($people->getImage()->getPath()) ? $people->getImage()->getPath() : $defaultImgProfile;
+        $file = $image && is_file($image->getPath()) ? $image->getPath() : $defaultImgProfile;
         $imageContent = file_get_contents($file);
         $response = $this->getResponse();
         $response->setContent($imageContent);
