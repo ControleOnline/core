@@ -124,6 +124,8 @@ class Format {
                             $return[strtolower(substr($method, 3, strlen($method)))] = $content;
                         }
                     }
+                } else {
+                    $return = $entities;
                 }
             } else {
                 $return = $entities;
