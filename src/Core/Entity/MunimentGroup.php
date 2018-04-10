@@ -45,6 +45,13 @@ class MunimentGroup {
      */
     private $people;
 
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $this->muniment = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
     public function resetId() {
         $this->id = null;
     }
@@ -79,23 +86,33 @@ class MunimentGroup {
     }
 
     /**
-     * Get muniment
+     * Add muniment
      *
-     * @return \Core\Entity\Muniment
+     * @param \Core\Entity\Muniment $muniment
+     * @return People
      */
-    public function getMuniment() {
-        return $this->muniment;
+    public function addMuniment(\Core\Entity\Muniment $muniment) {
+        $this->muniment[] = $muniment;
+
+        return $this;
     }
 
     /**
-     * Set muniment
+     * Remove muniment
      *
      * @param \Core\Entity\Muniment $muniment
-     * @return Muniment
      */
-    public function setMuniment(Core\Entity\Muniment $muniment = null) {
-        $this->muniment = $muniment;
-        return $this;
+    public function removeMuniment(\Core\Entity\Muniment $muniment) {
+        $this->muniment->removeElement($muniment);
+    }
+
+    /**
+     * Get muniment
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMuniment() {
+        return $this->muniment;
     }
 
     /**
@@ -118,4 +135,5 @@ class MunimentGroup {
     public function getPeople() {
         return $this->people;
     }
+
 }
