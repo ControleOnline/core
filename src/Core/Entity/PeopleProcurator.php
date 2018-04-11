@@ -47,7 +47,7 @@ class PeopleProcurator {
      *
      * @ORM\ManyToOne(targetEntity="Core\Entity\MunimentSignature")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="muniment_signature", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="muniment_signature_id", referencedColumnName="id")
      * })
      */
     private $muniment_signature;
