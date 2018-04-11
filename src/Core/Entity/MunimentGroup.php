@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Muniment
  *
- * @ORM\Table(name="muniment_group", uniqueConstraints={@ORM\UniqueConstraint(name="group_identifier", columns={"group_identifier"})}indexes={@ORM\Index(name="people_id", columns={"people_id"})})
+ * @ORM\Table(name="muniment_group", uniqueConstraints={@ORM\UniqueConstraint(name="group_identifier", columns={"group_identifier"})},indexes={@ORM\Index(name="people_id", columns={"people_id"})})
  * @ORM\Entity
  */
 class MunimentGroup {
