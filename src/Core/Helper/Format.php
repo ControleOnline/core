@@ -89,7 +89,7 @@ class Format {
         return array('response' => $return);
     }
 
-    public static function formatEntity($entities) {
+    public static function formatEntity($entities, $internal = false) {
         if (is_array($entities)) {
             foreach ($entities AS $key => $entity) {
                 $return[strtolower($key)] = self::formatEntity($entity);
@@ -126,8 +126,12 @@ class Format {
                                 } elseif ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity') {
                                     //$content = self::formatEntity($content);
                                     //$content = null;
-                                    $id = $content->getId();
-                                    $content = array('id' => $id);
+                                    if (!$internal) {
+                                        $content = self::formatEntity($content, true);
+                                    } else {
+                                        $id = $content->getId();
+                                        $content = array('id' => $id);
+                                    }
                                 } else {
                                     
                                 }
