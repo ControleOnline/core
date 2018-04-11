@@ -2518,10 +2518,9 @@ aside.app-sidebar {
     background-color: #185e90;
     box-shadow: 0 2px 2px rgba(68, 68, 68, 0.2);
     transition: all 0.3s ease; }
-aside.app-sidebar .sidebar-header {
-    height: 190px;
-    width: 180px;
-    padding: 50px 10px;
+aside.app-sidebar .sidebar-header {    
+    width: 100%;
+    padding: 10px 10px 10px 10px;
     position: relative;
 }
 aside.app-sidebar .sidebar-header .sidebar-brand {
