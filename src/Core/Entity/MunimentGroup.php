@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Muniment
  *
- * @ORM\Table(name="muniment_group", indexes={@ORM\Index(name="people_id", columns={"people_id"})})
+ * @ORM\Table(name="muniment_group", uniqueConstraints={@ORM\UniqueConstraint(name="group_identifier", columns={"group_identifier"})}indexes={@ORM\Index(name="people_id", columns={"people_id"})})
  * @ORM\Entity
  */
 class MunimentGroup {
@@ -27,6 +27,13 @@ class MunimentGroup {
      * @ORM\OneToMany(targetEntity="Core\Entity\Muniment", mappedBy="muniment_group")
      */
     private $muniment;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="group_identifier", type="string",  nullable=true)
+     */
+    private $group_identifier;
 
     /**
      * @var string
@@ -134,6 +141,26 @@ class MunimentGroup {
      */
     public function getPeople() {
         return $this->people;
+    }
+
+    /**
+     * Get group_identifier
+     *
+     * @return string
+     */
+    public function getGroupIdentifier() {
+        return $this->group_identifier;
+    }
+
+    /**
+     * Set group_identifier
+     *
+     * @param string $group_identifier
+     * @return Muniment
+     */
+    public function setGroupIdentifier($group_identifier = null) {
+        $this->group_identifier = $group_identifier;
+        return $this;
     }
 
 }

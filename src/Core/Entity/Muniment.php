@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Muniment
  *
- * @ORM\Table(name="muniment", uniqueConstraints={@ORM\UniqueConstraint(name="image_id", columns={"image_id"})},indexes={@ORM\Index(name="IDX_muniment_group_id", columns={"muniment_group_id"}),@ORM\Index(name="IDX_validation_date", columns={"validation_date"}),@ORM\Index(name="IDX_alter_date", columns={"alter_date"}),@ORM\Index(name="IDX_creation_date", columns={"creation_date"})})
+ * @ORM\Table(name="muniment", uniqueConstraints={@ORM\UniqueConstraint(name="image_id", columns={"image_id"}),@ORM\UniqueConstraint(name="group_identifier", columns={"group_identifier"})},indexes={@ORM\Index(name="IDX_muniment_group_id", columns={"muniment_group_id"}),@ORM\Index(name="IDX_validation_date", columns={"validation_date"}),@ORM\Index(name="IDX_alter_date", columns={"alter_date"}),@ORM\Index(name="IDX_creation_date", columns={"creation_date"})})
  * @ORM\Entity
  */
 class Muniment {
@@ -54,9 +54,9 @@ class Muniment {
     /**
      * @var string
      *
-     * @ORM\Column(name="muniment_identifier", type="string",  nullable=false)
+     * @ORM\Column(name="muniment_identifier", type="string",  nullable=true)
      */
-    private $muniment_identifier = '';
+    private $muniment_identifier;
 
     /**
      * @var string

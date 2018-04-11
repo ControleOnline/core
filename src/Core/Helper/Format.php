@@ -103,6 +103,8 @@ class Format {
                         if (substr($method, 0, 3) == 'get') {
                             $content = $entities->$method();
                             if (is_object($content) && !empty($content)) {
+                                $class = new \ReflectionClass(get_class($content));
+                                $className = $class->getNamespaceName();
                                 if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
                                     foreach ($content AS $key => $c) {
                                         $class = new \ReflectionClass(get_class($c));
