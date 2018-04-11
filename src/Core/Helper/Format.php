@@ -102,7 +102,7 @@ class Format {
                     foreach (get_class_methods($entities) AS $method) {
                         if (substr($method, 0, 3) == 'get') {
                             $content = $entities->$method();
-                            if (is_object($content)) {
+                            if (is_object($content) && !empty($content)) {
                                 if (get_class($content) == 'Doctrine\ORM\PersistentCollection') {
                                     foreach ($content AS $key => $c) {
                                         $class = new \ReflectionClass(get_class($c));
@@ -121,10 +121,13 @@ class Format {
                                          */
                                     }
                                     $content = $r;
-                                } else {
+                                } elseif ($className == 'Core\Entity' || $className == 'DoctrineORMModule\Proxy\__CG__\Core\Entity') {
                                     //$content = self::formatEntity($content);
-                                    $content = null;
-                                    $content['id'] = $c->getId();
+                                    //$content = null;
+                                    $id = $content->getId();
+                                    $content = array('id' => $id);
+                                } else {
+                                    
                                 }
                             }
                             $return[strtolower(substr($method, 3, strlen($method)))] = $content;
