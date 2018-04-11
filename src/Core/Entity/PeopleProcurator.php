@@ -22,9 +22,9 @@ class PeopleProcurator {
     private $id;
 
     /**
-     * @var \Core\Entity\People
+     * @var \Core\Entity\MunimentSignature
      *
-     * @ORM\ManyToOne(targetEntity="Core\Entity\People", inversedBy="peopleGrantor")
+     * @ORM\ManyToOne(targetEntity="Core\Entity\People")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="grantor_id", referencedColumnName="id")
      * })
@@ -32,13 +32,12 @@ class PeopleProcurator {
     private $grantor;
 
     /**
-     * @var \Core\Entity\People
+     * @var \Core\Entity\MunimentSignature
      *
-     * @ORM\ManyToOne(targetEntity="Core\Entity\People", inversedBy="peopleProcurator")
+     * @ORM\ManyToOne(targetEntity="Core\Entity\People")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="procurator_id", referencedColumnName="id")
      * })
-     * @ORM\OrderBy({"alias" = "ASC"})
      */
     private $procurator;
 
