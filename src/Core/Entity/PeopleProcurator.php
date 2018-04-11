@@ -22,7 +22,7 @@ class PeopleProcurator {
     private $id;
 
     /**
-     * @var \Core\Entity\MunimentSignature
+     * @var \Core\Entity\People
      *
      * @ORM\ManyToOne(targetEntity="Core\Entity\People")
      * @ORM\JoinColumns({
@@ -32,7 +32,7 @@ class PeopleProcurator {
     private $grantor;
 
     /**
-     * @var \Core\Entity\MunimentSignature
+     * @var \Core\Entity\People
      *
      * @ORM\ManyToOne(targetEntity="Core\Entity\People")
      * @ORM\JoinColumns({
@@ -41,7 +41,15 @@ class PeopleProcurator {
      */
     private $procurator;
 
-
+    /**
+     * @var \Core\Entity\MunimentSignature
+     *
+     * @ORM\ManyToOne(targetEntity="Core\Entity\MunimentSignature")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="muniment_signature_id", referencedColumnName="id")
+     * })
+     */
+    private $muniment_signature;
 
     /**
      * Get id
