@@ -148,10 +148,12 @@ class DefaultController extends AbstractController {
         $imageContent = file_get_contents($file);
         $response = $this->getResponse();
         $response->setContent($imageContent);
+        $finfo = new \finfo();
+        $fileMimeType = $finfo->file($file, FILEINFO_MIME_TYPE);
         $response
                 ->getHeaders()
                 ->addHeaderLine('Content-Transfer-Encoding', 'binary')
-                ->addHeaderLine('Content-Type', exif_imagetype($file) ? : 'image/svg+xml');
+                ->addHeaderLine('Content-Type', $fileMimeType ? : 'image/svg+xml');
         return $response;
     }
 
