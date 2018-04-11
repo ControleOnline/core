@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Request
  *
- * @ORM\Table(name="request", uniqueConstraints={@ORM\UniqueConstraint(name="muniment_id", columns={"muniment_id,people_id"})},indexes={@ORM\Index(name="IDX_signature_date", columns={"signature_date"}),@ORM\Index(name="people_id", columns={"people_id"})})
+ * @ORM\Table(name="muniment_signature", uniqueConstraints={@ORM\UniqueConstraint(name="muniment_id", columns={"muniment_id,people_id"})},indexes={@ORM\Index(name="IDX_signature_date", columns={"signature_date"}),@ORM\Index(name="people_id", columns={"people_id"})})
  * @ORM\Entity
  */
-class Request {
+class MunimentSignature {
 
     /**
      * @var integer
@@ -36,8 +36,6 @@ class Request {
      * @ORM\Column(name="creation_date", type="datetime",  nullable=false, columnDefinition="DATETIME")
      */
     private $creation_date;
-
-  
 
     /**
      * @var \DateTime
@@ -78,12 +76,12 @@ class Request {
     private $people;
 
     public function __construct() {
-        $this->creation_date = new \DateTime();        
+        $this->creation_date = new \DateTime();
     }
 
     public function resetId() {
         $this->id = null;
-        $this->creation_date = new \DateTime();        
+        $this->creation_date = new \DateTime();
         $this->signature_date = new \DateTime();
     }
 
