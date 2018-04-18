@@ -330,13 +330,13 @@ class DefaultController extends AbstractController {
         if (ErrorModel::getErrors()) {
             return $this->_view;
         }
-        $cpf = Format::onlyNumbers($this->params()->fromPost('cpf'));
+        $document_number = Format::onlyNumbers($this->params()->fromPost('document-number'));
         $password = $this->params()->fromPost('password');
         $confirm_password = $this->params()->fromPost('confirm-password');
         $email = $this->params()->fromPost('email');
 
         $api = new Api();
-        $data = $api->getDataFromDocument($cpf);
+        $data = $api->getDataFromDocument($document_number);
 
         if ($data && $data['CADASTRAIS']) {
             $user = new UserModel();

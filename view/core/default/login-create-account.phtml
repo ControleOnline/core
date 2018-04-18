@@ -6,39 +6,47 @@
                     <div class="form-suggestion">                                                
                         <?= $this->translate('Create Account'); ?>
                     </div>
-                    <form id="create-account-form" class="form-horizontal" data-success-url="/user/profile" action="<?= $this->companyModel->getPeopleDomain()->getDomainType() == 'cfcc' ? '/user/create-corporate-account.json' : '/user/create-account.json' ?>" method="POST"  >
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon1">
-                                <i class="fa fa-paper-plane" aria-hidden="true"></i></span>
-                            <input id="name" name="name" type="text" placeholder="<?= $this->translate('Enter your name') ?>" class="form-control input-md" required>
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon2">
-                                <i class="fa fa-user" aria-hidden="true"></i></span>
-                            <input id="username" data-user-in-use="/user/user-in-use/username/" data-mask-regex="({regex: '[.a-za-zA-Z0-9]{3,15}'})" name="username" type="text" placeholder="<?= $this->translate('Enter your username') ?>" class="form-control input-md" required>
-                        </div>
+                    <form id="create-account-form" class="form-horizontal" data-success-url="/user/profile" action="<?= $this->companyModel->getPeopleDomain()->getDomainType() == 'cfcc' ? '/user/create-corporate-account.json' : '/user/create-account.json' ?>" method="POST">
+                        <?php if ($this->companyModel->getPeopleDomain()->getDomainType() != 'cfcc') { ?>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1">
+                                    <i class="fa fa-paper-plane" aria-hidden="true"></i></span>
+                                <input id="name" name="name" type="text" placeholder="<?= $this->translate('Enter your name') ?>" class="form-control input-md" required/>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon2">
+                                    <i class="fa fa-user" aria-hidden="true"></i></span>
+                                <input id="username" data-user-in-use="/user/user-in-use/username/" data-mask-regex="({regex: '[.a-za-zA-Z0-9]{3,15}'})" name="username" type="text" placeholder="<?= $this->translate('Enter your username') ?>" class="form-control input-md" required/>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon4">
+                                    <i class="fa fa-phone" aria-hidden="true"></i></span>
+                                <input id="ddd" size="2" data-mask="({mask: '(99)',keepStatic: true})" name="ddd" type="text" placeholder="<?= $this->translate('DDD') ?>" class="form-control input-md" style="border-right: 1px solid #dfe6e8;" required/>
+                                <span class="input-group-addon" id="basic-addon5">
+                                    <i class="fa fa-phone" aria-hidden="true"></i></span>
+                                <input id="phone" data-mask="({mask: ['9999-9999', '99999-9999'],keepStatic: true})" name="phone" type="text" placeholder="<?= $this->translate('Enter your phone') ?>" class="form-control input-md" required/>
+                            </div>
+                        <?php } else { ?>    
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon3">
+                                    <input id="document-number" data-mask="({mask: '999.999.999-99',keepStatic: true})" name="document-number" type="text" placeholder="<?= $this->translate('Enter your user document') ?>" class="form-control input-md" required/>
+                            </div>
+                        <?php } ?>                        
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon3">
                                 <i class="fa fa-envelope" aria-hidden="true"></i></span>
-                            <input id="email" data-mask="({mask: '*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]',greedy: false,onBeforePaste: function (pastedValue, opts) {pastedValue = pastedValue.toLowerCase();return pastedValue.replace('mailto:', '');},definitions: {'*': {validator:'[0-9A-Za-z!#$%&\'*+/=?^_`{|}~\-]',cardinality: 1,casing: 'lower'}}})" name="email" type="text" placeholder="<?= $this->translate('Enter your e-mail') ?>" class="form-control input-md" required>
+                            <input id="email" data-mask="({mask: '*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]',greedy: false,onBeforePaste: function (pastedValue, opts) {pastedValue = pastedValue.toLowerCase();return pastedValue.replace('mailto:', '');},definitions: {'*': {validator:'[0-9A-Za-z!#$%&\'*+/=?^_`{|}~\-]',cardinality: 1,casing: 'lower'}}})" name="email" type="text" placeholder="<?= $this->translate('Enter your e-mail') ?>" class="form-control input-md" required/>
                         </div>
-                        <div class="input-group">
-                            <span class="input-group-addon" id="basic-addon4">
-                                <i class="fa fa-phone" aria-hidden="true"></i></span>
-                            <input id="ddd" size="2" data-mask="({mask: '(99)',keepStatic: true})" name="ddd" type="text" placeholder="<?= $this->translate('DDD') ?>" class="form-control input-md" style="border-right: 1px solid #dfe6e8;" required>
-                            <span class="input-group-addon" id="basic-addon5">
-                                <i class="fa fa-phone" aria-hidden="true"></i></span>
-                            <input id="phone" data-mask="({mask: ['9999-9999', '99999-9999'],keepStatic: true})" name="phone" type="text" placeholder="<?= $this->translate('Enter your phone') ?>" class="form-control input-md" required>
-                        </div>
+
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon6">
                                 <i class="fa fa-key" aria-hidden="true"></i></span>
-                            <input id="password" name="password" type="password" data-rule-minlength="5" data-rule-maxlength="15" placeholder="<?= $this->translate('Enter a password') ?>" class="form-control input-md" required>
+                            <input id="password" name="password" type="password" data-rule-minlength="5" data-rule-maxlength="15" placeholder="<?= $this->translate('Enter a password') ?>" class="form-control input-md" required/>
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon7">
                                 <i class="fa fa-check" aria-hidden="true"></i></span>
-                            <input id="password" name="confirm-password" type="password"  placeholder="<?= $this->translate('Confirm your Password') ?>" class="form-control input-md" required>
+                            <input id="password" name="confirm-password" type="password"  placeholder="<?= $this->translate('Confirm your Password') ?>" class="form-control input-md" required/>
                         </div>
                         <div class="text-center">                                    
                             <button data-success-url="<?= $this->login_referrer ?: '/user/profile' ?>" data-save="<?= $this->companyModel->getPeopleDomain()->getDomainType() == 'cfcc' ? '/user/create-corporate-account.json' : '/user/create-account.json' ?>" id="signup" name="signup" class="btn btn-success btn-submit"><?= $this->translate('Register') ?></button>
