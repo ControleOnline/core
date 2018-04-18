@@ -8,7 +8,6 @@ use User\Model\UserModel;
 use Assets\Helper\Header;
 use Core\Model\ErrorModel;
 use Novavida\Helper\Api;
-use Company\Model\CompanyModel;
 
 class DefaultController extends AbstractController {
 
@@ -413,7 +412,7 @@ class DefaultController extends AbstractController {
                     $params['country'] = 'Brazil';
                 }
 
-                $companymodel = new CompanyModel();
+                $companymodel = new \Company\Model\CompanyModel();
                 $companymodel->initialize($this->serviceLocator);
                 $people = $companymodel->addCompany($params);
 
