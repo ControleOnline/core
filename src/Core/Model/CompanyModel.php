@@ -576,5 +576,15 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
 
         return $peopleDomain ? $peopleDomain->getPeople() : false;
     }
+    /**
+     * @return \Core\Entity\People
+     */
+    public function getPeopleDomain() {
 
+        $peopleDomain = $this->_em->getRepository('\Core\Entity\PeopleDomain')->findOneBy(array(
+            'domain' => Url::getDomain()
+        ));
+
+        return $peopleDomain;
+    }
 }

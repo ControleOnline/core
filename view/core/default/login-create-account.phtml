@@ -6,7 +6,7 @@
                     <div class="form-suggestion">                                                
                         <?= $this->translate('Create Account'); ?>
                     </div>
-                    <form id="create-account-form" class="form-horizontal" data-success-url="/user/profile" action="/user/create-account.json" method="POST"  >
+                    <form id="create-account-form" class="form-horizontal" data-success-url="/user/profile" action="<?= $this->companyModel->getPeopleDomain()->getDomainType() == 'cfc' ? '/user/create-account.json' : '/user/create-corporate-account.json' ?>" method="POST"  >
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon1">
                                 <i class="fa fa-paper-plane" aria-hidden="true"></i></span>
@@ -41,7 +41,7 @@
                             <input id="password" name="confirm-password" type="password"  placeholder="<?= $this->translate('Confirm your Password') ?>" class="form-control input-md" required>
                         </div>
                         <div class="text-center">                                    
-                            <button data-success-url="<?= $this->login_referrer ? : '/user/profile' ?>" data-save="/user/create-account.json" id="signup" name="signup" class="btn btn-success btn-submit"><?= $this->translate('Register') ?></button>
+                            <button data-success-url="<?= $this->login_referrer ?: '/user/profile' ?>" data-save="/user/create-account.json" id="signup" name="signup" class="btn btn-success btn-submit"><?= $this->translate('Register') ?></button>
                         </div>
                     </form>
                     <!--
@@ -78,7 +78,7 @@
                             <span class="user-name" style="display: none"></span>
                             &nbsp;</h4>
                     </div>
-                    <form data-success-url="<?= $this->login_referrer ? : '/' . $this->module_name ?>" id="login-form" class="form-horizontal" action="/<?= $this->module_name ?>/login.json" method="POST"  >
+                    <form data-success-url="<?= $this->login_referrer ?: '/' . $this->module_name ?>" id="login-form" class="form-horizontal" action="/<?= $this->module_name ?>/login.json" method="POST"  >
                         <div class="input-group">
                             <span class="input-group-addon" id="basic-addon1">
                                 <i class="fa fa-user" aria-hidden="true"></i></span>              
@@ -90,7 +90,7 @@
                             <input id="password" name="password" type="password" placeholder="<?= $this->translate('Enter a password') ?>" class="form-control input-md" required>
                         </div>
                         <div class="text-center">                            
-                            <button data-save="/<?= $this->module_name ?>/login.json" data-success-url="<?= $this->login_referrer ? : '/' . $this->module_name ?>" id="login" name="login" class="btn btn-success btn-submit"><?= $this->translate('Login') ?></button>                            
+                            <button data-save="/<?= $this->module_name ?>/login.json" data-success-url="<?= $this->login_referrer ?: '/' . $this->module_name ?>" id="login" name="login" class="btn btn-success btn-submit"><?= $this->translate('Login') ?></button>                            
                         </div>
                     </form>
                     <!--
