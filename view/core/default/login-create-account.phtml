@@ -6,8 +6,8 @@
                     <div class="form-suggestion">                                                
                         <?= $this->translate('Create Account'); ?>
                     </div>
-                    <form id="create-account-form" class="form-horizontal" data-success-url="/user/profile" action="<?= $this->companyModel->getPeopleDomain()->getDomainType() == 'cfcc' ? '/user/create-corporate-account.json' : '/user/create-account.json' ?>" method="POST">
-                        <?php if ($this->companyModel->getPeopleDomain()->getDomainType() != 'cfcc') { ?>
+                    <form id="create-account-form" class="form-horizontal" data-success-url="/user/profile" action="<?= $this->companyModel && $this->companyModel->getPeopleDomain() && $this->companyModel->getPeopleDomain()->getDomainType() == 'cfcc' ? '/user/create-corporate-account.json' : '/user/create-account.json' ?>" method="POST">
+                        <?php if ($this->companyModel && $this->companyModel->getPeopleDomain() && $this->companyModel->getPeopleDomain()->getDomainType() != 'cfcc') { ?>
                             <div class="input-group">
                                 <span class="input-group-addon" id="basic-addon1">
                                     <i class="fa fa-paper-plane" aria-hidden="true"></i></span>
@@ -49,7 +49,7 @@
                             <input id="password" name="confirm-password" type="password"  placeholder="<?= $this->translate('Confirm your Password') ?>" class="form-control input-md" required/>
                         </div>
                         <div class="text-center">                                    
-                            <button data-success-url="<?= $this->login_referrer ?: '/user/profile' ?>" data-save="<?= $this->companyModel->getPeopleDomain()->getDomainType() == 'cfcc' ? '/user/create-corporate-account.json' : '/user/create-account.json' ?>" id="signup" name="signup" class="btn btn-success btn-submit"><?= $this->translate('Register') ?></button>
+                            <button data-success-url="<?= $this->login_referrer ?: '/user/profile' ?>" data-save="<?= $this->companyModel && $this->companyModel->getPeopleDomain() && $this->companyModel->getPeopleDomain()->getDomainType() == 'cfcc' ? '/user/create-corporate-account.json' : '/user/create-account.json' ?>" id="signup" name="signup" class="btn btn-success btn-submit"><?= $this->translate('Register') ?></button>
                         </div>
                     </form>
                     <!--
