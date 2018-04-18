@@ -78,7 +78,7 @@
                             <img class="profile-image lazy-loaded" data-default-image-profile="<?= $this->default_user_image_profile ?>" src="<?= $this->default_user_image_profile ?>">
                         </div>
                         <div class="app-brand">                            
-                            <img class="lazy-loaded logo-login" alt="<?= $this->translate('Application Name') ?>" src="<?= $this->defaultCompany->getImage()->getUrl() ?>">
+                            <img class="lazy-loaded logo-login" alt="<?= $this->translate('Application Name') ?>" src="<?= $this->defaultCompany ? $this->defaultCompany->getImage()->getUrl() : '' ?>">
                         </div>
                     </div> 
                     <div class="row username-container">
