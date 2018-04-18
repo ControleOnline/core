@@ -8,6 +8,7 @@ use User\Model\UserModel;
 use Assets\Helper\Header;
 use Core\Model\ErrorModel;
 use Novavida\Helper\Api;
+use Core\Controller\CompanyModel;
 
 class DefaultController extends AbstractController {
 
