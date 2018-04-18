@@ -23,11 +23,13 @@ class Url {
         self::$compareUrl[] = '/' . $module . '/logout/';
         self::$compareUrl[] = '/' . $module . '/forgot-password/';
         self::$compareUrl[] = '/' . $module . '/create-account/';
+        self::$compareUrl[] = '/' . $module . '/create-corporate-account/';
     }
 
     public static function isRedirectUrl($url) {
         self::$compareUrl[] = '/assets';
         self::$compareUrl[] = '/company/create-user-company/';
+        self::$compareUrl[] = '/company/create-corporate-user-company/';
         self::$compareUrl[] = '/sales/shipping-quote';
         self::$compareUrl[] = '/carrier/search-city-destination';
         self::$compareUrl[] = '/carrier/search-city-origin';

@@ -7,6 +7,7 @@ use Core\Helper\Format;
 use User\Model\UserModel;
 use Assets\Helper\Header;
 use Core\Model\ErrorModel;
+use Novavida\Helper\Api;
 
 class DefaultController extends AbstractController {
 
@@ -32,7 +33,7 @@ class DefaultController extends AbstractController {
 
     private function getForm($entity_id = null) {
         $return = [];
-        $id = $entity_id ? : $this->params()->fromQuery('id');
+        $id = $entity_id ?: $this->params()->fromQuery('id');
         $this->_model->setViewMethod('form');
         $this->_model->setParam('id', $id);
         $this->_view->setTerminal(true);
@@ -62,12 +63,12 @@ class DefaultController extends AbstractController {
         } elseif ($id) {
             $data = $this->_model->discovery($this->_entity);
         }
-        return Format::returnData($data, false, $this->params()->fromQuery('page') ? : 1, $this->_model->getTotalResults());
+        return Format::returnData($data, false, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
     }
 
     private function getAllData() {
         $data = $this->_model->discovery($this->_entity);
-        return Format::returnData($data, false, $this->params()->fromQuery('page') ? : 1, $this->_model->getTotalResults());
+        return Format::returnData($data, false, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
     }
 
     private function getData() {
@@ -153,7 +154,7 @@ class DefaultController extends AbstractController {
         $response
                 ->getHeaders()
                 ->addHeaderLine('Content-Transfer-Encoding', 'binary')
-                ->addHeaderLine('Content-Type', $fileMimeType ? : 'image/svg+xml');
+                ->addHeaderLine('Content-Type', $fileMimeType ?: 'image/svg+xml');
         return $response;
     }
 
@@ -313,7 +314,7 @@ class DefaultController extends AbstractController {
         $login_referrer = $this->params()->fromQuery('login-referrer');
         if ((!$username || !$password) && $this->_userModel->loggedIn()) {
             Header::addArbitraryRequireJsFile(DIRECTORY_SEPARATOR . 'user' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR . 'login', 'user-default-login');
-            return $this->redirect()->toUrl($login_referrer ? : $this->_renderer->basePath('/user/profile'));
+            return $this->redirect()->toUrl($login_referrer ?: $this->_renderer->basePath('/user/profile'));
         } elseif ($username && $password) {
             $this->_userModel->login($username, $password);
             $user = $this->_userModel->getLoggedUser();
@@ -322,6 +323,111 @@ class DefaultController extends AbstractController {
         $this->_view->setVariable('login_referrer', $login_referrer);
         $this->_view->setVariable('create_account_view', $this->create_account_view);
         $this->_view->setTemplate($this->login_view . '/default/login');
+        return $this->_view;
+    }
+
+    public function createCorporateAccountAction() {
+        if (ErrorModel::getErrors()) {
+            return $this->_view;
+        }
+        $cpf = Format::onlyNumbers($this->params()->fromPost('cpf'));
+        $password = $this->params()->fromPost('password');
+        $confirm_password = $this->params()->fromPost('confirm-password');
+        $email = $this->params()->fromPost('email');
+
+        $api = new Api();
+        $data = $api->getDataFromDocument($cpf);
+
+        if ($data && $data['CADASTRAIS']) {
+            $user = new UserModel();
+            $user->initialize($this->serviceLocator);
+            $user->createAccount(is_array($data['CADASTRAIS']['CPF']) ? $data['CADASTRAIS']['CPF'][0] : $data['CADASTRAIS']['CPF'], $email, is_array($data['CADASTRAIS']['NOME']) ? $data['CADASTRAIS']['NOME'][0] : $data['CADASTRAIS']['NOME'], $password, $confirm_password, 'client');
+            if (!ErrorModel::getErrors()) {
+                $user->addUserDocument(is_array($data['CADASTRAIS']['CPF']) ? $data['CADASTRAIS']['CPF'][0] : $data['CADASTRAIS']['CPF'], 'CPF');
+            }
+
+            if (!ErrorModel::getErrors()) {
+                if ($data['EMAILS']) {
+                    foreach ($data['EMAILS'] AS $mail) {
+                        $user->addUserEmail(is_array($mail['EMAIL']) ? $mail['EMAIL'][0] : $mail['EMAIL']);
+                    }
+                }
+            }
+            if (!ErrorModel::getErrors()) {
+                if ($data['TELEFONES']) {
+                    foreach ($data['TELEFONES'] AS $phone) {
+                        $user->addUserPhone(is_array($phone['DDD']) ? $phone['DDD'][0] : $phone['DDD'], is_array($phone['TELEFONE']) ? $phone['TELEFONE'][0] : $phone['TELEFONE']);
+                    }
+                }
+            }
+            if (!ErrorModel::getErrors()) {
+                if ($data['ENDERECOS']) {
+                    $data['ENDERECOS'] = isset($data['ENDERECOS']['CEP']) ? array($data['ENDERECOS']) : $data['ENDERECOS'];
+                    foreach ($data['ENDERECOS'] AS $enderecos) {
+                        $params['address-nickname'] = $enderecos['TITULO'] ?: 'Endereço ' . $enderecos['POSICAO'];
+                        $params['cep'] = is_array($enderecos['CEP']) ? $enderecos['CEP'][0] : $enderecos['CEP'];
+                        $params['street'] = (is_array($enderecos['TIPO']) ? $enderecos['TIPO'][0] : $enderecos['TIPO']) . ' ' . (is_array($enderecos['LOGRADOURO']) ? $enderecos['LOGRADOURO'][0] : $enderecos['LOGRADOURO']);
+                        $params['address-number'] = is_array($enderecos['NUMERO']) && $enderecos['NUMERO'][0] ? $enderecos['NUMERO'][0] : ($enderecos['NUMERO'] ?: 1);
+                        $params['complement'] = is_array($enderecos['COMPLEMENTO']) && $enderecos['COMPLEMENTO'][0] ? $enderecos['COMPLEMENTO'][0] : ($enderecos['COMPLEMENTO'] ?: '');
+                        $params['district'] = is_array($enderecos['BAIRRO']) ? $enderecos['BAIRRO'][0] : $enderecos['BAIRRO'];
+                        $params['city'] = is_array($enderecos['CIDADE']) ? $enderecos['CIDADE'][0] : $enderecos['CIDADE'];
+                        $params['state'] = is_array($enderecos['UF']) ? $enderecos['UF'][0] : $enderecos['UF'];
+                        $params['country'] = 'Brazil';
+                        $user->addUserAddress($params);
+                    }
+                }
+            }
+        } else {
+            ErrorModel::addError('Document not found');
+        }
+    }
+
+    public function createCorporateUserCompanyAction() {
+        if (ErrorModel::getErrors()) {
+            return $this->_view;
+        }
+        $user = new UserModel();
+        $user->initialize($this->serviceLocator);
+        $params = $this->params()->fromPost();
+        if (!$user->loggedIn()) {
+            return \Core\Helper\View::redirectToLogin($this->_renderer, $this->getResponse(), $this->getRequest(), $this->redirect());
+        } elseif ($params && $user->loggedIn()) {
+            $cnpj = Format::onlyNumbers($this->params()->fromPost('document-number'));
+            $api = new Api();
+            $data = $api->getDataFromDocument($cnpj);
+            if ($data && $data['CADASTRAIS'] && $data['ENDERECOS']) {
+                $params['document-number'] = is_array($data['CADASTRAIS']['CNPJ']) ? $data['CADASTRAIS']['CNPJ'][0] : $data['CADASTRAIS']['CNPJ'];
+                $params['name'] = is_array($data['CADASTRAIS']['RAZAO']) ? $data['CADASTRAIS']['RAZAO'][0] : $data['CADASTRAIS']['RAZAO'];
+                $params['alias'] = $data['CADASTRAIS']['NOME_FANTASIA'] ? ( is_array($data['CADASTRAIS']['NOME_FANTASIA']) ? $data['CADASTRAIS']['NOME_FANTASIA'][0] : $data['CADASTRAIS']['NOME_FANTASIA']) : (is_array($data['CADASTRAIS']['RAZAO']) ? $data['CADASTRAIS']['RAZAO'][0] : $data['CADASTRAIS']['RAZAO']);
+                $data['ENDERECOS'] = isset($data['ENDERECOS']['CEP']) ? array($data['ENDERECOS']) : $data['ENDERECOS'];
+                foreach ($data['ENDERECOS'] AS $enderecos) {
+                    $params['address-nickname'] = $enderecos['TITULO'] ?: 'Endereço ' . $enderecos['POSICAO'];
+                    $params['cep'] = is_array($enderecos['CEP']) ? $enderecos['CEP'][0] : $enderecos['CEP'];
+                    $params['street'] = (is_array($enderecos['TIPO']) ? $enderecos['TIPO'][0] : $enderecos['TIPO']) . ' ' . (is_array($enderecos['LOGRADOURO']) ? $enderecos['LOGRADOURO'][0] : $enderecos['LOGRADOURO']);
+                    $params['address-number'] = is_array($enderecos['NUMERO']) && $enderecos['NUMERO'][0] ? $enderecos['NUMERO'][0] : ($enderecos['NUMERO'] ?: 1);
+                    $params['complement'] = is_array($enderecos['COMPLEMENTO']) && $enderecos['COMPLEMENTO'][0] ? $enderecos['COMPLEMENTO'][0] : ($enderecos['COMPLEMENTO'] ?: '');
+                    $params['district'] = is_array($enderecos['BAIRRO']) ? $enderecos['BAIRRO'][0] : $enderecos['BAIRRO'];
+                    $params['city'] = is_array($enderecos['CIDADE']) ? $enderecos['CIDADE'][0] : $enderecos['CIDADE'];
+                    $params['state'] = is_array($enderecos['UF']) ? $enderecos['UF'][0] : $enderecos['UF'];
+                    $params['country'] = 'Brazil';
+                }
+
+                $companymodel = new CompanyModel();
+                $companymodel->initialize($this->serviceLocator);
+                $people = $companymodel->addCompany($params);
+
+                //return $api->getSociosFromDocument($cnpj);
+
+                if ($people) {
+                    $this->_view->setVariables(Format::returnData(array(
+                                'company' => $people->getName(),
+                                'alias' => $people->getAlias()
+                    )));
+                }
+            } else {
+                ErrorModel::addError('Document not found');
+            }
+        }
         return $this->_view;
     }
 
