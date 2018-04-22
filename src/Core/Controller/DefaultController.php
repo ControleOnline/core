@@ -417,7 +417,6 @@ class DefaultController extends AbstractController {
                 $companymodel->initialize($this->serviceLocator);
                 $people = $companymodel->addCompany($params);
 
-                //return $api->getBusinessPartnerFromDocument($cnpj);
 
                 if ($people) {
                     $this->_view->setVariables(Format::returnData(array(
