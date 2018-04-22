@@ -49,7 +49,7 @@ class Api {
             $res = $client->get(self::$nv_url . 'GerarToken', array(
                 'query' => array('usuario' => self::$nv_user, 'senha' => self::$nv_password, 'cliente' => self::$nv_client)
             ));
-            self::$nv_token = trim($res->getBody());
+            self::$nv_token = trim(Format::replaceXMLWords($res->getBody()));
         }
     }
 
