@@ -16,7 +16,7 @@ class Url {
     }
 
     public static function addDefaultUrlToNoLogin($module) {
-        $module = in_array(strtolower($module), array('carrier', 'client', 'company', 'provider', 'salesman')) ? $module : 'user';
+        $module = in_array(strtolower($module), array('carrier', 'client', 'company', 'provider', 'salesman','corporate')) ? $module : 'user';
         self::$compareUrl[] = '/' . $module . '/profile-image/';
         self::$compareUrl[] = '/' . $module . '/get-image-profile/';
         self::$compareUrl[] = '/' . $module . '/login/';
@@ -29,13 +29,14 @@ class Url {
     public static function isRedirectUrl($url) {
         self::$compareUrl[] = '/assets';
         self::$compareUrl[] = '/company/create-user-company/';
-        self::$compareUrl[] = '/company/create-corporate-user-company/';
+        self::$compareUrl[] = '/company/create-https://github.com/ControleOnline/corporate.git-user-company/';
         self::$compareUrl[] = '/sales/shipping-quote';
         self::$compareUrl[] = '/carrier/search-city-destination';
         self::$compareUrl[] = '/carrier/search-city-origin';
         self::$compareUrl[] = '/carrier/search-product-type';
         self::$compareUrl[] = '/sales/mail-invoice';
         self::$compareUrl[] = '/carrier/search-city-from-cep';
+        self::$compareUrl[] = '/corporate/conference';
         $url_final = substr(self::removeSufix($url), -1) == '/' ? self::removeSufix($url) : self::removeSufix($url) . '/';
         foreach (self::$compareUrl AS $compare) {
             $pregGrep = ($url_final != '/') ? preg_grep('/^' . \addcslashes($compare, '/') . '/i', array($url_final)) : false;
