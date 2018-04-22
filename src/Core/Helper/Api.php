@@ -2,7 +2,16 @@
 
 namespace Core\Helper;
 
+use GuzzleHttp\Client;
+use Core\Helper\Config;
+
 class Api {
+
+    private static $nv_token = NULL;
+    private static $nv_user = NULL;
+    private static $nv_password = NULL;
+    private static $nv_client = NULL;
+    private static $nv_url = NULL;
 
     public static function simpleCurl($url, array $params) {
         $fields_string = self::cleanParams($params);
@@ -25,6 +34,29 @@ class Api {
             }
         }
         return $fields_string;
+    }
+
+    protected static function nvConnect() {
+        if (!self::$nv_token) {
+            $client = new Client();
+
+            self::$nv_user = Config::getConfig('nv_user');
+            self::$nv_password = Config::getConfig('nv_password');
+            self::$nv_client = Config::getConfig('nv_client');
+            self::$nv_url = Config::getConfig('nv_url');
+
+            $res = $client->get(self::$nv_url . 'GerarToken', array(
+                'query' => array('usuario' => self::$nv_user, 'senha' => self::$nv_password, 'cliente' => self::$nv_client)
+            ));
+            self::$nv_token = trim($res->getBody());
+        }
+    }
+
+    public static function nvGet($endpoint, $data) {
+        $client = new Client();
+        self::nvConnect();
+        $data['token'] = self::$nv_token;
+        return Format::xmlToArray($client->get($this->url . $endpoint, $data)->getBody());
     }
 
 }

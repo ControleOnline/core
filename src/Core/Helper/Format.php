@@ -145,4 +145,17 @@ class Format {
         return $return;
     }
 
+    public static function replaceXMLWords($string) {
+        $origin = array('<?xml version="1.0" encoding="utf-8"?>', '<string xmlns="http://tempuri.org/">', '</string>', '&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt;', '&lt;', '&gt;');
+        $destiny = array('', '', '', '', '<', '>');
+        $token_clear = str_replace($origin, $destiny, $string);
+        return $token_clear;
+    }
+
+    public static function xmlToArray($string) {
+        $xml = self::replaceXMLWords(simplexml_load_string($string));
+        $array = json_decode(json_encode((array) $xml), TRUE);
+        return $array;
+    }
+
 }

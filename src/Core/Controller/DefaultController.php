@@ -7,7 +7,7 @@ use Core\Helper\Format;
 use User\Model\UserModel;
 use Assets\Helper\Header;
 use Core\Model\ErrorModel;
-use Novavida\Helper\Api;
+use Core\Helper\Api;
 
 class DefaultController extends AbstractController {
 
@@ -33,7 +33,7 @@ class DefaultController extends AbstractController {
 
     private function getForm($entity_id = null) {
         $return = [];
-        $id = $entity_id ?: $this->params()->fromQuery('id');
+        $id = $entity_id ? : $this->params()->fromQuery('id');
         $this->_model->setViewMethod('form');
         $this->_model->setParam('id', $id);
         $this->_view->setTerminal(true);
@@ -63,12 +63,12 @@ class DefaultController extends AbstractController {
         } elseif ($id) {
             $data = $this->_model->discovery($this->_entity);
         }
-        return Format::returnData($data, false, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
+        return Format::returnData($data, false, $this->params()->fromQuery('page') ? : 1, $this->_model->getTotalResults());
     }
 
     private function getAllData() {
         $data = $this->_model->discovery($this->_entity);
-        return Format::returnData($data, false, $this->params()->fromQuery('page') ?: 1, $this->_model->getTotalResults());
+        return Format::returnData($data, false, $this->params()->fromQuery('page') ? : 1, $this->_model->getTotalResults());
     }
 
     private function getData() {
@@ -154,7 +154,7 @@ class DefaultController extends AbstractController {
         $response
                 ->getHeaders()
                 ->addHeaderLine('Content-Transfer-Encoding', 'binary')
-                ->addHeaderLine('Content-Type', $fileMimeType ?: 'image/svg+xml');
+                ->addHeaderLine('Content-Type', $fileMimeType ? : 'image/svg+xml');
         return $response;
     }
 
@@ -314,7 +314,7 @@ class DefaultController extends AbstractController {
         $login_referrer = $this->params()->fromQuery('login-referrer');
         if ((!$username || !$password) && $this->_userModel->loggedIn()) {
             Header::addArbitraryRequireJsFile(DIRECTORY_SEPARATOR . 'user' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR . 'login', 'user-default-login');
-            return $this->redirect()->toUrl($login_referrer ?: $this->_renderer->basePath('/user/profile'));
+            return $this->redirect()->toUrl($login_referrer ? : $this->_renderer->basePath('/user/profile'));
         } elseif ($username && $password) {
             $this->_userModel->login($username, $password);
             $user = $this->_userModel->getLoggedUser();
@@ -335,9 +335,9 @@ class DefaultController extends AbstractController {
         $confirm_password = $this->params()->fromPost('confirm-password');
         $email = $this->params()->fromPost('email');
 
-        $api = new Api();
-        $data = $api->getDataFromDocument($document_number);
-
+        $data = Api::nvGet('PessoasEmpresasTk', array(
+                    'documento' => $document_number
+        ));
         if ($data && $data['CADASTRAIS']) {
             $user = new UserModel();
             $user->initialize($this->serviceLocator);
@@ -364,11 +364,11 @@ class DefaultController extends AbstractController {
                 if ($data['ENDERECOS']) {
                     $data['ENDERECOS'] = isset($data['ENDERECOS']['CEP']) ? array($data['ENDERECOS']) : $data['ENDERECOS'];
                     foreach ($data['ENDERECOS'] AS $enderecos) {
-                        $params['address-nickname'] = $enderecos['TITULO'] ?: 'Endereço ' . $enderecos['POSICAO'];
+                        $params['address-nickname'] = $enderecos['TITULO'] ? : 'Endereço ' . $enderecos['POSICAO'];
                         $params['cep'] = is_array($enderecos['CEP']) ? $enderecos['CEP'][0] : $enderecos['CEP'];
                         $params['street'] = (is_array($enderecos['TIPO']) ? $enderecos['TIPO'][0] : $enderecos['TIPO']) . ' ' . (is_array($enderecos['LOGRADOURO']) ? $enderecos['LOGRADOURO'][0] : $enderecos['LOGRADOURO']);
-                        $params['address-number'] = is_array($enderecos['NUMERO']) && $enderecos['NUMERO'][0] ? $enderecos['NUMERO'][0] : ($enderecos['NUMERO'] ?: 1);
-                        $params['complement'] = is_array($enderecos['COMPLEMENTO']) && $enderecos['COMPLEMENTO'][0] ? $enderecos['COMPLEMENTO'][0] : ($enderecos['COMPLEMENTO'] ?: '');
+                        $params['address-number'] = is_array($enderecos['NUMERO']) && $enderecos['NUMERO'][0] ? $enderecos['NUMERO'][0] : ($enderecos['NUMERO'] ? : 1);
+                        $params['complement'] = is_array($enderecos['COMPLEMENTO']) && $enderecos['COMPLEMENTO'][0] ? $enderecos['COMPLEMENTO'][0] : ($enderecos['COMPLEMENTO'] ? : '');
                         $params['district'] = is_array($enderecos['BAIRRO']) ? $enderecos['BAIRRO'][0] : $enderecos['BAIRRO'];
                         $params['city'] = is_array($enderecos['CIDADE']) ? $enderecos['CIDADE'][0] : $enderecos['CIDADE'];
                         $params['state'] = is_array($enderecos['UF']) ? $enderecos['UF'][0] : $enderecos['UF'];
@@ -393,19 +393,20 @@ class DefaultController extends AbstractController {
             return \Core\Helper\View::redirectToLogin($this->_renderer, $this->getResponse(), $this->getRequest(), $this->redirect());
         } elseif ($params && $user->loggedIn()) {
             $cnpj = Format::onlyNumbers($this->params()->fromPost('document-number'));
-            $api = new Api();
-            $data = $api->getDataFromDocument($cnpj);
+            $data = Api::nvGet('PessoasEmpresasTk', array(
+                        'documento' => $cnpj
+            ));
             if ($data && $data['CADASTRAIS'] && $data['ENDERECOS']) {
                 $params['document-number'] = is_array($data['CADASTRAIS']['CNPJ']) ? $data['CADASTRAIS']['CNPJ'][0] : $data['CADASTRAIS']['CNPJ'];
                 $params['name'] = is_array($data['CADASTRAIS']['RAZAO']) ? $data['CADASTRAIS']['RAZAO'][0] : $data['CADASTRAIS']['RAZAO'];
                 $params['alias'] = $data['CADASTRAIS']['NOME_FANTASIA'] ? ( is_array($data['CADASTRAIS']['NOME_FANTASIA']) ? $data['CADASTRAIS']['NOME_FANTASIA'][0] : $data['CADASTRAIS']['NOME_FANTASIA']) : (is_array($data['CADASTRAIS']['RAZAO']) ? $data['CADASTRAIS']['RAZAO'][0] : $data['CADASTRAIS']['RAZAO']);
                 $data['ENDERECOS'] = isset($data['ENDERECOS']['CEP']) ? array($data['ENDERECOS']) : $data['ENDERECOS'];
                 foreach ($data['ENDERECOS'] AS $enderecos) {
-                    $params['address-nickname'] = $enderecos['TITULO'] ?: 'Endereço ' . $enderecos['POSICAO'];
+                    $params['address-nickname'] = $enderecos['TITULO'] ? : 'Endereço ' . $enderecos['POSICAO'];
                     $params['cep'] = is_array($enderecos['CEP']) ? $enderecos['CEP'][0] : $enderecos['CEP'];
                     $params['street'] = (is_array($enderecos['TIPO']) ? $enderecos['TIPO'][0] : $enderecos['TIPO']) . ' ' . (is_array($enderecos['LOGRADOURO']) ? $enderecos['LOGRADOURO'][0] : $enderecos['LOGRADOURO']);
-                    $params['address-number'] = is_array($enderecos['NUMERO']) && $enderecos['NUMERO'][0] ? $enderecos['NUMERO'][0] : ($enderecos['NUMERO'] ?: 1);
-                    $params['complement'] = is_array($enderecos['COMPLEMENTO']) && $enderecos['COMPLEMENTO'][0] ? $enderecos['COMPLEMENTO'][0] : ($enderecos['COMPLEMENTO'] ?: '');
+                    $params['address-number'] = is_array($enderecos['NUMERO']) && $enderecos['NUMERO'][0] ? $enderecos['NUMERO'][0] : ($enderecos['NUMERO'] ? : 1);
+                    $params['complement'] = is_array($enderecos['COMPLEMENTO']) && $enderecos['COMPLEMENTO'][0] ? $enderecos['COMPLEMENTO'][0] : ($enderecos['COMPLEMENTO'] ? : '');
                     $params['district'] = is_array($enderecos['BAIRRO']) ? $enderecos['BAIRRO'][0] : $enderecos['BAIRRO'];
                     $params['city'] = is_array($enderecos['CIDADE']) ? $enderecos['CIDADE'][0] : $enderecos['CIDADE'];
                     $params['state'] = is_array($enderecos['UF']) ? $enderecos['UF'][0] : $enderecos['UF'];
@@ -416,7 +417,7 @@ class DefaultController extends AbstractController {
                 $companymodel->initialize($this->serviceLocator);
                 $people = $companymodel->addCompany($params);
 
-                //return $api->getSociosFromDocument($cnpj);
+                //return $api->getBusinessPartnerFromDocument($cnpj);
 
                 if ($people) {
                     $this->_view->setVariables(Format::returnData(array(
