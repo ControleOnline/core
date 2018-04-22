@@ -12,11 +12,11 @@ class Url {
     }
 
     public static function getDomain() {
-        return filter_input(INPUT_SERVER, 'HTTP_HOST') ?: $_SERVER['HTTP_HOST'];
+        return filter_input(INPUT_SERVER, 'HTTP_HOST') ? : $_SERVER['HTTP_HOST'];
     }
 
     public static function addDefaultUrlToNoLogin($module) {
-        $module = in_array(strtolower($module), array('carrier', 'client', 'company', 'provider', 'salesman','corporate')) ? $module : 'user';
+        $module = in_array(strtolower($module), array('carrier', 'client', 'company', 'provider', 'salesman', 'corporate')) ? $module : 'user';
         self::$compareUrl[] = '/' . $module . '/profile-image/';
         self::$compareUrl[] = '/' . $module . '/get-image-profile/';
         self::$compareUrl[] = '/' . $module . '/login/';
@@ -29,7 +29,7 @@ class Url {
     public static function isRedirectUrl($url) {
         self::$compareUrl[] = '/assets';
         self::$compareUrl[] = '/company/create-user-company/';
-        self::$compareUrl[] = '/company/create-https://github.com/ControleOnline/corporate.git-user-company/';
+        self::$compareUrl[] = '/company/create-corporate-user-company/';
         self::$compareUrl[] = '/sales/shipping-quote';
         self::$compareUrl[] = '/carrier/search-city-destination';
         self::$compareUrl[] = '/carrier/search-city-origin';
