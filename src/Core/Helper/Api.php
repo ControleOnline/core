@@ -57,7 +57,7 @@ class Api {
         $client = new Client();
         self::nvConnect();
         $data['token'] = self::$nv_token;
-        return Format::xmlToArray($client->get($this->url . $endpoint, $data)->getBody());
+        return Format::xmlToArray($client->get(self::$nv_url . $endpoint, $data)->getBody());
     }
 
 }
