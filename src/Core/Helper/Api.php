@@ -4,6 +4,7 @@ namespace Core\Helper;
 
 use GuzzleHttp\Client;
 use Core\Helper\Config;
+use Core\Helper\Format;
 
 class Api {
 
