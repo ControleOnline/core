@@ -36,7 +36,7 @@ class Url {
         self::$compareUrl[] = '/carrier/search-product-type';
         self::$compareUrl[] = '/sales/mail-invoice';
         self::$compareUrl[] = '/carrier/search-city-from-cep';
-        self::$compareUrl[] = '/corporate/conference';
+        self::$compareUrl[] = '/corporate/';
         $url_final = substr(self::removeSufix($url), -1) == '/' ? self::removeSufix($url) : self::removeSufix($url) . '/';
         foreach (self::$compareUrl AS $compare) {
             $pregGrep = ($url_final != '/') ? preg_grep('/^' . \addcslashes($compare, '/') . '/i', array($url_final)) : false;
