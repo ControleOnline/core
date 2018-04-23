@@ -53,6 +53,9 @@ class AbstractController extends AbstractActionController {
      * @return \Doctrine\ORM\EntityManager
      */
     public function getEntityManager() {
+        if (!$this->_em) {
+            $this->setEntityManager($this->serviceLocator->get('\Doctrine\ORM\EntityManager'));
+        }
         return $this->_em;
     }
 
@@ -76,7 +79,7 @@ class AbstractController extends AbstractActionController {
         $this->_model = new DiscoveryModel($this->serviceLocator, $this->_method, $this->_viewMethod, $this->getRequest(), $this->_config['Core']);
         $this->_entity_children = $this->params('entity_children');
         $this->_entity = $this->params('entity');
-        $this->_renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');            
+        $this->_renderer = $this->serviceLocator->get('Zend\View\Renderer\RendererInterface');
         View::setDefaultVariables($this, $this->serviceLocator);
     }
 
