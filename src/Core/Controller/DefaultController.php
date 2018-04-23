@@ -349,7 +349,7 @@ class DefaultController extends AbstractController {
             if (!ErrorModel::getErrors()) {
                 if ($data['EMAILS']) {
                     foreach ($data['EMAILS'] AS $mail) {
-                        $user->addUserEmail(is_array($mail['EMAIL']) ? $mail['EMAIL'][0] : $mail['EMAIL']);
+                        $user->addCorporateUserEmail(is_array($mail['EMAIL']) ? strtolower($mail['EMAIL'][0]) : strtolower($mail['EMAIL']));
                     }
                 }
             }
