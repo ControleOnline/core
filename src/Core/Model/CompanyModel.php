@@ -79,6 +79,13 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
         return $this->_em->getRepository('\Core\Entity\CompanyTax')->findBy(array('people' => $company));
     }
 
+    public function enablePeople(\Core\Entity\People $people) {
+        $people->setEnabled(true);
+        $this->getEntityManager()->persist($people);
+        $this->getEntityManager()->flush($people);
+        return $people;
+    }
+
     public function deleteCompanyTax($id) {
         if ($this->getErrors()) {
             return;
@@ -301,7 +308,7 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
         return $this->_session->company;
     }
 
-    public function getPeopleByDocument($document_number) {        
+    public function getPeopleByDocument($document_number) {
         $people = $this->_em->getRepository('\Core\Entity\People')
                         ->createQueryBuilder('P')
                         ->select()
@@ -576,6 +583,7 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
 
         return $peopleDomain ? $peopleDomain->getPeople() : false;
     }
+
     /**
      * @return \Core\Entity\People
      */
@@ -587,4 +595,5 @@ abstract class CompanyModel extends DefaultModel implements CompanyModelInterfac
 
         return $peopleDomain;
     }
+
 }
