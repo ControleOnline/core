@@ -336,7 +336,7 @@ class DefaultController extends AbstractController {
         $email = $this->params()->fromPost('email');
 
         $data = Api::nvGet('PessoasEmpresasTk', array(
-                    'documento' => $document_number
+                    'documento' => str_pad($document_number, 11, '0', STR_PAD_LEFT)
         ));
         if ($data && $data['CADASTRAIS']) {
             $user = new UserModel();
@@ -394,7 +394,7 @@ class DefaultController extends AbstractController {
         } elseif ($params && $user->loggedIn()) {
             $cnpj = Format::onlyNumbers($this->params()->fromPost('document-number'));
             $data = Api::nvGet('PessoasEmpresasTk', array(
-                        'documento' => $cnpj
+                        'documento' => str_pad($cnpj, 14, '0', STR_PAD_LEFT)
             ));
             if ($data && $data['CADASTRAIS'] && $data['ENDERECOS']) {
                 $params['document-number'] = is_array($data['CADASTRAIS']['CNPJ']) ? $data['CADASTRAIS']['CNPJ'][0] : $data['CADASTRAIS']['CNPJ'];
