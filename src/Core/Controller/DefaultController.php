@@ -318,7 +318,7 @@ class DefaultController extends AbstractController {
         } elseif ($username && $password) {
             $this->_userModel->login($username, $password);
             $user = $this->_userModel->getLoggedUser();
-            $this->_view->setVariables(Format::returnData($user ? array('apiKey' => $user->getApiKey()) : false));
+            $this->_view->setVariables(Format::returnData($user ? array('api-key' => $user->getApiKey()) : false));
         }
         $this->_view->setVariable('login_referrer', $login_referrer);
         $this->_view->setVariable('create_account_view', $this->create_account_view);
