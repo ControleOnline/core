@@ -373,7 +373,9 @@ class DefaultController extends AbstractController {
                         $params['city'] = is_array($enderecos['CIDADE']) ? $enderecos['CIDADE'][0] : $enderecos['CIDADE'];
                         $params['state'] = is_array($enderecos['UF']) ? $enderecos['UF'][0] : $enderecos['UF'];
                         $params['country'] = 'Brazil';
-                        $user->addUserAddress($params);
+                        if ($params['address-nickname'] && $params['cep'] && $params['street'] && $params['district'] && $params['city'] && $params['state'] && $params['country']) {
+                            $user->addUserAddress($params);
+                        }
                     }
                 }
             }
