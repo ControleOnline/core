@@ -26,12 +26,13 @@ Add these lines to your composer.json:
     "scripts": {
         "post-update-cmd": [
             "git describe --abbrev=0 --tags > .version",
-            "bower install controleonline\\core-js"
+            "find ./data/cache -type f -mtime 2 -exec rm -rf {} \\;"
         ],
         "pre-install-cmd": [
             "echo '{\"directory\" : \"public/vendor/\"}' > .bowerrc"
         ],
-        "post-install-cmd": [                           
+        "post-install-cmd": [
+            "bower install controleonline\\core-js"                           
         ]
     },
 
@@ -237,3 +238,20 @@ return array(
 //Another configs
 )
 ```
+
+
+# Cron #
+
+@reboot s3fs -o allow_other,uid=33,gid=33,umask=002,use_cache=/tmp/caches3 controleonline /s3/controleonline
+@reboot s3fs -o allow_other,uid=33,gid=33,umask=002,use_cache=/tmp/caches3 assinando /s3/assinando
+@reboot s3fs -o allow_other,uid=33,gid=33,umask=002,use_cache=/tmp/caches3 freteclick /s3/freteclick
+
+
+0 2 * * * find /var/www/freteclick/app/data/cache -type f -mtime 2 -exec rm -rf {} \;
+0 2 * * * find /var/www/assinando/app/data/cache -type f -mtime 2 -exec rm -rf {} \;
+0 2 * * * find /var/www/controleonline/app/data/cache -type f -mtime 2 -exec rm -rf {} \;
+
+
+
+1 0 * * * /usr/share/letsencrypt/letsencrypt-auto renew >> /var/log/lets-encrypt-renew.org
+* * * * * su -c "cd /var/www/crm; php -f cron.php > /dev/null 2>&1" -s /bin/sh www-data

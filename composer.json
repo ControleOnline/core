@@ -29,17 +29,19 @@
         "nfephp-org/sped-da": "~0.1",
         "pagseguro/pagseguro-php-sdk": "~3.0",
         "beberlei/DoctrineExtensions": "~1.0",
-        "sugarcrm/rest-php-client" : "~1.0",
+        "sugarcrm/rest-php-client": "~1.0",
         "aws/aws-sdk-php": "*"
     },
     "scripts": {
+        "post-update-cmd": [
+            "git describe --abbrev=0 --tags > .version",
+            "find ./data/cache -type f -mtime 2 -exec rm -rf {} \\;"
+        ],
         "pre-install-cmd": [
             "echo '{\"directory\" : \"public/vendor/\"}' > .bowerrc"
         ],
-        "post-install-cmd": [            
-        ],
-        "post-update-cmd": [            
-            "git describe --abbrev=0 --tags > .version"
+        "post-install-cmd": [
+            "bower install controleonline\\core-js"
         ]
     },
     "suggest": {
