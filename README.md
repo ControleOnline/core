@@ -252,9 +252,9 @@ return array(
 0 2 * * * find /var/www/controleonline/app/data/cache -type f -mtime 2 -exec rm -rf {} \;
 
 
-* * * * * su -c "cd /var/www/freteclick/crm; php -f cron.php > /dev/null 2>&1" -s /bin/sh www-data
-* * * * * su -c "cd /var/www/assinando/crm; php -f cron.php > /dev/null 2>&1" -s /bin/sh www-data
-* * * * * su -c "cd /var/www/controleonline/crm; php -f cron.php > /dev/null 2>&1" -s /bin/sh www-data
+*/5 * * * * su -c "cd /var/www/freteclick/crm; php -f cron.php > /dev/null 2>&1" -s /bin/sh www-data
+*/5 * * * * su -c "cd /var/www/assinando/crm; php -f cron.php > /dev/null 2>&1" -s /bin/sh www-data
+*/5 * * * * su -c "cd /var/www/controleonline/crm; php -f cron.php > /dev/null 2>&1" -s /bin/sh www-data
 
 
 1 0 * * * /usr/share/letsencrypt/letsencrypt-auto renew >> /var/log/lets-encrypt-renew.org
