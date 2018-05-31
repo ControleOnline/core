@@ -9,6 +9,12 @@ img{
 .card.card-banner .card-body .content .value{
     font-size: 2em !important;
 }
+.app-simple{
+    background: #173c68 !important;
+}
+.app-logged-simple {
+    padding-left: 0px !important;
+}
 .payment-logo{
     background: url(../../img/payment/invoice-bar.png);
     background-position: right 20px;
@@ -559,9 +565,6 @@ footer.app-footer{
     font-size: 24px;
     line-height: 1.33;
     border-radius: 35px;
-}
-.app-logged-simple{
-    padding: 0px !important;
 }
 .navbar .navbar-collapse{
     overflow: hidden;
